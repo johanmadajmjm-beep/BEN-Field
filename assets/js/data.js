@@ -2,7 +2,7 @@
 // BEN-Field: data.js — Children Data (from Excel, 200 anak)
 // ================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCx4CiGyxXRj01nP8v8W-2D9livH1Zk9r_uuCx2v4WCKIYJ-dBlugpvoYUE1ymw98a/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbykXCG6hxn8xdQuv2BKAujYT5XGSCjTmJmxMLS1T3SeFqVAF3LK3G9Fxev-14rLw9WL/exec';
 const CACHE_KEY       = 'ben_children_cache';
 const CACHE_TTL_MS    = 1000 * 60 * 60 * 6; // 6 jam
 
