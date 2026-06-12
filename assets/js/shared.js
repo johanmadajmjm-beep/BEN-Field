@@ -42,10 +42,13 @@ function showToast(msg, type = '') {
 
 // ── Section toggle ───────────────────────────────────────────────
 function toggleSection(id) {
-  const body    = document.getElementById(`body-${id}`);
-  const chevron = document.getElementById(`chevron-${id}`);
+  // Support both old prefix (body-) and new prefix (sbody-)
+  const body    = document.getElementById(`sbody-${id}`) || document.getElementById(`body-${id}`);
+  const chevron = document.getElementById(`schev-${id}`) || document.getElementById(`chevron-${id}`);
+  const hdr     = document.getElementById(`shdr-${id}`);
   const isOpen  = body.classList.contains('open');
   body.classList.toggle('open', !isOpen);
+  if (hdr) hdr.classList.toggle('open', !isOpen);
   chevron.classList.toggle('open', !isOpen);
 }
 
@@ -62,7 +65,7 @@ function initWorkerChild(workerSelId, childSelId) {
 // ── Draft ────────────────────────────────────────────────────────
 function saveDraft(data) {
   localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
-  showToast('Draft tersimpan ✓', 'success');
+  showToast('Draft tersimpan ✓', 't-success');
 }
 
 function loadDraft() {
@@ -109,20 +112,20 @@ function renderQueueList() {
     return;
   }
   list.innerHTML = q.map(item => `
-    <div class="queue-item">
-      <div class="queue-item-info">
-        <div class="queue-item-name">${item.namaAnakLabel || item.namaAnak || '—'}</div>
-        <div class="queue-item-meta">${item.cbrWorkerLabel || ''} • ${item.tanggal || ''}</div>
+    <div class="q-item">
+      <div class="q-item-info">
+        <div class="q-item-name">\${item.namaAnakLabel || item.namaAnak || '—'}</div>
+        <div class="q-item-meta">\${item.cbrWorkerLabel || ''} · \${item.tanggal || ''}</div>
       </div>
-      <button class="btn-q-submit" onclick="submitQueueItem(${item._queueId})">Kirim</button>
-      <button class="btn-q-delete" onclick="deleteQueueItem(${item._queueId})">Hapus</button>
+      <button class="btn-q-send" onclick="submitQueueItem(\${item._queueId})">Kirim</button>
+      <button class="btn-q-del"  onclick="deleteQueueItem(\${item._queueId})">Hapus</button>
     </div>
   `).join('');
 }
 
 async function submitQueueItem(id) {
   const url = window.BEN_APPS_SCRIPT_URL;
-  if (!url || url.startsWith('GANTI')) { showToast('⚠️ URL Apps Script belum diisi!', 'error'); return; }
+  if (!url || url.startsWith('GANTI')) { showToast('⚠️ URL Apps Script belum diisi!', 't-error'); return; }
   let q = getQueue();
   const item = q.find(x => x._queueId === id);
   if (!item) return;
@@ -131,8 +134,8 @@ async function submitQueueItem(id) {
     if (!res.ok) throw new Error();
     _saveQueue(q.filter(x => x._queueId !== id));
     updateQueueBadge(); renderQueueList();
-    showToast('✅ Terkirim!', 'success');
-  } catch { showToast('Gagal kirim — cek koneksi', 'error'); }
+    showToast('✅ Terkirim!', 't-success');
+  } catch { showToast('Gagal kirim — cek koneksi', 't-error'); }
 }
 
 function deleteQueueItem(id) {
@@ -141,9 +144,9 @@ function deleteQueueItem(id) {
 }
 
 async function submitAllQueue() {
-  if (!isOnline) { showToast('Tidak ada koneksi', 'error'); return; }
+  if (!isOnline) { showToast('Tidak ada koneksi', 't-error'); return; }
   const url = window.BEN_APPS_SCRIPT_URL;
-  if (!url || url.startsWith('GANTI')) { showToast('⚠️ URL Apps Script belum diisi!', 'error'); return; }
+  if (!url || url.startsWith('GANTI')) { showToast('⚠️ URL Apps Script belum diisi!', 't-error'); return; }
   const q = getQueue();
   let success = 0;
   for (const item of q) {
@@ -153,7 +156,7 @@ async function submitAllQueue() {
     } catch {}
   }
   updateQueueBadge(); renderQueueList();
-  showToast(`✅ ${success} dari ${q.length} berhasil dikirim`, 'success');
+  showToast(`✅ ${success} dari ${q.length} berhasil dikirim`, 't-success');
 }
 
 // Click outside modal
@@ -170,12 +173,12 @@ async function doSubmit(data, onSuccess) {
   const fill = document.getElementById('progressFill');
 
   if (!url || url.startsWith('GANTI')) {
-    showToast('⚠️ URL Apps Script belum diisi!', 'error'); return;
+    showToast('⚠️ URL Apps Script belum diisi!', 't-error'); return;
   }
 
   if (!isOnline) {
     addToQueue(data);
-    showToast('Offline — data masuk antrian ✓', 'warning');
+    showToast('Offline — data masuk antrian ✓', 't-warning');
     return;
   }
 
@@ -197,13 +200,13 @@ async function doSubmit(data, onSuccess) {
     clearInterval(interval);
     if (fill) fill.style.width = '100%';
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    showToast('✅ Data berhasil dikirim!', 'success');
+    showToast('✅ Data berhasil dikirim!', 't-success');
     clearDraft();
     if (onSuccess) setTimeout(onSuccess, 1500);
   } catch {
     clearInterval(interval);
     addToQueue(data);
-    showToast('Gagal — data masuk antrian ✓', 'warning');
+    showToast('Gagal — data masuk antrian ✓', 't-warning');
   } finally {
     if (btn) { btn.disabled = false; btn.innerHTML = '📤 Kirim ke Server'; }
     setTimeout(() => {
