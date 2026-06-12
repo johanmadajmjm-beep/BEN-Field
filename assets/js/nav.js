@@ -43,7 +43,7 @@ function injectBottomNav() {
       color: #7a9e8a; font-size: 10px; font-weight: 600;
       padding: 6px 2px; position: relative;
       -webkit-tap-highlight-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     .bottom-nav a .ni { font-size: 22px; line-height: 1; }
     .bottom-nav a .nl { font-size: 9px; margin-top: 1px; white-space: nowrap; }
