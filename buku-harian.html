@@ -4,55 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#1a3d5c">
-<title>Buku Harian Anak — BEN</title>
+<meta name="theme-color" content="#0F2744">
+<title>Buku Harian — BEN</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/shared.css">
-<style>
-.diary-block {
-  border:1.5px solid #b0d4e8;
-  border-radius:var(--radius);
-  margin-bottom:12px;
-  overflow:hidden;
-}
-.diary-block-header {
-  background:#1a3d5c;color:white;
-  padding:11px 14px;
-  display:flex;align-items:center;gap:10px;
-  cursor:pointer;
-}
-.diary-block-num {
-  width:24px;height:24px;
-  background:rgba(255,255,255,0.2);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;flex-shrink:0;
-}
-.diary-block-body { padding:14px;display:none;background:#fff; }
-.diary-block-body.open { display:block; }
-.btn-remove-diary {
-  background:rgba(255,255,255,0.15);border:none;color:white;
-  width:26px;height:26px;border-radius:50%;font-size:14px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.btn-add-diary {
-  width:100%;padding:13px;
-  background:#e0f0ff;
-  border:2px dashed #90caf9;
-  border-radius:var(--radius-sm);
-  color:#1a3d5c;font-size:14px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  transition:all 0.15s;
-}
-.btn-add-diary:hover{background:#c5e3f7;}
-.diary-guide {
-  background:#e8f4fd;border:1.5px solid #90caf9;
-  border-radius:8px;padding:10px 13px;
-  font-size:12px;color:#1a3a5c;line-height:1.7;margin-bottom:10px;
-}
-</style>
 </head>
 <body>
 <script>
@@ -60,60 +17,73 @@
   window.BEN_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCx4CiGyxXRj01nP8v8W-2D9livH1Zk9r_uuCx2v4WCKIYJ-dBlugpvoYUE1ymw98a/exec';
 </script>
 
-<div class="app-header buku-harian">
-  <div class="logo-wrap">
-    <div class="logo-icon">📓</div>
-    <div><div class="sub">Program BEN — Manggarai</div><h1>Buku Harian Anak</h1></div>
+<div class="app-header h-blue">
+  <div class="header-icon">📓</div>
+  <div class="header-text">
+    <div class="header-sub">Program BEN — Manggarai</div>
+    <div class="header-title">Buku Harian Anak</div>
   </div>
-  <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
-    <span>📤</span><span id="queueCount">0</span> antrian
+  <div class="header-badge" id="queueBadge" onclick="openQueueModal()">
+    <span class="dot"></span><span id="queueCount">0</span> antrian
   </div>
 </div>
-<div class="status-bar">
+<div class="status-pill">
   <div class="status-dot" id="statusDot"></div>
   <span id="statusText">Memeriksa koneksi…</span>
 </div>
 
 <div class="main">
-  <div class="section-card">
-    <div class="section-header blue" onclick="toggleSection('s1')">
-      <div class="section-num">1</div>
-      <div class="section-title">Benef/Dampingan <div class="section-sub">Identitas</div></div>
-      <div class="chevron open" id="chevron-s1">▼</div>
+
+  <!-- IDENTITAS -->
+  <div class="s-card">
+    <div class="s-header open" id="shdr-s1" onclick="toggleSection('s1')">
+      <div class="s-step blue">1</div>
+      <div class="s-info"><div class="s-title">Benef / Dampingan</div><div class="s-sub">Identitas</div></div>
+      <svg class="s-chevron open" id="schev-s1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="section-body open" id="body-s1">
+    <div class="s-body open" id="sbody-s1">
       <div class="field">
-        <label>CBR Worker <span class="req">*</span></label>
+        <label class="field-label">CBR Worker <span class="req">*</span></label>
         <select id="cbrWorker" onchange="onWorkerChange()"></select>
       </div>
       <div class="field">
-        <label>Nama Anak <span class="req">*</span></label>
+        <label class="field-label">Nama Anak <span class="req">*</span></label>
         <select id="namaAnak" disabled><option value="">— Pilih CBR Worker dulu —</option></select>
       </div>
     </div>
   </div>
 
-  <!-- DIARY DYNAMIC -->
-  <div class="section-card">
-    <div class="section-header diary" onclick="toggleSection('sd')">
-      <div class="section-num">2</div>
-      <div class="section-title">Buku Harian <div class="section-sub" id="diaryCountLabel">2 catatan</div></div>
-      <div class="chevron" id="chevron-sd">▼</div>
+  <!-- CATATAN HARIAN -->
+  <div class="s-card">
+    <div class="s-header" id="shdr-s2" onclick="toggleSection('s2')">
+      <div class="s-step blue">2</div>
+      <div class="s-info"><div class="s-title">Catatan Harian</div><div class="s-sub" id="diaryCountLabel">2 catatan</div></div>
+      <svg class="s-chevron" id="schev-s2" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="section-body" id="body-sd">
+    <div class="s-body" id="sbody-s2">
       <div id="diaryList"></div>
-      <button class="btn-add-diary" onclick="addDiary()">＋ Tambah Catatan Harian</button>
+      <button class="btn-add blue" onclick="addDiary()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Tambah Catatan Harian
+      </button>
     </div>
   </div>
 
-  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="action-row">
-    <button class="btn btn-draft" onclick="handleDraft()">💾 Simpan Draft</button>
-    <button class="btn btn-submit" id="btnSubmit" onclick="handleSubmit()">📤 Kirim ke Server</button>
+  <div class="progress-wrap" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="action-bar">
+    <button class="btn btn-secondary" onclick="handleDraft()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Simpan Draft
+    </button>
+    <button class="btn btn-primary" id="btnSubmit" onclick="handleSubmit()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Kirim ke Server
+    </button>
   </div>
-  <div class="action-row" style="margin-bottom:32px;">
-    <button class="btn btn-home" onclick="window.location.href='index.html'" style="background:var(--blue-light);color:var(--blue);border:1.5px solid #bfdbfe;">🏠 Menu</button>
-    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset</button>
+  <div class="action-bar" style="margin-bottom:0;">
+    <button class="btn btn-ghost" onclick="window.location.href='index.html'">🏠 Kembali ke Menu</button>
+    <button class="btn btn-danger" onclick="confirmReset()">↺ Reset</button>
   </div>
 </div>
 
@@ -121,15 +91,16 @@
 <div class="modal-overlay" id="queueModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-title">📤 Antrian</div>
+    <div class="modal-title">Antrian Pengiriman</div>
     <div id="queueList"></div>
-    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua</button>
+    <button class="btn btn-primary" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
   </div>
 </div>
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
-    <h3>⚠️ Reset Form?</h3>
-    <p>Data yang belum disimpan sebagai draft akan hilang.</p>
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">Reset Form?</div>
+    <div class="confirm-desc">Data yang belum tersimpan akan hilang.</div>
     <div class="confirm-btns">
       <button class="btn-cancel-c" onclick="closeConfirm()">Batal</button>
       <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
@@ -140,172 +111,95 @@
 <script src="assets/js/data.js"></script>
 <script src="assets/js/shared.js"></script>
 <script>
-let diaryIds = [];
-let diaryCount = 0;
+let diaryIds=[], diaryCount=0;
+const GUIDE='<strong>Panduan:</strong> Hal menonjol (baik & tantangan) · 5W1H · Aktivitas di rumah · Perjanjian dengan petugas RBM · Pertanyaan untuk kunjungan berikutnya';
 
-const GUIDE = `<strong>Panduan:</strong> Hal menonjol (baik & tantangan) · Apa, Mengapa, Dimana, Bagaimana, Siapa, Kapan · Aktivitas di rumah · Perjanjian dengan petugas RBM · Pertanyaan untuk kunjungan berikutnya`;
-
-document.addEventListener('DOMContentLoaded', () => {
-  initChildrenData(() => {
+document.addEventListener('DOMContentLoaded',()=>{
+  initChildrenData(()=>{
     populateWorkerSelect(document.getElementById('cbrWorker'));
-    // draft restore
-    const draft = loadDraftLocal();
-    if (draft) { restoreForm(draft); showToast('Draft sebelumnya dimuat','warning'); }
+    const d=loadDraft();
+    if(d){restoreForm(d);showToast('Draft sebelumnya dimuat','t-warning');}
   });
-  updateStatusBar();
-  updateQueueBadge();
+  if(!diaryIds.length){addDiary();addDiary();}
+  updateStatusBar();updateQueueBadge();
 });
 
-function onWorkerChange() {
-  populateChildSelect(document.getElementById('cbrWorker').value, document.getElementById('namaAnak'));
-}
+function onWorkerChange(){populateChildSelect(document.getElementById('cbrWorker').value,document.getElementById('namaAnak'));}
 
-function addDiary(data) {
+function addDiary(data){
   diaryCount++;
-  const id = 'dr_' + Date.now() + '_' + diaryCount;
+  const id='dr_'+Date.now()+'_'+diaryCount;
   diaryIds.push(id);
-  const n  = diaryIds.length;
-
-  const block = document.createElement('div');
-  block.className = 'diary-block';
-  block.id = 'dblock_' + id;
-  block.innerHTML = `
-    <div class="diary-block-header" onclick="toggleDiary('${id}')">
-      <div class="diary-block-num">${n}</div>
-      <div style="flex:1;font-size:13px;font-weight:700;">Catatan Harian ${n}</div>
-      <button class="btn-remove-diary" onclick="removeDiary('${id}',event)">✕</button>
-      <span style="font-size:11px;opacity:0.7;margin-left:6px;" id="dchev_${id}">▼</span>
+  const n=diaryIds.length;
+  const block=document.createElement('div');
+  block.className='diary-block';block.id='dblock_'+id;
+  block.innerHTML=`
+    <div class="diary-block-hdr" onclick="toggleDiary('${id}')">
+      <div class="diary-num">${n}</div>
+      <div class="diary-title">Catatan Harian ${n}</div>
+      <button class="diary-remove" onclick="removeDiary('${id}',event)">✕</button>
+      <svg class="diary-chev open" id="dchev_${id}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="diary-block-body open" id="dbody_${id}">
-      <div class="diary-guide">${GUIDE}</div>
-      <div class="field">
-        <label>Tanggal</label>
-        <input type="date" id="dtgl_${id}">
-      </div>
-      <div class="field">
-        <label>Catatan</label>
-        <textarea id="disi_${id}" rows="5" placeholder="Tuliskan catatan diary di sini…"></textarea>
-      </div>
+    <div class="diary-body open" id="dbody_${id}">
+      <div class="info-box blue" style="margin-bottom:12px;">${GUIDE}</div>
+      <div class="field"><label class="field-label">Tanggal</label><input type="date" id="dtgl_${id}"></div>
+      <div class="field"><label class="field-label">Catatan</label><textarea id="disi_${id}" rows="5" placeholder="Tuliskan catatan di sini…"></textarea></div>
     </div>`;
-
   document.getElementById('diaryList').appendChild(block);
-
-  if (data) {
-    if (data.tanggal) document.getElementById('dtgl_'+id).value = data.tanggal;
-    if (data.isi)     document.getElementById('disi_'+id).value = data.isi;
-  }
+  if(data){if(data.tanggal)document.getElementById('dtgl_'+id).value=data.tanggal;if(data.isi)document.getElementById('disi_'+id).value=data.isi;}
   updateDiaryLabel();
 }
-
-function removeDiary(id, event) {
-  event.stopPropagation();
-  if (diaryIds.length <= 1) { showToast('Minimal 1 catatan harus ada','error'); return; }
+function removeDiary(id,e){
+  e.stopPropagation();
+  if(diaryIds.length<=1){showToast('Minimal 1 catatan harus ada','t-error');return;}
   document.getElementById('dblock_'+id)?.remove();
-  diaryIds = diaryIds.filter(x => x !== id);
+  diaryIds=diaryIds.filter(x=>x!==id);
   renumberDiary();
 }
-
-function renumberDiary() {
-  diaryIds.forEach((id,i) => {
-    const el = document.querySelector(`#dblock_${id} .diary-block-header div[style]`);
-    if (el) el.textContent = `Catatan Harian ${i+1}`;
-    document.querySelector(`#dblock_${id} .diary-block-num`).textContent = i+1;
+function renumberDiary(){
+  diaryIds.forEach((id,i)=>{
+    const n=i+1;
+    const el=document.querySelector('#dblock_'+id+' .diary-num');if(el)el.textContent=n;
+    const tl=document.querySelector('#dblock_'+id+' .diary-title');if(tl)tl.textContent='Catatan Harian '+n;
   });
   updateDiaryLabel();
 }
+function updateDiaryLabel(){document.getElementById('diaryCountLabel').textContent=diaryIds.length+' catatan';}
+function toggleDiary(id){const b=document.getElementById('dbody_'+id),c=document.getElementById('dchev_'+id);const o=b.classList.toggle('open');c.classList.toggle('open',o);}
 
-function updateDiaryLabel() {
-  document.getElementById('diaryCountLabel').textContent = diaryIds.length + ' catatan';
-}
-
-function toggleDiary(id) {
-  const body = document.getElementById('dbody_'+id);
-  const chev = document.getElementById('dchev_'+id);
-  const open = body.classList.toggle('open');
-  if (chev) chev.textContent = open ? '▼' : '▶';
-}
-
-function collect() {
-  const workerEl = document.getElementById('cbrWorker');
-  const anakEl   = document.getElementById('namaAnak');
+function collect(){
+  const w=document.getElementById('cbrWorker'),a=document.getElementById('namaAnak');
   return {
-    timestamp: new Date().toISOString(),
-    modul: 'buku_harian',
-    cbrWorkerValue: workerEl.value,
-    cbrWorkerLabel: workerEl.options[workerEl.selectedIndex]?.text||'',
-    namaAnakValue:  anakEl.value,
-    namaAnakLabel:  anakEl.options[anakEl.selectedIndex]?.text||'',
-    tanggal: diaryIds[0] ? document.getElementById('dtgl_'+diaryIds[0])?.value||'' : '',
-    diaries: diaryIds.map((id,i) => ({
-      nomor: i+1,
-      tanggal: document.getElementById('dtgl_'+id)?.value||'',
-      isi: (document.getElementById('disi_'+id)?.value||'').trim()
-    }))
+    timestamp:new Date().toISOString(),modul:'buku_harian',
+    cbrWorkerValue:w.value,cbrWorkerLabel:w.options[w.selectedIndex]?.text||'',
+    namaAnakValue:a.value,namaAnakLabel:a.options[a.selectedIndex]?.text||'',
+    tanggal:diaryIds[0]?document.getElementById('dtgl_'+diaryIds[0])?.value||'':'',
+    diaries:diaryIds.map((id,i)=>({nomor:i+1,tanggal:document.getElementById('dtgl_'+id)?.value||'',isi:(document.getElementById('disi_'+id)?.value||'').trim()}))
   };
 }
-
-function validate(d) {
-  if (!d.cbrWorkerValue) return 'CBR Worker belum dipilih.';
-  if (!d.namaAnakValue)  return 'Nama Anak belum dipilih.';
-  if (!d.diaries.some(x=>x.isi)) return 'Minimal 1 catatan harus diisi.';
+function validate(d){
+  if(!d.cbrWorkerValue) return 'CBR Worker belum dipilih.';
+  if(!d.namaAnakValue)  return 'Nama Anak belum dipilih.';
+  if(!d.diaries.some(x=>x.isi)) return 'Minimal 1 catatan harus diisi.';
   return null;
 }
-
-function restoreForm(data) {
-  if (!data) return;
-  const workerEl = document.getElementById('cbrWorker');
-  const anakEl   = document.getElementById('namaAnak');
-  if (data.cbrWorkerValue) {
-    workerEl.value = data.cbrWorkerValue;
-    populateChildSelect(data.cbrWorkerValue, anakEl);
-    setTimeout(() => { if (data.namaAnakValue) anakEl.value = data.namaAnakValue; }, 50);
-  }
-  if (data.diaries && data.diaries.length > 0) {
-    document.getElementById('diaryList').innerHTML='';
-    diaryIds=[]; diaryCount=0;
-    data.diaries.forEach(d => addDiary(d));
-  }
+function restoreForm(d){
+  if(!d)return;
+  const w=document.getElementById('cbrWorker'),a=document.getElementById('namaAnak');
+  if(d.cbrWorkerValue){w.value=d.cbrWorkerValue;populateChildSelect(d.cbrWorkerValue,a);setTimeout(()=>{if(d.namaAnakValue)a.value=d.namaAnakValue;},50);}
+  if(d.diaries&&d.diaries.length>0){document.getElementById('diaryList').innerHTML='';diaryIds=[];diaryCount=0;d.diaries.forEach(di=>addDiary(di));}
 }
-
-function loadDraftLocal() {
-  try { return JSON.parse(localStorage.getItem(DRAFT_KEY)||'null'); } catch { return null; }
-}
-function handleDraft() {
-  const data = collect();
-  const err  = validate(data);
-  if (err) { showToast('⚠️ '+err,'error'); return; }
-  localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
-  showToast('Draft tersimpan ✓','success');
-}
-
-function handleSubmit() {
-  const data = collect();
-  const err  = validate(data);
-  if (err) { showToast('⚠️ '+err,'error'); return; }
-  doSubmit(data, doReset);
-}
-
-function doReset() {
-  closeConfirm();
-  localStorage.removeItem(DRAFT_KEY);
+function handleDraft(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'t-error');return;}saveDraft(d);showToast('Draft tersimpan','t-success');}
+function handleSubmit(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'t-error');return;}doSubmit(d,doReset);}
+function doReset(){
+  closeConfirm();clearDraft();
   document.getElementById('cbrWorker').value='';
-  const a=document.getElementById('namaAnak');
-  a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';
-  a.disabled=true;
-  document.getElementById('diaryList').innerHTML='';
-  diaryIds=[]; diaryCount=0;
-  addDiary(); addDiary();
-  window.scrollTo(0,0);
-  showToast('Form dikosongkan','');
+  const a=document.getElementById('namaAnak');a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';a.disabled=true;
+  document.getElementById('diaryList').innerHTML='';diaryIds=[];diaryCount=0;addDiary();addDiary();
+  window.scrollTo(0,0);showToast('Form dikosongkan','');
 }
-
-// Reuse shared queue/submit via shared.js
-
-let _t;
-window.addEventListener('online',updateStatusBar);
-window.addEventListener('offline',updateStatusBar);
 </script>
-<script>window.BEN_ACTIVE_NAV = "nav-harian";</script>
+<script>window.BEN_ACTIVE_NAV='nav-harian';</script>
 <script src="assets/js/nav.js"></script>
 </body>
 </html>
