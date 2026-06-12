@@ -92,7 +92,7 @@ function addToQueue(data) {
 function updateQueueBadge() {
   const badge = document.getElementById('queueBadge');
   const count = document.getElementById('queueCount');
-  if (!badge) return;
+  if (!badge || !count) return;
   const q = getQueue();
   if (q.length > 0) { badge.classList.add('visible'); count.textContent = q.length; }
   else { badge.classList.remove('visible'); }
@@ -111,30 +111,32 @@ function renderQueueList() {
     list.innerHTML = '<div class="empty-queue">Tidak ada data dalam antrian 🎉</div>';
     return;
   }
-  list.innerHTML = q.map(item => `
-    <div class="q-item">
-      <div class="q-item-info">
-        <div class="q-item-name">\${item.namaAnakLabel || item.namaAnak || '—'}</div>
-        <div class="q-item-meta">\${item.cbrWorkerLabel || ''} · \${item.tanggal || ''}</div>
-      </div>
-      <button class="btn-q-send" onclick="submitQueueItem(\${item._queueId})">Kirim</button>
-      <button class="btn-q-del"  onclick="deleteQueueItem(\${item._queueId})">Hapus</button>
-    </div>
-  `).join('');
+  list.innerHTML = q.map(function(item) {
+    return '<div class="q-item">' +
+      '<div class="q-item-info">' +
+        '<div class="q-item-name">' + (item.namaAnakLabel || item.namaAnak || '—') + '</div>' +
+        '<div class="q-item-meta">' + (item.cbrWorkerLabel || '') + ' · ' + (item.tanggal || '') + '</div>' +
+      '</div>' +
+      '<button class="btn-q-send" onclick="submitQueueItem(' + item._queueId + ')">Kirim</button>' +
+      '<button class="btn-q-del" onclick="deleteQueueItem(' + item._queueId + ')">Hapus</button>' +
+    '</div>';
+  }).join('');
 }
 
 async function submitQueueItem(id) {
   const url = window.BEN_APPS_SCRIPT_URL;
-  if (!url || url.startsWith('GANTI')) { showToast('⚠️ URL Apps Script belum diisi!', 't-error'); return; }
+  if (!url || url.startsWith('GANTI')) { showToast('⚠️ URL belum diisi!', 't-error'); return; }
   let q = getQueue();
   const item = q.find(x => x._queueId === id);
   if (!item) return;
   try {
-    const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(item) });
-    if (!res.ok) throw new Error();
+    const enc = encodeURIComponent(JSON.stringify(item));
+    const res = await fetch(url + '?data=' + enc);
+    const json = await res.json();
+    if (json.status !== 200) throw new Error(json.message);
     _saveQueue(q.filter(x => x._queueId !== id));
     updateQueueBadge(); renderQueueList();
-    showToast('✅ Terkirim!', 't-success');
+    showToast('Terkirim!', 't-success');
   } catch { showToast('Gagal kirim — cek koneksi', 't-error'); }
 }
 
@@ -151,8 +153,10 @@ async function submitAllQueue() {
   let success = 0;
   for (const item of q) {
     try {
-      const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(item) });
-      if (res.ok) { success++; _saveQueue(getQueue().filter(x => x._queueId !== item._queueId)); }
+      const encAll = encodeURIComponent(JSON.stringify(item));
+      const rAll = await fetch(url + '?data=' + encAll);
+      const jAll = await rAll.json();
+      if (jAll.status === 200) { success++; _saveQueue(getQueue().filter(x => x._queueId !== item._queueId)); }
     } catch {}
   }
   updateQueueBadge(); renderQueueList();
@@ -192,14 +196,13 @@ async function doSubmit(data, onSuccess) {
   }, 300);
 
   try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
+    // Pakai GET ?data= (pola TaniMap) — tidak ada CORS issue
+    const encoded = encodeURIComponent(JSON.stringify(data));
+    const res = await fetch(url + '?data=' + encoded);
     clearInterval(interval);
     if (fill) fill.style.width = '100%';
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (json.status !== 200) throw new Error(json.message || 'Server error');
     showToast('✅ Data berhasil dikirim!', 't-success');
     clearDraft();
     if (onSuccess) setTimeout(onSuccess, 1500);
