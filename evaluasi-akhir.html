@@ -109,11 +109,14 @@ let ynState = {};
 let tujuanDariRencana = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-  populateWorkerSelect(document.getElementById('cbrWorker'));
-  document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-  updateStatusBar(); updateQueueBadge();
-  const draft = loadDraftLocal();
-  if (draft) { restoreForm(draft); showToast('Draft sebelumnya dimuat','warning'); }
+  initChildrenData(() => {
+    populateWorkerSelect(document.getElementById('cbrWorker'));
+    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+    const draft = loadDraftLocal();
+    if (draft) { restoreForm(draft); showToast('Draft sebelumnya dimuat','warning'); }
+  });
+  updateStatusBar();
+  updateQueueBadge();
 });
 
 function onWorkerChange() {
@@ -247,22 +250,6 @@ function handleDraft(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '
 function handleSubmit(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'error');return;}doSubmit(d,doReset);}
 function doReset(){closeConfirm();localStorage.removeItem(DRAFT_KEY);document.getElementById('cbrWorker').value='';const a=document.getElementById('namaAnak');a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';a.disabled=true;document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];buildEvalSections([]);ynState={};window.scrollTo(0,0);showToast('Form dikosongkan','');}
 
-function addToQueue(data){const q=JSON.parse(localStorage.getItem('ben_queue_eval_akhir')||'[]');data._queueId=Date.now();q.push(data);localStorage.setItem('ben_queue_eval_akhir',JSON.stringify(q));updateQueueBadge();}
-function getQueue(){return JSON.parse(localStorage.getItem('ben_queue_eval_akhir')||'[]');}
-function updateQueueBadge(){const q=getQueue(),b=document.getElementById('queueBadge'),c=document.getElementById('queueCount');if(b&&c){b.classList.toggle('visible',q.length>0);c.textContent=q.length;}}
-function openQueueModal(){document.getElementById('queueModal').classList.add('open');renderQueueList();}
-function renderQueueList(){const q=getQueue(),l=document.getElementById('queueList');if(!l)return;if(!q.length){l.innerHTML='<div class="empty-queue">Tidak ada antrian 🎉</div>';return;}l.innerHTML=q.map(i=>`<div class="queue-item"><div class="queue-item-info"><div class="queue-item-name">${i.namaAnakLabel||'—'}</div><div class="queue-item-meta">${i.cbrWorkerLabel||''}</div></div><button class="btn-q-submit" onclick="submitQueueItem(${i._queueId})">Kirim</button><button class="btn-q-delete" onclick="deleteQueueItem(${i._queueId})">Hapus</button></div>`).join('');}
-async function submitQueueItem(id){let q=getQueue(),item=q.find(x=>x._queueId===id);if(!item)return;try{const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});if(!r.ok)throw 0;localStorage.setItem('ben_queue_eval_akhir',JSON.stringify(q.filter(x=>x._queueId!==id)));updateQueueBadge();renderQueueList();showToast('✅ Terkirim!','success');}catch{showToast('Gagal','error');}}
-function deleteQueueItem(id){localStorage.setItem('ben_queue_eval_akhir',JSON.stringify(getQueue().filter(x=>x._queueId!==id)));updateQueueBadge();renderQueueList();}
-async function submitAllQueue(){const q=getQueue();let ok=0;for(const item of q){try{const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});if(r.ok){ok++;localStorage.setItem('ben_queue_eval_akhir',JSON.stringify(getQueue().filter(x=>x._queueId!==item._queueId)));}}catch{}}updateQueueBadge();renderQueueList();showToast(`✅ ${ok}/${q.length} terkirim`,'success');}
-document.getElementById('queueModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
-
-let _t;function showToast(m,t=''){const el=document.getElementById('toast');el.textContent=m;el.className='toast '+t+' show';clearTimeout(_t);_t=setTimeout(()=>{el.className='toast';},3200);}
-function toggleSection(id){const b=document.getElementById('body-'+id),c=document.getElementById('chevron-'+id);if(!b||!c)return;const o=b.classList.toggle('open');c.classList.toggle('open',o);}
-function updateStatusBar(){const d=document.getElementById('statusDot'),t=document.getElementById('statusText');if(!d)return;if(navigator.onLine){d.className='status-dot';t.textContent='Online — siap kirim data';}else{d.className='status-dot offline';t.textContent='Offline — data ke antrian';}}
-function confirmReset(){document.getElementById('confirmOverlay').classList.add('open');}
-function closeConfirm(){document.getElementById('confirmOverlay').classList.remove('open');}
-window.addEventListener('online',updateStatusBar);window.addEventListener('offline',updateStatusBar);
 </script>
 <script>window.BEN_ACTIVE_NAV = "nav-akhir";</script>
 <script src="assets/js/nav.js"></script>
