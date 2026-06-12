@@ -179,6 +179,31 @@
         <select id="namaAnak" disabled onchange="onAnakChange()">
           <option value="">— Pilih CBR Worker dulu —</option>
         </select>
+        <div id="addAnakRow" style="display:none;margin-top:8px;">
+          <button type="button" onclick="showAddAnakForm()" style="
+            width:100%;padding:10px;border:2px dashed #b8dfc9;border-radius:8px;
+            background:#e8f5ee;color:#1a5c3a;font-size:13px;font-weight:700;
+            cursor:pointer;font-family:inherit;">
+            ＋ Tambah Anak Baru ke Daftar
+          </button>
+        </div>
+        <div id="addAnakForm" style="display:none;margin-top:10px;padding:12px;background:#e8f5ee;border-radius:8px;border:1.5px solid #b8dfc9;">
+          <div style="font-size:13px;font-weight:700;color:#1a5c3a;margin-bottom:8px;">Tambah Anak Baru</div>
+          <input type="text" id="newAnakName" placeholder="Nama lengkap anak baru…"
+            style="width:100%;padding:10px 12px;border:1.5px solid #b8dfc9;border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:8px;">
+          <div style="display:flex;gap:8px;">
+            <button type="button" onclick="submitNewAnak()" style="
+              flex:1;padding:10px;background:#1a5c3a;color:white;border:none;
+              border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
+              ✓ Simpan
+            </button>
+            <button type="button" onclick="hideAddAnakForm()" style="
+              padding:10px 14px;background:#d4e8db;color:#3d5c4a;border:none;
+              border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
+              Batal
+            </button>
+          </div>
+        </div>
       </div>
       <div class="field">
         <label>Tanggal Perencanaan <span class="req">*</span></label>
@@ -321,12 +346,14 @@ function getAllDraftKeys() {
 
 // ── INIT ─────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  populateWorkerSelect(document.getElementById('cbrWorker'));
+  initChildrenData(() => {
+    populateWorkerSelect(document.getElementById('cbrWorker'));
+    renderDraftManager();
+  });
   document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-  // Default 2 tujuan
   addTujuan(); addTujuan();
-  updateStatusBar(); updateQueueBadge();
-  renderDraftManager();
+  updateStatusBar();
+  updateQueueBadge();
 });
 
 // ── WORKER / ANAK ─────────────────────────────────────────────────
@@ -334,6 +361,51 @@ function onWorkerChange() {
   const workerEl = document.getElementById('cbrWorker');
   const anakEl   = document.getElementById('namaAnak');
   populateChildSelect(workerEl.value, anakEl);
+  // Tampilkan tombol anak baru jika worker dipilih
+  const addRow = document.getElementById('addAnakRow');
+  if (addRow) addRow.style.display = workerEl.value ? 'block' : 'none';
+  hideAddAnakForm();
+}
+
+function showAddAnakForm() {
+  document.getElementById('addAnakForm').style.display = 'block';
+  document.getElementById('addAnakRow').style.display  = 'none';
+  document.getElementById('newAnakName').focus();
+}
+function hideAddAnakForm() {
+  const f = document.getElementById('addAnakForm');
+  const r = document.getElementById('addAnakRow');
+  const w = document.getElementById('cbrWorker');
+  if (f) f.style.display = 'none';
+  if (r) r.style.display = w?.value ? 'block' : 'none';
+  const inp = document.getElementById('newAnakName');
+  if (inp) inp.value = '';
+}
+
+async function submitNewAnak() {
+  const workerEl = document.getElementById('cbrWorker');
+  const namaEl   = document.getElementById('newAnakName');
+  const nama     = namaEl.value.trim();
+  if (!workerEl.value) { showToast('Pilih CBR Worker dulu', 'error'); return; }
+  if (!nama)           { showToast('Nama anak tidak boleh kosong', 'error'); return; }
+  if (!navigator.onLine) { showToast('Perlu koneksi untuk tambah anak baru', 'error'); return; }
+
+  const workerLabel = workerEl.options[workerEl.selectedIndex].text;
+  showToast('Menyimpan…', '');
+
+  const result = await tambahAnakBaru(workerEl.value, workerLabel, nama);
+  if (result.ok) {
+    // Refresh dropdown dan pilih anak baru
+    populateChildSelect(workerEl.value, document.getElementById('namaAnak'));
+    setTimeout(() => {
+      document.getElementById('namaAnak').value = result.value;
+      onAnakChange();
+    }, 100);
+    hideAddAnakForm();
+    showToast('✅ Anak baru berhasil ditambahkan!', 'success');
+  } else {
+    showToast('Gagal: ' + result.message, 'error');
+  }
 }
 function onAnakChange() {
   // Auto-load draft jika ada untuk anak ini
