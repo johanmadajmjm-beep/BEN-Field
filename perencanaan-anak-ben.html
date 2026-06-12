@@ -4,123 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#1a5c3a">
+<meta name="theme-color" content="#14532D">
 <title>Perencanaan Anak — BEN</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/shared.css">
-<style>
-.tujuan-block {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 12px;
-  overflow: hidden;
-}
-.tujuan-block-header {
-  background: var(--green-mid);
-  color: white;
-  padding: 11px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-}
-.tujuan-block-num {
-  width:24px;height:24px;
-  background:rgba(255,255,255,0.2);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;flex-shrink:0;
-}
-.tujuan-block-title { flex:1;font-size:13px;font-weight:700; }
-.tujuan-block-preview { font-size:11px;opacity:0.8;font-weight:400;max-width:140px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis; }
-.tujuan-block-body { padding:14px;display:none;background:#fff; }
-.tujuan-block-body.open { display:block; }
-.btn-remove-tujuan {
-  background:rgba(255,255,255,0.15);
-  border:none;color:white;
-  width:26px;height:26px;border-radius:50%;
-  font-size:14px;cursor:pointer;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.btn-add-tujuan {
-  width:100%;padding:13px;
-  background:var(--green-pale);
-  border:2px dashed var(--green-border);
-  border-radius:var(--radius-sm);
-  color:var(--green-mid);
-  font-size:14px;font-weight:700;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  transition:all 0.15s;
-}
-.btn-add-tujuan:hover{background:var(--green-border);}
-
-/* Draft Manager */
-.draft-manager {
-  background:var(--card);
-  border-radius:var(--radius);
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  margin-bottom:14px;
-  overflow:hidden;
-}
-.draft-manager-header {
-  background:#f0f7f4;
-  border-bottom:1px solid var(--border);
-  padding:12px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.draft-manager-title { font-size:14px;font-weight:700;color:var(--text); }
-.draft-count-badge {
-  background:var(--green-deep);color:white;
-  font-size:11px;font-weight:700;
-  padding:3px 9px;border-radius:12px;
-}
-.draft-list { padding:12px 16px; }
-.draft-item {
-  border:1.5px solid var(--border);
-  border-radius:var(--radius-sm);
-  padding:12px 14px;
-  margin-bottom:10px;
-  cursor:pointer;
-  transition:all 0.15s;
-  position:relative;
-}
-.draft-item:last-child{margin-bottom:0;}
-.draft-item.selected{border-color:var(--green-mid);background:var(--green-pale);}
-.draft-item-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
-.draft-item-meta{font-size:11px;color:var(--text-muted);}
-.draft-item-actions{display:flex;gap:8px;margin-top:10px;}
-.btn-draft-load{
-  flex:1;padding:8px;border:none;border-radius:6px;
-  background:var(--green-deep);color:white;
-  font-size:12px;font-weight:700;cursor:pointer;
-  font-family:'Plus Jakarta Sans',sans-serif;
-}
-.btn-draft-delete{
-  padding:8px 12px;border:none;border-radius:6px;
-  background:var(--red-light);color:var(--red);
-  font-size:12px;font-weight:700;cursor:pointer;
-  font-family:'Plus Jakarta Sans',sans-serif;
-}
-.btn-draft-submit{
-  flex:1;padding:8px;border:none;border-radius:6px;
-  background:var(--amber);color:white;
-  font-size:12px;font-weight:700;cursor:pointer;
-  font-family:'Plus Jakarta Sans',sans-serif;
-}
-.no-draft{text-align:center;padding:20px;color:var(--text-muted);font-size:13px;}
-
-.abc-box{
-  background:var(--amber-light);border:1.5px solid var(--amber-border);
-  border-radius:var(--radius-sm);padding:10px 12px;
-  margin-bottom:8px;font-size:12px;color:#7a4a10;line-height:1.6;
-}
-.abc-box strong{color:#5a3008;}
-</style>
 </head>
 <body>
 <script>
@@ -128,20 +17,17 @@
   window.BEN_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCx4CiGyxXRj01nP8v8W-2D9livH1Zk9r_uuCx2v4WCKIYJ-dBlugpvoYUE1ymw98a/exec';
 </script>
 
-<!-- HEADER -->
 <div class="app-header">
-  <div class="logo-wrap">
-    <div class="logo-icon">📋</div>
-    <div>
-      <div class="sub">Program BEN — Manggarai</div>
-      <h1>Perencanaan Anak</h1>
-    </div>
+  <div class="header-icon">📋</div>
+  <div class="header-text">
+    <div class="header-sub">Program BEN — Manggarai</div>
+    <div class="header-title">Perencanaan Anak</div>
   </div>
-  <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
-    <span>📤</span><span id="queueCount">0</span> antrian
+  <div class="header-badge" id="queueBadge" onclick="openQueueModal()">
+    <span class="dot"></span><span id="queueCount">0</span> antrian
   </div>
 </div>
-<div class="status-bar">
+<div class="status-pill">
   <div class="status-dot" id="statusDot"></div>
   <span id="statusText">Memeriksa koneksi…</span>
 </div>
@@ -149,120 +35,123 @@
 <div class="main">
 
   <!-- DRAFT MANAGER -->
-  <div class="draft-manager" id="draftManager">
-    <div class="draft-manager-header" onclick="toggleDraftManager()">
-      <div class="draft-manager-title">📁 Draft Tersimpan</div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div class="draft-count-badge" id="draftCountBadge">0</div>
-        <span style="color:var(--text-muted);font-size:12px;" id="draftChevron">▼</span>
+  <div class="draft-manager">
+    <div class="draft-manager-hdr" id="draftMgrHdr" onclick="toggleDraftMgr()">
+      <div class="draft-manager-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        Draft Tersimpan
+        <span class="draft-count" id="draftCountBadge">0</span>
       </div>
+      <svg id="draftChev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2.5" style="transition:transform 0.2s;flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div id="draftManagerBody" style="display:none;">
-      <div class="draft-list" id="draftList"></div>
+    <div class="draft-body" id="draftBody">
+      <div id="draftList"></div>
     </div>
   </div>
 
   <!-- SECTION 1: IDENTITAS -->
-  <div class="section-card">
-    <div class="section-header" onclick="toggleSection('s1')">
-      <div class="section-num">1</div>
-      <div class="section-title">Benef/Dampingan <div class="section-sub">Identitas kunjungan</div></div>
-      <div class="chevron open" id="chevron-s1">▼</div>
+  <div class="s-card">
+    <div class="s-header open" id="shdr-s1" onclick="toggleSection('s1')">
+      <div class="s-step">1</div>
+      <div class="s-info">
+        <div class="s-title">Benef / Dampingan</div>
+        <div class="s-sub">Identitas kunjungan</div>
+      </div>
+      <svg class="s-chevron open" id="schev-s1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="section-body open" id="body-s1">
+    <div class="s-body open" id="sbody-s1">
       <div class="field">
-        <label>CBR Worker <span class="req">*</span></label>
+        <label class="field-label">CBR Worker <span class="req">*</span></label>
         <select id="cbrWorker" onchange="onWorkerChange()"></select>
       </div>
       <div class="field">
-        <label>Nama Anak <span class="req">*</span></label>
+        <label class="field-label">Nama Anak <span class="req">*</span></label>
         <select id="namaAnak" disabled onchange="onAnakChange()">
           <option value="">— Pilih CBR Worker dulu —</option>
         </select>
         <div id="addAnakRow" style="display:none;margin-top:8px;">
-          <button type="button" onclick="showAddAnakForm()" style="
-            width:100%;padding:10px;border:2px dashed #b8dfc9;border-radius:8px;
-            background:#e8f5ee;color:#1a5c3a;font-size:13px;font-weight:700;
-            cursor:pointer;font-family:inherit;">
-            ＋ Tambah Anak Baru ke Daftar
+          <button type="button" onclick="showAddAnakForm()" class="btn-add" style="border-radius:10px;padding:10px;font-size:13px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Anak Baru ke Daftar
           </button>
         </div>
-        <div id="addAnakForm" style="display:none;margin-top:10px;padding:12px;background:#e8f5ee;border-radius:8px;border:1.5px solid #b8dfc9;">
-          <div style="font-size:13px;font-weight:700;color:#1a5c3a;margin-bottom:8px;">Tambah Anak Baru</div>
-          <input type="text" id="newAnakName" placeholder="Nama lengkap anak baru…"
-            style="width:100%;padding:10px 12px;border:1.5px solid #b8dfc9;border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:8px;">
+        <div id="addAnakForm" style="display:none;margin-top:10px;padding:14px;background:var(--c-green-50);border-radius:12px;border:1.5px solid #BBF7D0;">
+          <div style="font-size:13px;font-weight:700;color:var(--c-green-800);margin-bottom:10px;">Tambah Anak Baru</div>
+          <input type="text" id="newAnakName" placeholder="Nama lengkap anak baru…" style="margin-bottom:10px;">
           <div style="display:flex;gap:8px;">
-            <button type="button" onclick="submitNewAnak()" style="
-              flex:1;padding:10px;background:#1a5c3a;color:white;border:none;
-              border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
-              ✓ Simpan
-            </button>
-            <button type="button" onclick="hideAddAnakForm()" style="
-              padding:10px 14px;background:#d4e8db;color:#3d5c4a;border:none;
-              border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
-              Batal
-            </button>
+            <button type="button" onclick="submitNewAnak()" class="btn btn-primary" style="flex:1;padding:10px;font-size:13px;">✓ Simpan</button>
+            <button type="button" onclick="hideAddAnakForm()" class="btn btn-secondary" style="padding:10px 14px;font-size:13px;">Batal</button>
           </div>
         </div>
       </div>
       <div class="field">
-        <label>Tanggal Perencanaan <span class="req">*</span></label>
+        <label class="field-label">Tanggal Perencanaan <span class="req">*</span></label>
         <input type="date" id="tanggal">
       </div>
     </div>
   </div>
 
   <!-- SECTION 2: KESULITAN -->
-  <div class="section-card">
-    <div class="section-header" onclick="toggleSection('s2')">
-      <div class="section-num">2</div>
-      <div class="section-title">Kesulitan <div class="section-sub">Identifikasi prioritas</div></div>
-      <div class="chevron" id="chevron-s2">▼</div>
+  <div class="s-card">
+    <div class="s-header" id="shdr-s2" onclick="toggleSection('s2')">
+      <div class="s-step">2</div>
+      <div class="s-info">
+        <div class="s-title">Kesulitan</div>
+        <div class="s-sub">Identifikasi prioritas</div>
+      </div>
+      <svg class="s-chevron" id="schev-s2" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="section-body" id="body-s2">
+    <div class="s-body" id="sbody-s2">
       <div class="field">
-        <label>Kesulitan menurut Pengasuh/Anak</label>
-        <textarea id="kesulitanPengasuh" rows="3" placeholder="Tuliskan kesulitan yang diprioritaskan menurut pengasuh atau anak…"></textarea>
+        <label class="field-label">Menurut Pengasuh / Anak</label>
+        <textarea id="kesulitanPengasuh" rows="3" placeholder="Kesulitan yang diprioritaskan menurut pengasuh atau anak…"></textarea>
       </div>
       <div class="field">
-        <label>Kesulitan menurut Pekerja Lapangan
-          <span class="hint">Jika berbeda, diskusikan bersama pengasuh</span>
+        <label class="field-label">Menurut Pekerja Lapangan
+          <span class="field-hint">Jika berbeda, diskusikan bersama pengasuh</span>
         </label>
-        <textarea id="kesulitanPekerja" rows="3" placeholder="Tuliskan kesulitan menurut pekerja lapangan…"></textarea>
+        <textarea id="kesulitanPekerja" rows="3" placeholder="Kesulitan menurut pekerja lapangan…"></textarea>
       </div>
       <div class="field">
-        <label>Kesepakatan Kesulitan Prioritas</label>
-        <textarea id="kesepakatan" rows="3" placeholder="Tuliskan kesepakatan kesulitan yang menjadi prioritas…"></textarea>
+        <label class="field-label">Kesepakatan Prioritas</label>
+        <textarea id="kesepakatan" rows="3" placeholder="Kesulitan yang menjadi prioritas bersama…"></textarea>
       </div>
     </div>
   </div>
 
-  <!-- SECTION 3: TUJUAN (DYNAMIC) -->
-  <div class="section-card">
-    <div class="section-header" onclick="toggleSection('s3')">
-      <div class="section-num">3</div>
-      <div class="section-title">Tujuan <div class="section-sub">Fokus 1–3 bulan ke depan</div></div>
-      <div class="chevron" id="chevron-s3">▼</div>
+  <!-- SECTION 3: TUJUAN -->
+  <div class="s-card">
+    <div class="s-header" id="shdr-s3" onclick="toggleSection('s3')">
+      <div class="s-step">3</div>
+      <div class="s-info">
+        <div class="s-title">Tujuan</div>
+        <div class="s-sub" id="tujuanCountLabel">Fokus 1–3 bulan ke depan</div>
+      </div>
+      <svg class="s-chevron" id="schev-s3" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="section-body" id="body-s3">
+    <div class="s-body" id="sbody-s3">
       <div id="tujuanList"></div>
-      <button class="btn-add-tujuan" onclick="addTujuan()">
-        ＋ Tambah Tujuan
+      <button class="btn-add" onclick="addTujuan()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Tambah Tujuan
       </button>
     </div>
   </div>
 
   <!-- SECTION 4: DOKUMENTASI -->
-  <div class="section-card">
-    <div class="section-header" style="background:var(--text-mid);" onclick="toggleSection('s4')">
-      <div class="section-num">4</div>
-      <div class="section-title">Dokumentasi <div class="section-sub">Foto & Lokasi</div></div>
-      <div class="chevron" id="chevron-s4">▼</div>
+  <div class="s-card">
+    <div class="s-header" id="shdr-s4" onclick="toggleSection('s4')">
+      <div class="s-step gray">4</div>
+      <div class="s-info">
+        <div class="s-title">Dokumentasi</div>
+        <div class="s-sub">Foto & Lokasi GPS</div>
+      </div>
+      <svg class="s-chevron" id="schev-s4" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="section-body" id="body-s4">
+    <div class="s-body" id="sbody-s4">
       <div class="field">
-        <label>Foto</label>
-        <div class="foto-grid" id="fotoGrid">
+        <label class="field-label">Foto</label>
+        <div class="foto-grid">
           <div class="foto-slot" id="slot-0" onclick="triggerPhoto(0)">
             <div class="slot-icon">📷</div>
             <div class="slot-label">Anak/<br>Remaja</div>
@@ -282,44 +171,57 @@
       </div>
       <div class="divider"></div>
       <div class="field">
-        <label>Lokasi Penyusunan Rencana</label>
+        <label class="field-label">Lokasi GPS</label>
         <div class="gps-row">
-          <div class="gps-display" id="gpsDisplay"><span>📍</span><span id="gpsText">Belum diambil</span></div>
-          <button class="btn-gps" id="btnGps" onclick="getLocation()"><span>🎯</span> Ambil GPS</button>
+          <div class="gps-display" id="gpsDisplay">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 00-8 8c0 5.25 8 14 8 14s8-8.75 8-14a8 8 0 00-8-8z"/></svg>
+            <span id="gpsText">Belum diambil</span>
+          </div>
+          <button class="btn-gps" id="btnGps" onclick="getLocation()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            Ambil GPS
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-wrap" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
 
-  <div class="action-row">
-    <button class="btn btn-draft" onclick="handleSaveDraft()">💾 Simpan Draft</button>
-    <button class="btn btn-submit" id="btnSubmit" onclick="handleSubmit()">📤 Kirim ke Server</button>
+  <div class="action-bar">
+    <button class="btn btn-secondary" onclick="handleSaveDraft()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Simpan Draft
+    </button>
+    <button class="btn btn-primary" id="btnSubmit" onclick="handleSubmit()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Kirim ke Server
+    </button>
   </div>
-  <div class="action-row" style="margin-bottom:32px;">
-    <button class="btn btn-reset" onclick="confirmReset()">✏️ Form Baru / Reset</button>
+  <div class="action-bar" style="margin-bottom:0;">
+    <button class="btn btn-danger" onclick="confirmReset()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+      Form Baru / Reset
+    </button>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- QUEUE MODAL -->
 <div class="modal-overlay" id="queueModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-title">📤 Antrian Pengiriman</div>
+    <div class="modal-title">Antrian Pengiriman</div>
     <div id="queueList"></div>
-    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
+    <button class="btn btn-primary" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
   </div>
 </div>
 
-<!-- CONFIRM -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
-    <h3>⚠️ Reset Form?</h3>
-    <p>Data yang belum disimpan sebagai draft akan hilang.</p>
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">Reset Form?</div>
+    <div class="confirm-desc">Data yang belum disimpan sebagai draft akan hilang.</div>
     <div class="confirm-btns">
       <button class="btn-cancel-c" onclick="closeConfirm()">Batal</button>
       <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
@@ -331,528 +233,276 @@
 <script src="assets/js/shared.js"></script>
 <script>
 // ── STATE ────────────────────────────────────────────────────────
-let photos       = [null, null, null];
-let gpsData      = null;
-let tujuanCount  = 0;
-let tujuanIds    = []; // array of unique IDs
+let photos=[null,null,null], gpsData=null, tujuanCount=0, tujuanIds=[];
 
-// Draft key per anak: ben_draft_perencanaan_{namaAnakValue}
-function draftKey(anakValue) {
-  return 'ben_draft_perencanaan_' + (anakValue || '_unsaved');
-}
-function getAllDraftKeys() {
-  return Object.keys(localStorage).filter(k => k.startsWith('ben_draft_perencanaan_'));
-}
+function draftKey(v){ return 'ben_draft_perencanaan_'+(v||'_unsaved'); }
+function getAllDraftKeys(){ return Object.keys(localStorage).filter(k=>k.startsWith('ben_draft_perencanaan_')); }
 
 // ── INIT ─────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  initChildrenData(() => {
+document.addEventListener('DOMContentLoaded',()=>{
+  initChildrenData(()=>{
     populateWorkerSelect(document.getElementById('cbrWorker'));
     renderDraftManager();
   });
-  document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+  document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];
   addTujuan(); addTujuan();
-  updateStatusBar();
-  updateQueueBadge();
+  updateStatusBar(); updateQueueBadge();
 });
 
+// ── SECTION TOGGLE ────────────────────────────────────────────────
+
 // ── WORKER / ANAK ─────────────────────────────────────────────────
-function onWorkerChange() {
-  const workerEl = document.getElementById('cbrWorker');
-  const anakEl   = document.getElementById('namaAnak');
-  populateChildSelect(workerEl.value, anakEl);
-  // Tampilkan tombol anak baru jika worker dipilih
-  const addRow = document.getElementById('addAnakRow');
-  if (addRow) addRow.style.display = workerEl.value ? 'block' : 'none';
+function onWorkerChange(){
+  const w=document.getElementById('cbrWorker');
+  const a=document.getElementById('namaAnak');
+  populateChildSelect(w.value,a);
+  const row=document.getElementById('addAnakRow');
+  if(row) row.style.display=w.value?'block':'none';
   hideAddAnakForm();
 }
-
-function showAddAnakForm() {
-  document.getElementById('addAnakForm').style.display = 'block';
-  document.getElementById('addAnakRow').style.display  = 'none';
-  document.getElementById('newAnakName').focus();
+function onAnakChange(){
+  const v=document.getElementById('namaAnak').value;
+  if(!v) return;
+  const raw=localStorage.getItem(draftKey(v));
+  if(raw){ try{const d=JSON.parse(raw);restoreForm(d);showToast('Draft dimuat otomatis','t-warning');}catch{} }
 }
-function hideAddAnakForm() {
-  const f = document.getElementById('addAnakForm');
-  const r = document.getElementById('addAnakRow');
-  const w = document.getElementById('cbrWorker');
-  if (f) f.style.display = 'none';
-  if (r) r.style.display = w?.value ? 'block' : 'none';
-  const inp = document.getElementById('newAnakName');
-  if (inp) inp.value = '';
-}
-
-async function submitNewAnak() {
-  const workerEl = document.getElementById('cbrWorker');
-  const namaEl   = document.getElementById('newAnakName');
-  const nama     = namaEl.value.trim();
-  if (!workerEl.value) { showToast('Pilih CBR Worker dulu', 'error'); return; }
-  if (!nama)           { showToast('Nama anak tidak boleh kosong', 'error'); return; }
-  if (!navigator.onLine) { showToast('Perlu koneksi untuk tambah anak baru', 'error'); return; }
-
-  const workerLabel = workerEl.options[workerEl.selectedIndex].text;
-  showToast('Menyimpan…', '');
-
-  const result = await tambahAnakBaru(workerEl.value, workerLabel, nama);
-  if (result.ok) {
-    // Refresh dropdown dan pilih anak baru
-    populateChildSelect(workerEl.value, document.getElementById('namaAnak'));
-    setTimeout(() => {
-      document.getElementById('namaAnak').value = result.value;
-      onAnakChange();
-    }, 100);
-    hideAddAnakForm();
-    showToast('✅ Anak baru berhasil ditambahkan!', 'success');
-  } else {
-    showToast('Gagal: ' + result.message, 'error');
-  }
-}
-function onAnakChange() {
-  // Auto-load draft jika ada untuk anak ini
-  const anakVal = document.getElementById('namaAnak').value;
-  if (!anakVal) return;
-  const key  = draftKey(anakVal);
-  const raw  = localStorage.getItem(key);
-  if (raw) {
-    try {
-      const data = JSON.parse(raw);
-      const workerLabel = document.getElementById('cbrWorker').options[document.getElementById('cbrWorker').selectedIndex]?.text || '';
-      const anakLabel   = document.getElementById('namaAnak').options[document.getElementById('namaAnak').selectedIndex]?.text || '';
-      showToast(`Draft "${anakLabel}" ditemukan — dimuat otomatis`, 'warning');
-      restoreForm(data);
-    } catch {}
-  }
+function showAddAnakForm(){ document.getElementById('addAnakForm').style.display='block'; document.getElementById('addAnakRow').style.display='none'; document.getElementById('newAnakName').focus(); }
+function hideAddAnakForm(){ const f=document.getElementById('addAnakForm'),r=document.getElementById('addAnakRow'),w=document.getElementById('cbrWorker'); if(f)f.style.display='none'; if(r)r.style.display=w?.value?'block':'none'; const i=document.getElementById('newAnakName'); if(i)i.value=''; }
+async function submitNewAnak(){
+  const w=document.getElementById('cbrWorker'); const n=document.getElementById('newAnakName').value.trim();
+  if(!w.value){showToast('Pilih CBR Worker dulu','t-error');return;}
+  if(!n){showToast('Nama tidak boleh kosong','t-error');return;}
+  if(!navigator.onLine){showToast('Butuh koneksi untuk tambah anak baru','t-error');return;}
+  const wLabel=w.options[w.selectedIndex].text;
+  showToast('Menyimpan…','');
+  const result=await tambahAnakBaru(w.value,wLabel,n);
+  if(result.ok){ populateChildSelect(w.value,document.getElementById('namaAnak')); setTimeout(()=>{document.getElementById('namaAnak').value=result.value;onAnakChange();},100); hideAddAnakForm(); showToast('Anak baru berhasil ditambahkan','t-success'); }
+  else showToast('Gagal: '+result.message,'t-error');
 }
 
-// ── TUJUAN DYNAMIC ────────────────────────────────────────────────
-function addTujuan(data) {
+// ── TUJUAN ────────────────────────────────────────────────────────
+function addTujuan(data){
   tujuanCount++;
-  const id  = 'tj_' + Date.now() + '_' + tujuanCount;
+  const id='tj_'+Date.now()+'_'+tujuanCount;
   tujuanIds.push(id);
-  const n   = tujuanIds.length;
-
-  const block = document.createElement('div');
-  block.className = 'tujuan-block';
-  block.id = 'block_' + id;
-  block.innerHTML = `
-    <div class="tujuan-block-header" onclick="toggleTujuanBlock('${id}')">
-      <div class="tujuan-block-num">${n}</div>
+  const n=tujuanIds.length;
+  const block=document.createElement('div');
+  block.className='tujuan-block'; block.id='block_'+id;
+  block.innerHTML=`
+    <div class="tujuan-block-hdr" onclick="toggleTujuan('${id}')">
+      <div class="tujuan-num">${n}</div>
       <div style="flex:1">
-        <div class="tujuan-block-title">Tujuan ${n}</div>
-        <div class="tujuan-block-preview" id="prev_${id}">Belum diisi</div>
+        <div class="tujuan-title">Tujuan ${n}</div>
+        <div class="tujuan-preview" id="prev_${id}">Belum diisi</div>
       </div>
-      <button class="btn-remove-tujuan" onclick="removeTujuan('${id}',event)" title="Hapus tujuan ini">✕</button>
-      <span style="font-size:11px;opacity:0.7;margin-left:6px;" id="chev_${id}">▼</span>
+      <button class="tujuan-remove" onclick="removeTujuan('${id}',event)">✕</button>
+      <svg class="tujuan-chev open" id="tchev_${id}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="tujuan-block-body open" id="body_${id}">
-      <div class="field">
-        <label>Tujuan ${n}</label>
-        <textarea id="tujuan_${id}" rows="2" placeholder="Apa yang ingin difokuskan dalam 1–3 bulan ke depan?"
-          oninput="updateTujuanPreview('${id}')"></textarea>
-      </div>
-      <div class="field">
-        <label>Siapa yang Terlibat</label>
-        <textarea id="terlibat_${id}" rows="2" placeholder="Siapa saja yang terlibat?"></textarea>
-      </div>
-      <div class="field">
-        <label>Apa yang Akan Dilakukan</label>
-        <textarea id="dilakukan_${id}" rows="2" placeholder="Kegiatan yang akan dilakukan…"></textarea>
-      </div>
-      <div class="field">
-        <label>Bagaimana Cara Melaksanakan</label>
-        <textarea id="bagaimana_${id}" rows="2" placeholder="Bagaimana cara melaksanakannya?"></textarea>
-      </div>
-      <div class="field">
-        <label>Dimana Dilaksanakan</label>
-        <input type="text" id="dimana_${id}" placeholder="Lokasi pelaksanaan…">
-      </div>
-      <div class="field">
-        <label>Kapan Dilaksanakan</label>
-        <input type="text" id="kapan_${id}" placeholder="Mis: Januari–Maret 2025, setiap minggu…">
-      </div>
+    <div class="tujuan-body open" id="tbody_${id}">
+      <div class="field"><label class="field-label">Tujuan ${n}</label>
+        <textarea id="tujuan_${id}" rows="2" placeholder="Apa yang ingin difokuskan dalam 1–3 bulan ke depan?" oninput="updateTujuanPreview('${id}')"></textarea></div>
+      <div class="field"><label class="field-label">Siapa yang Terlibat</label>
+        <textarea id="terlibat_${id}" rows="2" placeholder="Siapa saja yang terlibat?"></textarea></div>
+      <div class="field"><label class="field-label">Apa yang Akan Dilakukan</label>
+        <textarea id="dilakukan_${id}" rows="2" placeholder="Kegiatan yang akan dilakukan…"></textarea></div>
+      <div class="field"><label class="field-label">Bagaimana Cara Melaksanakan</label>
+        <textarea id="bagaimana_${id}" rows="2" placeholder="Bagaimana cara melaksanakannya?"></textarea></div>
+      <div class="field"><label class="field-label">Dimana Dilaksanakan</label>
+        <input type="text" id="dimana_${id}" placeholder="Lokasi pelaksanaan…"></div>
+      <div class="field"><label class="field-label">Kapan Dilaksanakan</label>
+        <input type="text" id="kapan_${id}" placeholder="Mis: Januari–Maret 2025, setiap minggu…"></div>
       <div class="divider"></div>
-      <div class="field">
-        <label>Rencana Aksi — Rumus ABC</label>
-        <div class="abc-box">
-          <strong>A</strong> = Antecedent (kondisi awal / pemicu)<br>
-          <strong>B</strong> = Behavior (perilaku yang ingin diubah/ditingkatkan)<br>
+      <div class="field"><label class="field-label">Rencana Aksi — Rumus ABC</label>
+        <div class="info-box amber" style="margin-bottom:10px;">
+          <strong>A</strong> = Antecedent (kondisi awal/pemicu) &nbsp;·&nbsp;
+          <strong>B</strong> = Behavior (perilaku yang ingin diubah) &nbsp;·&nbsp;
           <strong>C</strong> = Consequence (hasil yang diharapkan)
         </div>
-        <textarea id="abc_${id}" rows="3" placeholder="Tuliskan rencana aksi menggunakan panduan ABC…"></textarea>
-      </div>
+        <textarea id="abc_${id}" rows="3" placeholder="Tuliskan rencana aksi menggunakan panduan ABC…"></textarea></div>
     </div>`;
-
   document.getElementById('tujuanList').appendChild(block);
-
-  // Restore data jika ada
-  if (data) {
-    ['tujuan','terlibat','dilakukan','bagaimana','dimana','kapan','abc'].forEach(f => {
-      const el = document.getElementById(`${f}_${id}`);
-      if (el && data[f]) el.value = data[f];
-    });
-    updateTujuanPreview(id);
-  }
-
+  if(data){['tujuan','terlibat','dilakukan','bagaimana','dimana','kapan','abc'].forEach(f=>{const el=document.getElementById(f+'_'+id);if(el&&data[f])el.value=data[f];});updateTujuanPreview(id);}
   renumberTujuan();
 }
-
-function removeTujuan(id, event) {
-  if (event) event.stopPropagation();
-  if (tujuanIds.length <= 1) { showToast('Minimal 1 tujuan harus ada', 'error'); return; }
-  document.getElementById('block_' + id)?.remove();
-  tujuanIds = tujuanIds.filter(x => x !== id);
+function removeTujuan(id,e){
+  e.stopPropagation();
+  if(tujuanIds.length<=1){showToast('Minimal 1 tujuan harus ada','t-error');return;}
+  document.getElementById('block_'+id)?.remove();
+  tujuanIds=tujuanIds.filter(x=>x!==id);
   renumberTujuan();
 }
-
-function renumberTujuan() {
-  tujuanIds.forEach((id, i) => {
-    const n = i + 1;
-    const block = document.getElementById('block_' + id);
-    if (!block) return;
-    block.querySelector('.tujuan-block-num').textContent = n;
-    block.querySelector('.tujuan-block-title').textContent = `Tujuan ${n}`;
-    block.querySelector('label').textContent = `Tujuan ${n}`;
+function renumberTujuan(){
+  tujuanIds.forEach((id,i)=>{
+    const n=i+1;
+    const b=document.getElementById('block_'+id); if(!b) return;
+    b.querySelector('.tujuan-num').textContent=n;
+    b.querySelector('.tujuan-title').textContent='Tujuan '+n;
   });
+  document.getElementById('tujuanCountLabel').textContent=tujuanIds.length+' tujuan';
 }
-
-function toggleTujuanBlock(id) {
-  const body = document.getElementById('body_' + id);
-  const chev = document.getElementById('chev_' + id);
-  const open = body.classList.toggle('open');
-  if (chev) chev.textContent = open ? '▼' : '▶';
+function toggleTujuan(id){
+  const body=document.getElementById('tbody_'+id);
+  const chev=document.getElementById('tchev_'+id);
+  const open=body.classList.toggle('open');
+  chev.classList.toggle('open',open);
 }
-
-function updateTujuanPreview(id) {
-  const val  = document.getElementById('tujuan_' + id)?.value.trim();
-  const prev = document.getElementById('prev_' + id);
-  if (prev) prev.textContent = val ? (val.length > 40 ? val.slice(0,40)+'…' : val) : 'Belum diisi';
+function updateTujuanPreview(id){
+  const v=(document.getElementById('tujuan_'+id)?.value||'').trim();
+  const p=document.getElementById('prev_'+id);
+  if(p) p.textContent=v?(v.length>40?v.slice(0,40)+'…':v):'Belum diisi';
 }
 
 // ── COLLECT ───────────────────────────────────────────────────────
-function collectForm() {
-  const workerEl = document.getElementById('cbrWorker');
-  const anakEl   = document.getElementById('namaAnak');
-  const tujuan   = tujuanIds.map((id, i) => ({
-    nomor:     i + 1,
-    tujuan:    (document.getElementById('tujuan_'+id)?.value||'').trim(),
-    terlibat:  (document.getElementById('terlibat_'+id)?.value||'').trim(),
-    dilakukan: (document.getElementById('dilakukan_'+id)?.value||'').trim(),
-    bagaimana: (document.getElementById('bagaimana_'+id)?.value||'').trim(),
-    dimana:    (document.getElementById('dimana_'+id)?.value||'').trim(),
-    kapan:     (document.getElementById('kapan_'+id)?.value||'').trim(),
-    rencanaABC:(document.getElementById('abc_'+id)?.value||'').trim(),
-  }));
+function collectForm(){
+  const w=document.getElementById('cbrWorker'),a=document.getElementById('namaAnak');
   return {
-    timestamp:       new Date().toISOString(),
-    modul:           'perencanaan',
-    cbrWorkerValue:  workerEl.value,
-    cbrWorkerLabel:  workerEl.options[workerEl.selectedIndex]?.text || '',
-    namaAnakValue:   anakEl.value,
-    namaAnakLabel:   anakEl.options[anakEl.selectedIndex]?.text || '',
-    tanggal:         document.getElementById('tanggal').value,
-    kesulitanPengasuh: (document.getElementById('kesulitanPengasuh').value||'').trim(),
-    kesulitanPekerja:  (document.getElementById('kesulitanPekerja').value||'').trim(),
-    kesepakatan:       (document.getElementById('kesepakatan').value||'').trim(),
-    tujuan,
-    gps:  gpsData,
-    foto: { anak: photos[0], keluarga: photos[1], lingkungan: photos[2] }
+    timestamp:new Date().toISOString(), modul:'perencanaan',
+    cbrWorkerValue:w.value, cbrWorkerLabel:w.options[w.selectedIndex]?.text||'',
+    namaAnakValue:a.value, namaAnakLabel:a.options[a.selectedIndex]?.text||'',
+    tanggal:document.getElementById('tanggal').value,
+    kesulitanPengasuh:(document.getElementById('kesulitanPengasuh').value||'').trim(),
+    kesulitanPekerja:(document.getElementById('kesulitanPekerja').value||'').trim(),
+    kesepakatan:(document.getElementById('kesepakatan').value||'').trim(),
+    tujuan:tujuanIds.map((id,i)=>({
+      nomor:i+1,
+      tujuan:(document.getElementById('tujuan_'+id)?.value||'').trim(),
+      terlibat:(document.getElementById('terlibat_'+id)?.value||'').trim(),
+      dilakukan:(document.getElementById('dilakukan_'+id)?.value||'').trim(),
+      bagaimana:(document.getElementById('bagaimana_'+id)?.value||'').trim(),
+      dimana:(document.getElementById('dimana_'+id)?.value||'').trim(),
+      kapan:(document.getElementById('kapan_'+id)?.value||'').trim(),
+      rencanaABC:(document.getElementById('abc_'+id)?.value||'').trim(),
+    })),
+    gps:gpsData,
+    foto:{anak:photos[0],keluarga:photos[1],lingkungan:photos[2]}
   };
 }
-
-function validateForm(data) {
-  if (!data.cbrWorkerValue) return 'CBR Worker belum dipilih.';
-  if (!data.namaAnakValue)  return 'Nama Anak belum dipilih.';
-  if (!data.tanggal)        return 'Tanggal belum diisi.';
+function validateForm(d){
+  if(!d.cbrWorkerValue) return 'CBR Worker belum dipilih.';
+  if(!d.namaAnakValue)  return 'Nama Anak belum dipilih.';
+  if(!d.tanggal)        return 'Tanggal belum diisi.';
   return null;
 }
 
 // ── DRAFT MANAGER ─────────────────────────────────────────────────
-function handleSaveDraft() {
-  const data = collectForm();
-  const err  = validateForm(data);
-  if (err) { showToast('⚠️ ' + err, 'error'); return; }
-  const key  = draftKey(data.namaAnakValue);
-  localStorage.setItem(key, JSON.stringify(data));
-  renderDraftManager();
-  showToast(`Draft "${data.namaAnakLabel}" tersimpan ✓`, 'success');
+function handleSaveDraft(){
+  const d=collectForm(),e=validateForm(d);
+  if(e){showToast('⚠️ '+e,'t-error');return;}
+  localStorage.setItem(draftKey(d.namaAnakValue),JSON.stringify(d));
+  renderDraftManager(); showToast('Draft "'+d.namaAnakLabel+'" tersimpan','t-success');
 }
-
-function renderDraftManager() {
-  const keys  = getAllDraftKeys();
-  const badge = document.getElementById('draftCountBadge');
-  badge.textContent = keys.length;
-  badge.style.background = keys.length > 0 ? 'var(--green-deep)' : 'var(--text-muted)';
-
-  const list = document.getElementById('draftList');
-  if (keys.length === 0) {
-    list.innerHTML = '<div class="no-draft">Belum ada draft tersimpan</div>';
-    return;
-  }
-  list.innerHTML = keys.map(key => {
-    try {
-      const d = JSON.parse(localStorage.getItem(key));
-      const ts = d.timestamp ? new Date(d.timestamp).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}) : '—';
-      const tujuanCount = (d.tujuan||[]).filter(t=>t.tujuan).length;
-      return `
-        <div class="draft-item" id="draftitem_${key}">
-          <div class="draft-item-name">👤 ${d.namaAnakLabel || '—'}</div>
-          <div class="draft-item-meta">${d.cbrWorkerLabel || ''} · ${ts} · ${tujuanCount} tujuan</div>
-          <div class="draft-item-actions">
-            <button class="btn-draft-load" onclick="loadDraftItem('${key}')">✏️ Edit / Muat</button>
-            <button class="btn-draft-submit" onclick="submitDraftItem('${key}')">📤 Kirim</button>
-            <button class="btn-draft-delete" onclick="deleteDraftItem('${key}')">🗑</button>
-          </div>
-        </div>`;
-    } catch { return ''; }
+function renderDraftManager(){
+  const keys=getAllDraftKeys();
+  const badge=document.getElementById('draftCountBadge');
+  if(badge){badge.textContent=keys.length;badge.style.background=keys.length>0?'var(--c-green-800)':'var(--c-text-soft)';}
+  const list=document.getElementById('draftList');
+  if(!list) return;
+  if(keys.length===0){list.innerHTML='<div class="no-draft">Belum ada draft tersimpan</div>';return;}
+  list.innerHTML=keys.map(key=>{
+    try{
+      const d=JSON.parse(localStorage.getItem(key));
+      const ts=d.timestamp?new Date(d.timestamp).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'—';
+      const tc=(d.tujuan||[]).filter(t=>t.tujuan).length;
+      return `<div class="draft-item">
+        <div class="draft-item-name">👤 ${d.namaAnakLabel||'—'}</div>
+        <div class="draft-item-meta">${d.cbrWorkerLabel||''} · ${ts} · ${tc} tujuan</div>
+        <div class="draft-item-actions">
+          <button class="btn-di-load" onclick="loadDraftItem('${key}')">✏️ Edit / Muat</button>
+          <button class="btn-di-send" onclick="submitDraftItem('${key}')">📤 Kirim</button>
+          <button class="btn-di-del"  onclick="deleteDraftItem('${key}')">🗑</button>
+        </div>
+      </div>`;
+    }catch{return '';}
   }).join('');
 }
-
-function toggleDraftManager() {
-  const body  = document.getElementById('draftManagerBody');
-  const chev  = document.getElementById('draftChevron');
-  const open  = body.style.display === 'none';
-  body.style.display = open ? 'block' : 'none';
-  chev.textContent   = open ? '▲' : '▼';
-  if (open) renderDraftManager();
+function toggleDraftMgr(){
+  const body=document.getElementById('draftBody');
+  const chev=document.getElementById('draftChev');
+  const hdr=document.getElementById('draftMgrHdr');
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);
+  chev.style.transform=open?'rotate(180deg)':'';
+  if(open) renderDraftManager();
 }
-
-function loadDraftItem(key) {
-  try {
-    const data = JSON.parse(localStorage.getItem(key));
-    restoreForm(data);
-    // Close draft manager
-    document.getElementById('draftManagerBody').style.display = 'none';
-    document.getElementById('draftChevron').textContent = '▼';
-    showToast('Draft dimuat — silakan edit', 'success');
-    window.scrollTo(0, 0);
-  } catch { showToast('Gagal muat draft', 'error'); }
+function loadDraftItem(key){
+  try{const d=JSON.parse(localStorage.getItem(key));restoreForm(d);document.getElementById('draftBody').classList.remove('open');document.getElementById('draftMgrHdr').classList.remove('open');document.getElementById('draftChev').style.transform='';showToast('Draft dimuat — silakan edit','t-success');window.scrollTo(0,0);}
+  catch{showToast('Gagal muat draft','t-error');}
 }
-
-function deleteDraftItem(key) {
-  localStorage.removeItem(key);
-  renderDraftManager();
-  showToast('Draft dihapus', '');
-}
-
-async function submitDraftItem(key) {
-  try {
-    const data = JSON.parse(localStorage.getItem(key));
-    const url  = window.BEN_APPS_SCRIPT_URL;
-    if (!isOnline) { showToast('Tidak ada koneksi', 'error'); return; }
-    const res  = await fetch(url, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error();
-    localStorage.removeItem(key);
-    renderDraftManager();
-    showToast('✅ Draft berhasil dikirim!', 'success');
-  } catch { showToast('Gagal kirim — cek koneksi', 'error'); }
+function deleteDraftItem(key){localStorage.removeItem(key);renderDraftManager();showToast('Draft dihapus','');}
+async function submitDraftItem(key){
+  try{const d=JSON.parse(localStorage.getItem(key));if(!navigator.onLine){showToast('Tidak ada koneksi','t-error');return;}
+  const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
+  if(!r.ok) throw new Error();
+  localStorage.removeItem(key);renderDraftManager();showToast('Draft berhasil dikirim','t-success');}
+  catch{showToast('Gagal kirim — cek koneksi','t-error');}
 }
 
 // ── RESTORE ───────────────────────────────────────────────────────
-function restoreForm(data) {
-  if (!data) return;
-  const workerEl = document.getElementById('cbrWorker');
-  const anakEl   = document.getElementById('namaAnak');
-
-  if (data.cbrWorkerValue) {
-    workerEl.value = data.cbrWorkerValue;
-    populateChildSelect(data.cbrWorkerValue, anakEl);
-    setTimeout(() => { if (data.namaAnakValue) anakEl.value = data.namaAnakValue; }, 50);
-  }
-  if (data.tanggal) document.getElementById('tanggal').value = data.tanggal;
-
-  ['kesulitanPengasuh','kesulitanPekerja','kesepakatan'].forEach(f => {
-    const el = document.getElementById(f);
-    if (el && data[f]) el.value = data[f];
-  });
-
-  // Restore tujuan
-  if (data.tujuan && data.tujuan.length > 0) {
-    // Clear existing
-    document.getElementById('tujuanList').innerHTML = '';
-    tujuanIds = []; tujuanCount = 0;
-    data.tujuan.forEach(t => addTujuan(t));
-  }
-
-  // GPS
-  if (data.gps) {
-    gpsData = data.gps;
-    document.getElementById('gpsText').textContent =
-      `${gpsData.lat.toFixed(6)}, ${gpsData.lng.toFixed(6)} (±${gpsData.acc}m)`;
-    document.getElementById('gpsDisplay').className = 'gps-display got-location';
-  }
-
-  // Photos
-  if (data.foto) {
-    const icons  = ['📷','👨‍👩‍👧','🏘️'];
-    const labels = ['Anak/<br>Remaja','Keluarga','Lingkungan'];
-    const keys   = ['anak','keluarga','lingkungan'];
-    keys.forEach((k, i) => {
-      if (!data.foto[k]) return;
-      photos[i] = data.foto[k];
-      const slot = document.getElementById('slot-' + i);
-      slot.classList.add('has-photo');
-      slot.innerHTML = `
-        <img src="${data.foto[k]}" alt="${k}">
-        <button class="remove-btn" onclick="removePhoto(${i},event)">✕</button>
-        <input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;
-      slot.onclick = null;
-    });
-  }
+function restoreForm(d){
+  if(!d) return;
+  const w=document.getElementById('cbrWorker'),a=document.getElementById('namaAnak');
+  if(d.cbrWorkerValue){w.value=d.cbrWorkerValue;populateChildSelect(d.cbrWorkerValue,a);setTimeout(()=>{if(d.namaAnakValue)a.value=d.namaAnakValue;},50);}
+  if(d.tanggal) document.getElementById('tanggal').value=d.tanggal;
+  ['kesulitanPengasuh','kesulitanPekerja','kesepakatan'].forEach(f=>{const el=document.getElementById(f);if(el&&d[f])el.value=d[f];});
+  if(d.tujuan&&d.tujuan.length>0){document.getElementById('tujuanList').innerHTML='';tujuanIds=[];tujuanCount=0;d.tujuan.forEach(t=>addTujuan(t));}
+  if(d.gps){gpsData=d.gps;document.getElementById('gpsText').textContent=`${gpsData.lat.toFixed(6)}, ${gpsData.lng.toFixed(6)} (±${gpsData.acc}m)`;document.getElementById('gpsDisplay').className='gps-display ok';}
+  if(d.foto){const icons=['📷','👨‍👩‍👧','🏘️'],labels=['Anak/<br>Remaja','Keluarga','Lingkungan'],keys=['anak','keluarga','lingkungan'];keys.forEach((k,i)=>{if(!d.foto[k])return;photos[i]=d.foto[k];const slot=document.getElementById('slot-'+i);slot.classList.add('has-photo');slot.innerHTML=`<img src="${d.foto[k]}"><button class="remove-btn" onclick="removePhoto(${i},event)">✕</button><input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;slot.onclick=null;});}
 }
 
 // ── SUBMIT ────────────────────────────────────────────────────────
-async function handleSubmit() {
-  const data = collectForm();
-  const err  = validateForm(data);
-  if (err) { showToast('⚠️ ' + err, 'error'); return; }
-
-  if (!isOnline) {
-    addToQueue(data);
-    showToast('Offline — data masuk antrian ✓', 'warning');
-    return;
-  }
-
-  const btn  = document.getElementById('btnSubmit');
-  const bar  = document.getElementById('progressBar');
-  const fill = document.getElementById('progressFill');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Mengirim…';
-  bar.classList.add('visible');
-
-  let prog = 0;
-  const iv = setInterval(() => { prog = Math.min(prog+8,85); fill.style.width=prog+'%'; }, 300);
-
-  try {
-    const res = await fetch(window.BEN_APPS_SCRIPT_URL, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(data)
-    });
-    clearInterval(iv); fill.style.width='100%';
-    if (!res.ok) throw new Error();
-    // Remove draft if exists
-    const key = draftKey(data.namaAnakValue);
-    localStorage.removeItem(key);
-    renderDraftManager();
-    showToast('✅ Data berhasil dikirim!', 'success');
-    setTimeout(doReset, 1500);
-  } catch {
-    clearInterval(iv);
-    addToQueue(data);
-    showToast('Gagal — data masuk antrian ✓', 'warning');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '📤 Kirim ke Server';
-    setTimeout(() => { bar.classList.remove('visible'); fill.style.width='0%'; }, 1000);
-  }
+async function handleSubmit(){
+  const d=collectForm(),e=validateForm(d);
+  if(e){showToast('⚠️ '+e,'t-error');return;}
+  if(!isOnline){addToQueue(d);showToast('Offline — data masuk antrian','t-warning');return;}
+  const btn=document.getElementById('btnSubmit'),bar=document.getElementById('progressBar'),fill=document.getElementById('progressFill');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Mengirim…';bar.classList.add('visible');
+  let p=0;const iv=setInterval(()=>{p=Math.min(p+8,85);fill.style.width=p+'%';},300);
+  try{
+    const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
+    clearInterval(iv);fill.style.width='100%';
+    if(!r.ok) throw new Error();
+    localStorage.removeItem(draftKey(d.namaAnakValue));renderDraftManager();
+    showToast('Data berhasil dikirim!','t-success');setTimeout(doReset,1500);
+  }catch{clearInterval(iv);addToQueue(d);showToast('Gagal — data masuk antrian','t-warning');}
+  finally{btn.disabled=false;btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Kirim ke Server';setTimeout(()=>{bar.classList.remove('visible');fill.style.width='0%';},1000);}
 }
 
 // ── FOTO ──────────────────────────────────────────────────────────
-const FOTO_ICONS  = ['📷','👨‍👩‍👧','🏘️'];
-const FOTO_LABELS = ['Anak/<br>Remaja','Keluarga','Lingkungan'];
-
-function triggerPhoto(i) { document.getElementById('file-'+i).click(); }
-
-function handlePhoto(i, input) {
-  const file = input.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    photos[i] = e.target.result;
-    const slot = document.getElementById('slot-'+i);
-    slot.classList.add('has-photo');
-    slot.innerHTML = `
-      <img src="${e.target.result}">
-      <button class="remove-btn" onclick="removePhoto(${i},event)">✕</button>
-      <input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;
-    slot.onclick = null;
-  };
-  reader.readAsDataURL(file);
+const FOTO_ICONS=['📷','👨‍👩‍👧','🏘️'],FOTO_LABELS=['Anak/<br>Remaja','Keluarga','Lingkungan'];
+function triggerPhoto(i){document.getElementById('file-'+i).click();}
+function handlePhoto(i,input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();r.onload=e=>{photos[i]=e.target.result;const s=document.getElementById('slot-'+i);s.classList.add('has-photo');s.innerHTML=`<img src="${e.target.result}"><button class="remove-btn" onclick="removePhoto(${i},event)">✕</button><input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;s.onclick=null;};r.readAsDataURL(f);
 }
-
-function removePhoto(i, event) {
-  event.stopPropagation();
-  photos[i] = null;
-  const slot = document.getElementById('slot-'+i);
-  slot.classList.remove('has-photo');
-  slot.innerHTML = `
-    <div class="slot-icon">${FOTO_ICONS[i]}</div>
-    <div class="slot-label">${FOTO_LABELS[i]}</div>
-    <input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;
-  slot.onclick = () => triggerPhoto(i);
-}
+function removePhoto(i,e){e.stopPropagation();photos[i]=null;const s=document.getElementById('slot-'+i);s.classList.remove('has-photo');s.innerHTML=`<div class="slot-icon">${FOTO_ICONS[i]}</div><div class="slot-label">${FOTO_LABELS[i]}</div><input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;s.onclick=()=>triggerPhoto(i);}
 
 // ── GPS ───────────────────────────────────────────────────────────
-function getLocation() {
-  const btn  = document.getElementById('btnGps');
-  const disp = document.getElementById('gpsDisplay');
-  const text = document.getElementById('gpsText');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Mengambil…';
-  text.textContent = 'Mengambil lokasi…';
-
+function getLocation(){
+  const btn=document.getElementById('btnGps'),disp=document.getElementById('gpsDisplay'),txt=document.getElementById('gpsText');
+  btn.disabled=true;btn.innerHTML='<span class="spinner" style="border-top-color:white;"></span> Mengambil…';
   navigator.geolocation.getCurrentPosition(
-    pos => {
-      gpsData = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: Math.round(pos.coords.accuracy) };
-      text.textContent = `${gpsData.lat.toFixed(6)}, ${gpsData.lng.toFixed(6)} (±${gpsData.acc}m)`;
-      disp.className = 'gps-display got-location';
-      btn.disabled = false;
-      btn.innerHTML = '<span>✅</span> Diperbarui';
-      setTimeout(() => { btn.innerHTML = '<span>🎯</span> Perbarui GPS'; }, 2000);
-    },
-    err => {
-      text.textContent = 'Gagal: ' + err.message;
-      disp.className = 'gps-display error';
-      btn.disabled = false;
-      btn.innerHTML = '<span>🎯</span> Coba Lagi';
-    },
-    { enableHighAccuracy: true, timeout: 15000 }
+    pos=>{gpsData={lat:pos.coords.latitude,lng:pos.coords.longitude,acc:Math.round(pos.coords.accuracy)};txt.textContent=`${gpsData.lat.toFixed(6)}, ${gpsData.lng.toFixed(6)} (±${gpsData.acc}m)`;disp.className='gps-display ok';btn.disabled=false;btn.innerHTML='✅ Diperbarui';setTimeout(()=>{btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Perbarui GPS';},2000);},
+    err=>{txt.textContent='Gagal: '+err.message;disp.className='gps-display error';btn.disabled=false;btn.innerHTML='Coba Lagi';},
+    {enableHighAccuracy:true,timeout:15000}
   );
 }
 
 // ── RESET ─────────────────────────────────────────────────────────
-function doReset() {
+function doReset(){
   closeConfirm();
-  document.getElementById('cbrWorker').value = '';
-  const anakEl = document.getElementById('namaAnak');
-  anakEl.innerHTML = '<option value="">— Pilih CBR Worker dulu —</option>';
-  anakEl.disabled = true;
-  document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-  ['kesulitanPengasuh','kesulitanPekerja','kesepakatan'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = '';
-  });
-  // Reset tujuan ke default 2
-  document.getElementById('tujuanList').innerHTML = '';
-  tujuanIds = []; tujuanCount = 0;
-  addTujuan(); addTujuan();
-  // Reset foto
-  photos = [null,null,null];
-  [0,1,2].forEach(i => {
-    const slot = document.getElementById('slot-'+i);
-    slot.classList.remove('has-photo');
-    slot.innerHTML = `
-      <div class="slot-icon">${FOTO_ICONS[i]}</div>
-      <div class="slot-label">${FOTO_LABELS[i]}</div>
-      <input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;
-    slot.onclick = () => triggerPhoto(i);
-  });
-  // Reset GPS
-  gpsData = null;
-  document.getElementById('gpsText').textContent = 'Belum diambil';
-  document.getElementById('gpsDisplay').className = 'gps-display';
-  document.getElementById('btnGps').innerHTML = '<span>🎯</span> Ambil GPS';
-  window.scrollTo(0,0);
-  showToast('Form dikosongkan', '');
+  document.getElementById('cbrWorker').value='';
+  const a=document.getElementById('namaAnak');a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';a.disabled=true;
+  document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];
+  ['kesulitanPengasuh','kesulitanPekerja','kesepakatan'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('tujuanList').innerHTML='';tujuanIds=[];tujuanCount=0;addTujuan();addTujuan();
+  photos=[null,null,null];
+  [0,1,2].forEach(i=>{const s=document.getElementById('slot-'+i);s.classList.remove('has-photo');s.innerHTML=`<div class="slot-icon">${FOTO_ICONS[i]}</div><div class="slot-label">${FOTO_LABELS[i]}</div><input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;s.onclick=()=>triggerPhoto(i);});
+  gpsData=null;document.getElementById('gpsText').textContent='Belum diambil';document.getElementById('gpsDisplay').className='gps-display';document.getElementById('btnGps').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Ambil GPS';
+  const row=document.getElementById('addAnakRow');if(row)row.style.display='none';
+  window.scrollTo(0,0);showToast('Form dikosongkan','');
 }
-
-// Queue
-
-window.addEventListener('online',()=>{ isOnline=true; updateStatusBar(); });
-window.addEventListener('offline',()=>{ isOnline=false; updateStatusBar(); });
 </script>
-
-<script>window.BEN_ACTIVE_NAV = "nav-perenc";</script>
+<script>window.BEN_ACTIVE_NAV='nav-perenc';</script>
 <script src="assets/js/nav.js"></script>
 </body>
 </html>
