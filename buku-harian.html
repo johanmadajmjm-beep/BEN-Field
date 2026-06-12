@@ -142,7 +142,6 @@
 <script>
 let diaryIds = [];
 let diaryCount = 0;
-const DRAFT_KEY = 'ben_draft_buku_harian';
 
 const GUIDE = `<strong>Panduan:</strong> Hal menonjol (baik & tantangan) · Apa, Mengapa, Dimana, Bagaimana, Siapa, Kapan · Aktivitas di rumah · Perjanjian dengan petugas RBM · Pertanyaan untuk kunjungan berikutnya`;
 
@@ -301,47 +300,6 @@ function doReset() {
 }
 
 // Reuse shared queue/submit via shared.js
-function addToQueue(data) {
-  const q=JSON.parse(localStorage.getItem('ben_queue_buku_harian')||'[]');
-  data._queueId=Date.now(); q.push(data);
-  localStorage.setItem('ben_queue_buku_harian',JSON.stringify(q));
-  updateQueueBadge();
-}
-function getQueue(){return JSON.parse(localStorage.getItem('ben_queue_buku_harian')||'[]');}
-function updateQueueBadge(){
-  const q=getQueue(),b=document.getElementById('queueBadge'),c=document.getElementById('queueCount');
-  if(b&&c){b.classList.toggle('visible',q.length>0);c.textContent=q.length;}
-}
-function openQueueModal(){document.getElementById('queueModal').classList.add('open');renderQueueList();}
-function renderQueueList(){
-  const q=getQueue(),list=document.getElementById('queueList');
-  if(!list)return;
-  if(!q.length){list.innerHTML='<div class="empty-queue">Tidak ada antrian 🎉</div>';return;}
-  list.innerHTML=q.map(item=>`
-    <div class="queue-item">
-      <div class="queue-item-info">
-        <div class="queue-item-name">${item.namaAnakLabel||'—'}</div>
-        <div class="queue-item-meta">${item.cbrWorkerLabel||''}</div>
-      </div>
-      <button class="btn-q-submit" onclick="submitQueueItem(${item._queueId})">Kirim</button>
-      <button class="btn-q-delete" onclick="deleteQueueItem(${item._queueId})">Hapus</button>
-    </div>`).join('');
-}
-async function submitQueueItem(id){
-  let q=getQueue(),item=q.find(x=>x._queueId===id);if(!item)return;
-  try{const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
-  if(!r.ok)throw 0;
-  localStorage.setItem('ben_queue_buku_harian',JSON.stringify(q.filter(x=>x._queueId!==id)));
-  updateQueueBadge();renderQueueList();showToast('✅ Terkirim!','success');}
-  catch{showToast('Gagal kirim','error');}
-}
-function deleteQueueItem(id){localStorage.setItem('ben_queue_buku_harian',JSON.stringify(getQueue().filter(x=>x._queueId!==id)));updateQueueBadge();renderQueueList();}
-async function submitAllQueue(){
-  const q=getQueue();let ok=0;
-  for(const item of q){try{const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});if(r.ok){ok++;localStorage.setItem('ben_queue_buku_harian',JSON.stringify(getQueue().filter(x=>x._queueId!==item._queueId)));}}catch{}}
-  updateQueueBadge();renderQueueList();showToast(`✅ ${ok}/${q.length} terkirim`,'success');
-}
-document.getElementById('queueModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 
 let _t;
 window.addEventListener('online',updateStatusBar);
