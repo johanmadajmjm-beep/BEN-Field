@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1a3d5c">
 <title>Buku Harian Anak — BEN</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,59 +11,70 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/shared.css">
 <style>
-  .diary-guide {
-    background: #e8f4fd;
-    border: 1.5px solid #90caf9;
-    border-radius: 8px;
-    padding: 10px 13px;
-    font-size: 12px;
-    color: #1a3a5c;
-    line-height: 1.7;
-    margin-bottom: 10px;
-  }
-  .diary-guide strong { color: #0d2a45; }
-  .diary-num {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 22px; height: 22px; border-radius: 50%;
-    background: #1a3d5c; color: white;
-    font-size: 11px; font-weight: 700; flex-shrink: 0;
-  }
-  .diary-header-row {
-    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
-  }
-  .diary-date-label { font-size: 13px; font-weight: 600; color: var(--text-mid); flex:1; }
+.diary-block {
+  border:1.5px solid #b0d4e8;
+  border-radius:var(--radius);
+  margin-bottom:12px;
+  overflow:hidden;
+}
+.diary-block-header {
+  background:#1a3d5c;color:white;
+  padding:11px 14px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;
+}
+.diary-block-num {
+  width:24px;height:24px;
+  background:rgba(255,255,255,0.2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;
+}
+.diary-block-body { padding:14px;display:none;background:#fff; }
+.diary-block-body.open { display:block; }
+.btn-remove-diary {
+  background:rgba(255,255,255,0.15);border:none;color:white;
+  width:26px;height:26px;border-radius:50%;font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.btn-add-diary {
+  width:100%;padding:13px;
+  background:#e0f0ff;
+  border:2px dashed #90caf9;
+  border-radius:var(--radius-sm);
+  color:#1a3d5c;font-size:14px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition:all 0.15s;
+}
+.btn-add-diary:hover{background:#c5e3f7;}
+.diary-guide {
+  background:#e8f4fd;border:1.5px solid #90caf9;
+  border-radius:8px;padding:10px 13px;
+  font-size:12px;color:#1a3a5c;line-height:1.7;margin-bottom:10px;
+}
 </style>
 </head>
 <body>
-
 <script>
   window.BEN_MODULE = 'buku_harian';
   window.BEN_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCx4CiGyxXRj01nP8v8W-2D9livH1Zk9r_uuCx2v4WCKIYJ-dBlugpvoYUE1ymw98a/exec';
 </script>
 
-<!-- HEADER -->
 <div class="app-header buku-harian">
   <div class="logo-wrap">
     <div class="logo-icon">📓</div>
-    <div>
-      <div class="sub">Program BEN — Manggarai</div>
-      <h1>Buku Harian Anak</h1>
-    </div>
+    <div><div class="sub">Program BEN — Manggarai</div><h1>Buku Harian Anak</h1></div>
   </div>
   <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
     <span>📤</span><span id="queueCount">0</span> antrian
   </div>
 </div>
-
-<!-- STATUS BAR -->
 <div class="status-bar">
   <div class="status-dot" id="statusDot"></div>
   <span id="statusText">Memeriksa koneksi…</span>
 </div>
 
 <div class="main">
-
-  <!-- SECTION 1: IDENTITAS -->
   <div class="section-card">
     <div class="section-header blue" onclick="toggleSection('s1')">
       <div class="section-num">1</div>
@@ -72,55 +84,52 @@
     <div class="section-body open" id="body-s1">
       <div class="field">
         <label>CBR Worker <span class="req">*</span></label>
-        <select id="cbrWorker"></select>
+        <select id="cbrWorker" onchange="onWorkerChange()"></select>
       </div>
       <div class="field">
         <label>Nama Anak <span class="req">*</span></label>
-        <select id="namaAnak" disabled>
-          <option value="">— Pilih CBR Worker dulu —</option>
-        </select>
+        <select id="namaAnak" disabled><option value="">— Pilih CBR Worker dulu —</option></select>
       </div>
     </div>
   </div>
 
-  <!-- SECTION 2–11: DIARY 1–10 -->
-  <div id="diaryContainer"></div>
-
-  <!-- PROGRESS -->
-  <div class="progress-bar" id="progressBar">
-    <div class="progress-fill" id="progressFill"></div>
+  <!-- DIARY DYNAMIC -->
+  <div class="section-card">
+    <div class="section-header diary" onclick="toggleSection('sd')">
+      <div class="section-num">2</div>
+      <div class="section-title">Buku Harian <div class="section-sub" id="diaryCountLabel">2 catatan</div></div>
+      <div class="chevron" id="chevron-sd">▼</div>
+    </div>
+    <div class="section-body" id="body-sd">
+      <div id="diaryList"></div>
+      <button class="btn-add-diary" onclick="addDiary()">＋ Tambah Catatan Harian</button>
+    </div>
   </div>
 
-  <!-- ACTIONS -->
+  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
   <div class="action-row">
     <button class="btn btn-draft" onclick="handleDraft()">💾 Simpan Draft</button>
     <button class="btn btn-submit" id="btnSubmit" onclick="handleSubmit()">📤 Kirim ke Server</button>
   </div>
   <div class="action-row" style="margin-bottom:32px;">
-    <button class="btn btn-home" onclick="window.location.href='index.html'">🏠 Kembali ke Menu</button>
-    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset Form</button>
+    <button class="btn btn-home" onclick="window.location.href='index.html'" style="background:var(--blue-light);color:var(--blue);border:1.5px solid #bfdbfe;">🏠 Menu</button>
+    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset</button>
   </div>
-
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
-
-<!-- QUEUE MODAL -->
 <div class="modal-overlay" id="queueModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-title">📤 Antrian Pengiriman</div>
+    <div class="modal-title">📤 Antrian</div>
     <div id="queueList"></div>
-    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
+    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua</button>
   </div>
 </div>
-
-<!-- CONFIRM RESET -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
     <h3>⚠️ Reset Form?</h3>
-    <p>Semua data yang belum disimpan sebagai draft akan hilang.</p>
+    <p>Data yang belum disimpan sebagai draft akan hilang.</p>
     <div class="confirm-btns">
       <button class="btn-cancel-c" onclick="closeConfirm()">Batal</button>
       <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
@@ -128,80 +137,119 @@
   </div>
 </div>
 
-<script>window.BEN_ACTIVE_NAV = "nav-harian";</script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/shared.js"></script>
 <script>
-const DIARY_GUIDE = `<strong>Panduan isi diary:</strong><br>
-● Hal-hal yang menonjol saat ini — sesuatu yang sangat baik & tantangan<br>
-● Apa, Mengapa, Dimana, Bagaimana, Siapa, Kapan<br>
-● Aktivitas yang dilakukan di rumah<br>
-● Perjanjian yang dibuat dengan petugas RBM<br>
-● Pertanyaan untuk kunjungan berikutnya`;
+let diaryIds = [];
+let diaryCount = 0;
+const DRAFT_KEY = 'ben_draft_buku_harian';
 
-// Build diary sections
-function buildDiaries() {
-  const container = document.getElementById('diaryContainer');
-  let html = '';
-  for (let n = 1; n <= 10; n++) {
-    const sectionNum = n + 1;
-    html += `
-    <div class="section-card">
-      <div class="section-header diary" onclick="toggleSection('d${n}')">
-        <div class="section-num">${sectionNum}</div>
-        <div class="section-title">Diary ${n} <div class="section-sub">Catatan kunjungan ke-${n}</div></div>
-        <div class="chevron" id="chevron-d${n}">▼</div>
-      </div>
-      <div class="section-body" id="body-d${n}">
-        <div class="diary-guide">${DIARY_GUIDE}</div>
-        <div class="field">
-          <label>Tanggal Diary ${n}</label>
-          <input type="date" id="tanggal_diary_${n}">
-        </div>
-        <div class="field">
-          <label>Catatan Diary ${n}</label>
-          <textarea id="isi_diary_${n}" placeholder="Tuliskan catatan diary di sini…" rows="5"></textarea>
-        </div>
-      </div>
-    </div>`;
-  }
-  container.innerHTML = html;
+const GUIDE = `<strong>Panduan:</strong> Hal menonjol (baik & tantangan) · Apa, Mengapa, Dimana, Bagaimana, Siapa, Kapan · Aktivitas di rumah · Perjanjian dengan petugas RBM · Pertanyaan untuk kunjungan berikutnya`;
+
+document.addEventListener('DOMContentLoaded', () => {
+  populateWorkerSelect(document.getElementById('cbrWorker'));
+  addDiary(); addDiary(); // default 2
+  updateStatusBar(); updateQueueBadge();
+  const draft = loadDraftLocal();
+  if (draft) { restoreForm(draft); showToast('Draft sebelumnya dimuat','warning'); }
+});
+
+function onWorkerChange() {
+  populateChildSelect(document.getElementById('cbrWorker').value, document.getElementById('namaAnak'));
 }
 
-// Collect
+function addDiary(data) {
+  diaryCount++;
+  const id = 'dr_' + Date.now() + '_' + diaryCount;
+  diaryIds.push(id);
+  const n  = diaryIds.length;
+
+  const block = document.createElement('div');
+  block.className = 'diary-block';
+  block.id = 'dblock_' + id;
+  block.innerHTML = `
+    <div class="diary-block-header" onclick="toggleDiary('${id}')">
+      <div class="diary-block-num">${n}</div>
+      <div style="flex:1;font-size:13px;font-weight:700;">Catatan Harian ${n}</div>
+      <button class="btn-remove-diary" onclick="removeDiary('${id}',event)">✕</button>
+      <span style="font-size:11px;opacity:0.7;margin-left:6px;" id="dchev_${id}">▼</span>
+    </div>
+    <div class="diary-block-body open" id="dbody_${id}">
+      <div class="diary-guide">${GUIDE}</div>
+      <div class="field">
+        <label>Tanggal</label>
+        <input type="date" id="dtgl_${id}">
+      </div>
+      <div class="field">
+        <label>Catatan</label>
+        <textarea id="disi_${id}" rows="5" placeholder="Tuliskan catatan diary di sini…"></textarea>
+      </div>
+    </div>`;
+
+  document.getElementById('diaryList').appendChild(block);
+
+  if (data) {
+    if (data.tanggal) document.getElementById('dtgl_'+id).value = data.tanggal;
+    if (data.isi)     document.getElementById('disi_'+id).value = data.isi;
+  }
+  updateDiaryLabel();
+}
+
+function removeDiary(id, event) {
+  event.stopPropagation();
+  if (diaryIds.length <= 1) { showToast('Minimal 1 catatan harus ada','error'); return; }
+  document.getElementById('dblock_'+id)?.remove();
+  diaryIds = diaryIds.filter(x => x !== id);
+  renumberDiary();
+}
+
+function renumberDiary() {
+  diaryIds.forEach((id,i) => {
+    const el = document.querySelector(`#dblock_${id} .diary-block-header div[style]`);
+    if (el) el.textContent = `Catatan Harian ${i+1}`;
+    document.querySelector(`#dblock_${id} .diary-block-num`).textContent = i+1;
+  });
+  updateDiaryLabel();
+}
+
+function updateDiaryLabel() {
+  document.getElementById('diaryCountLabel').textContent = diaryIds.length + ' catatan';
+}
+
+function toggleDiary(id) {
+  const body = document.getElementById('dbody_'+id);
+  const chev = document.getElementById('dchev_'+id);
+  const open = body.classList.toggle('open');
+  if (chev) chev.textContent = open ? '▼' : '▶';
+}
+
 function collect() {
   const workerEl = document.getElementById('cbrWorker');
   const anakEl   = document.getElementById('namaAnak');
-  const diaries  = [];
-  for (let n = 1; n <= 10; n++) {
-    diaries.push({
-      nomor:   n,
-      tanggal: document.getElementById(`tanggal_diary_${n}`)?.value || '',
-      isi:     document.getElementById(`isi_diary_${n}`)?.value.trim() || ''
-    });
-  }
   return {
-    timestamp:       new Date().toISOString(),
-    modul:           'buku_harian',
-    cbrWorkerValue:  workerEl.value,
-    cbrWorkerLabel:  workerEl.options[workerEl.selectedIndex]?.text || '',
-    namaAnakValue:   anakEl.value,
-    namaAnakLabel:   anakEl.options[anakEl.selectedIndex]?.text || '',
-    tanggal:         diaries.find(d => d.tanggal)?.tanggal || new Date().toISOString().split('T')[0],
-    diaries
+    timestamp: new Date().toISOString(),
+    modul: 'buku_harian',
+    cbrWorkerValue: workerEl.value,
+    cbrWorkerLabel: workerEl.options[workerEl.selectedIndex]?.text||'',
+    namaAnakValue:  anakEl.value,
+    namaAnakLabel:  anakEl.options[anakEl.selectedIndex]?.text||'',
+    tanggal: diaryIds[0] ? document.getElementById('dtgl_'+diaryIds[0])?.value||'' : '',
+    diaries: diaryIds.map((id,i) => ({
+      nomor: i+1,
+      tanggal: document.getElementById('dtgl_'+id)?.value||'',
+      isi: (document.getElementById('disi_'+id)?.value||'').trim()
+    }))
   };
 }
 
-function validate(data) {
-  if (!data.cbrWorkerValue) return 'CBR Worker belum dipilih.';
-  if (!data.namaAnakValue)  return 'Nama Anak belum dipilih.';
-  const filled = data.diaries.filter(d => d.isi);
-  if (filled.length === 0)  return 'Minimal 1 diary harus diisi.';
+function validate(d) {
+  if (!d.cbrWorkerValue) return 'CBR Worker belum dipilih.';
+  if (!d.namaAnakValue)  return 'Nama Anak belum dipilih.';
+  if (!d.diaries.some(x=>x.isi)) return 'Minimal 1 catatan harus diisi.';
   return null;
 }
 
-// Restore
-function restore(data) {
+function restoreForm(data) {
   if (!data) return;
   const workerEl = document.getElementById('cbrWorker');
   const anakEl   = document.getElementById('namaAnak');
@@ -210,50 +258,98 @@ function restore(data) {
     populateChildSelect(data.cbrWorkerValue, anakEl);
     setTimeout(() => { if (data.namaAnakValue) anakEl.value = data.namaAnakValue; }, 50);
   }
-  (data.diaries || []).forEach(d => {
-    const tEl = document.getElementById(`tanggal_diary_${d.nomor}`);
-    const iEl = document.getElementById(`isi_diary_${d.nomor}`);
-    if (tEl && d.tanggal) tEl.value = d.tanggal;
-    if (iEl && d.isi)     iEl.value = d.isi;
-  });
-}
-
-function doReset() {
-  closeConfirm();
-  clearDraft();
-  document.getElementById('cbrWorker').value = '';
-  const anakEl = document.getElementById('namaAnak');
-  anakEl.innerHTML = '<option value="">— Pilih CBR Worker dulu —</option>';
-  anakEl.disabled = true;
-  for (let n = 1; n <= 10; n++) {
-    const tEl = document.getElementById(`tanggal_diary_${n}`);
-    const iEl = document.getElementById(`isi_diary_${n}`);
-    if (tEl) tEl.value = '';
-    if (iEl) iEl.value = '';
+  if (data.diaries && data.diaries.length > 0) {
+    document.getElementById('diaryList').innerHTML='';
+    diaryIds=[]; diaryCount=0;
+    data.diaries.forEach(d => addDiary(d));
   }
-  window.scrollTo(0, 0);
-  showToast('Form dikosongkan', '');
 }
 
-function handleDraft() { saveDraft(collect()); }
+function loadDraftLocal() {
+  try { return JSON.parse(localStorage.getItem(DRAFT_KEY)||'null'); } catch { return null; }
+}
+function handleDraft() {
+  const data = collect();
+  const err  = validate(data);
+  if (err) { showToast('⚠️ '+err,'error'); return; }
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+  showToast('Draft tersimpan ✓','success');
+}
 
 function handleSubmit() {
   const data = collect();
   const err  = validate(data);
-  if (err) { showToast('⚠️ ' + err, 'error'); return; }
+  if (err) { showToast('⚠️ '+err,'error'); return; }
   doSubmit(data, doReset);
 }
 
-// Init
-document.addEventListener('DOMContentLoaded', () => {
-  buildDiaries();
-  initWorkerChild('cbrWorker', 'namaAnak');
-  updateStatusBar();
+function doReset() {
+  closeConfirm();
+  localStorage.removeItem(DRAFT_KEY);
+  document.getElementById('cbrWorker').value='';
+  const a=document.getElementById('namaAnak');
+  a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';
+  a.disabled=true;
+  document.getElementById('diaryList').innerHTML='';
+  diaryIds=[]; diaryCount=0;
+  addDiary(); addDiary();
+  window.scrollTo(0,0);
+  showToast('Form dikosongkan','');
+}
+
+// Reuse shared queue/submit via shared.js
+function addToQueue(data) {
+  const q=JSON.parse(localStorage.getItem('ben_queue_buku_harian')||'[]');
+  data._queueId=Date.now(); q.push(data);
+  localStorage.setItem('ben_queue_buku_harian',JSON.stringify(q));
   updateQueueBadge();
-  const draft = loadDraft();
-  if (draft) { restore(draft); showToast('Draft sebelumnya dimuat', 'warning'); }
-});
+}
+function getQueue(){return JSON.parse(localStorage.getItem('ben_queue_buku_harian')||'[]');}
+function updateQueueBadge(){
+  const q=getQueue(),b=document.getElementById('queueBadge'),c=document.getElementById('queueCount');
+  if(b&&c){b.classList.toggle('visible',q.length>0);c.textContent=q.length;}
+}
+function openQueueModal(){document.getElementById('queueModal').classList.add('open');renderQueueList();}
+function renderQueueList(){
+  const q=getQueue(),list=document.getElementById('queueList');
+  if(!list)return;
+  if(!q.length){list.innerHTML='<div class="empty-queue">Tidak ada antrian 🎉</div>';return;}
+  list.innerHTML=q.map(item=>`
+    <div class="queue-item">
+      <div class="queue-item-info">
+        <div class="queue-item-name">${item.namaAnakLabel||'—'}</div>
+        <div class="queue-item-meta">${item.cbrWorkerLabel||''}</div>
+      </div>
+      <button class="btn-q-submit" onclick="submitQueueItem(${item._queueId})">Kirim</button>
+      <button class="btn-q-delete" onclick="deleteQueueItem(${item._queueId})">Hapus</button>
+    </div>`).join('');
+}
+async function submitQueueItem(id){
+  let q=getQueue(),item=q.find(x=>x._queueId===id);if(!item)return;
+  try{const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
+  if(!r.ok)throw 0;
+  localStorage.setItem('ben_queue_buku_harian',JSON.stringify(q.filter(x=>x._queueId!==id)));
+  updateQueueBadge();renderQueueList();showToast('✅ Terkirim!','success');}
+  catch{showToast('Gagal kirim','error');}
+}
+function deleteQueueItem(id){localStorage.setItem('ben_queue_buku_harian',JSON.stringify(getQueue().filter(x=>x._queueId!==id)));updateQueueBadge();renderQueueList();}
+async function submitAllQueue(){
+  const q=getQueue();let ok=0;
+  for(const item of q){try{const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});if(r.ok){ok++;localStorage.setItem('ben_queue_buku_harian',JSON.stringify(getQueue().filter(x=>x._queueId!==item._queueId)));}}catch{}}
+  updateQueueBadge();renderQueueList();showToast(`✅ ${ok}/${q.length} terkirim`,'success');
+}
+document.getElementById('queueModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+
+let _t;
+function showToast(m,t=''){const el=document.getElementById('toast');el.textContent=m;el.className='toast '+t+' show';clearTimeout(_t);_t=setTimeout(()=>{el.className='toast';},3200);}
+function toggleSection(id){const b=document.getElementById('body-'+id),c=document.getElementById('chevron-'+id);const o=b.classList.toggle('open');c.classList.toggle('open',o);}
+function updateStatusBar(){const d=document.getElementById('statusDot'),t=document.getElementById('statusText');if(!d)return;if(navigator.onLine){d.className='status-dot';t.textContent='Online — siap kirim data';}else{d.className='status-dot offline';t.textContent='Offline — data ke antrian';}}
+function confirmReset(){document.getElementById('confirmOverlay').classList.add('open');}
+function closeConfirm(){document.getElementById('confirmOverlay').classList.remove('open');}
+window.addEventListener('online',updateStatusBar);
+window.addEventListener('offline',updateStatusBar);
 </script>
+<script>window.BEN_ACTIVE_NAV = "nav-harian";</script>
 <script src="assets/js/nav.js"></script>
 </body>
 </html>
