@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#4a2d7a">
 <title>Evaluasi Jangka Menengah — BEN</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,62 +11,49 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/shared.css">
 <style>
-  .score-hint {
-    background: #f3e8ff; border: 1.5px solid #c084fc;
-    border-radius: 8px; padding: 10px 13px;
-    font-size: 12px; color: #4a1d7a; margin-bottom: 10px; line-height: 1.7;
-  }
-  .score-scale {
-    display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap;
-  }
-  .score-scale span {
-    font-size: 10px; padding: 3px 7px; border-radius: 10px;
-    background: rgba(255,255,255,0.7); border: 1px solid #c084fc; color: #4a1d7a;
-  }
-  .score-input-wrap { display: flex; align-items: center; gap: 14px; }
-  .score-input-wrap input[type="number"] {
-    width: 90px; text-align: center; font-size: 28px; font-weight: 800;
-    color: var(--green-deep); padding: 10px;
-  }
-  .score-label {
-    font-size: 14px; font-weight: 700; padding: 8px 16px;
-    border-radius: 20px; transition: all 0.2s;
-    background: var(--green-pale); color: var(--green-deep);
-    border: 1.5px solid var(--green-border);
-  }
-  .score-label.mid { background:#fff8e1; color:#e65100; border-color:#ffcc80; }
-  .score-label.low { background:var(--red-light); color:var(--red); border-color:#f5b7b1; }
+.tujuan-ref {
+  background:#f3e8ff;border:1.5px solid #c084fc;
+  border-radius:8px;padding:10px 13px;
+  font-size:12px;color:#4a1d7a;margin-bottom:12px;line-height:1.6;
+}
+.tujuan-ref strong{color:#3b0f6e;display:block;margin-bottom:3px;font-size:13px;}
+.no-rencana-notice {
+  background:#fff8e1;border:1.5px solid #ffcc80;
+  border-radius:8px;padding:10px 13px;
+  font-size:12px;color:#7a4a10;margin-bottom:12px;
+}
+.score-input-wrap{display:flex;align-items:center;gap:14px;}
+.score-input-wrap input[type="number"]{width:90px;text-align:center;font-size:28px;font-weight:800;color:var(--green-deep);padding:10px;}
+.score-label{font-size:14px;font-weight:700;padding:8px 16px;border-radius:20px;transition:all 0.2s;background:var(--green-pale);color:var(--green-deep);border:1.5px solid var(--green-border);}
+.score-label.mid{background:#fff8e1;color:#e65100;border-color:#ffcc80;}
+.score-label.low{background:var(--red-light);color:var(--red);border-color:#f5b7b1;}
+.score-hint{background:#f3e8ff;border:1.5px solid #c084fc;border-radius:8px;padding:10px 13px;font-size:12px;color:#4a1d7a;margin-bottom:10px;line-height:1.7;}
+.score-scale{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;}
+.score-scale span{font-size:10px;padding:3px 7px;border-radius:10px;background:rgba(255,255,255,0.7);border:1px solid #c084fc;color:#4a1d7a;}
 </style>
 </head>
 <body>
-
 <script>
   window.BEN_MODULE = 'eval_menengah';
   window.BEN_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCx4CiGyxXRj01nP8v8W-2D9livH1Zk9r_uuCx2v4WCKIYJ-dBlugpvoYUE1ymw98a/exec';
 </script>
 
-<!-- HEADER -->
 <div class="app-header eval-mid">
   <div class="logo-wrap">
     <div class="logo-icon">📊</div>
-    <div>
-      <div class="sub">Program BEN — Manggarai</div>
-      <h1>Evaluasi Jangka Menengah</h1>
-    </div>
+    <div><div class="sub">Program BEN — Manggarai</div><h1>Evaluasi Jangka Menengah</h1></div>
   </div>
   <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
     <span>📤</span><span id="queueCount">0</span> antrian
   </div>
 </div>
-
 <div class="status-bar">
   <div class="status-dot" id="statusDot"></div>
   <span id="statusText">Memeriksa koneksi…</span>
 </div>
 
 <div class="main">
-
-  <!-- SECTION 1: IDENTITAS -->
+  <!-- IDENTITAS -->
   <div class="section-card">
     <div class="section-header purple" onclick="toggleSection('s1')">
       <div class="section-num">1</div>
@@ -75,11 +63,13 @@
     <div class="section-body open" id="body-s1">
       <div class="field">
         <label>CBR Worker <span class="req">*</span></label>
-        <select id="cbrWorker"></select>
+        <select id="cbrWorker" onchange="onWorkerChange()"></select>
       </div>
       <div class="field">
         <label>Nama Anak <span class="req">*</span></label>
-        <select id="namaAnak" disabled><option value="">— Pilih CBR Worker dulu —</option></select>
+        <select id="namaAnak" disabled onchange="onAnakChange()">
+          <option value="">— Pilih CBR Worker dulu —</option>
+        </select>
       </div>
       <div class="field">
         <label>Tanggal Evaluasi Menengah <span class="req">*</span></label>
@@ -88,36 +78,33 @@
     </div>
   </div>
 
-  <!-- TUJUAN 1, 2, 3 -->
-  <div id="tujuanContainer"></div>
+  <!-- EVALUASI TUJUAN (dynamic dari perencanaan) -->
+  <div id="evalContainer"></div>
 
   <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
-
   <div class="action-row">
     <button class="btn btn-draft" onclick="handleDraft()">💾 Simpan Draft</button>
     <button class="btn btn-submit" id="btnSubmit" onclick="handleSubmit()">📤 Kirim ke Server</button>
   </div>
   <div class="action-row" style="margin-bottom:32px;">
-    <button class="btn btn-home" onclick="window.location.href='index.html'">🏠 Kembali ke Menu</button>
-    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset Form</button>
+    <button class="btn btn-home" onclick="window.location.href='index.html'" style="background:var(--blue-light);color:var(--blue);border:1.5px solid #bfdbfe;">🏠 Menu</button>
+    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
-
 <div class="modal-overlay" id="queueModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-title">📤 Antrian Pengiriman</div>
+    <div class="modal-title">📤 Antrian</div>
     <div id="queueList"></div>
-    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
+    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua</button>
   </div>
 </div>
-
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
     <h3>⚠️ Reset Form?</h3>
-    <p>Semua data yang belum disimpan sebagai draft akan hilang.</p>
+    <p>Data yang belum tersimpan akan hilang.</p>
     <div class="confirm-btns">
       <button class="btn-cancel-c" onclick="closeConfirm()">Batal</button>
       <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
@@ -125,164 +112,181 @@
   </div>
 </div>
 
-<script>window.BEN_ACTIVE_NAV = "nav-menengah";</script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/shared.js"></script>
 <script>
+const DRAFT_KEY = 'ben_draft_eval_menengah';
+let tujuanDariRencana = []; // loaded from perencanaan draft
 
-function scoreLabel(v) {
-  if (!v || v < 1) return { text: '—', cls: '' };
-  if (v >= 8) return { text: `${v} — Sangat Baik`, cls: '' };
-  if (v >= 5) return { text: `${v} — Cukup`, cls: 'mid' };
-  return { text: `${v} — Perlu Perhatian`, cls: 'low' };
+document.addEventListener('DOMContentLoaded', () => {
+  populateWorkerSelect(document.getElementById('cbrWorker'));
+  document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+  updateStatusBar(); updateQueueBadge();
+  const draft = loadDraftLocal();
+  if (draft) { restoreForm(draft); showToast('Draft sebelumnya dimuat','warning'); }
+});
+
+function onWorkerChange() {
+  populateChildSelect(document.getElementById('cbrWorker').value, document.getElementById('namaAnak'));
 }
 
-function updateScoreLabel(n) {
-  const val = parseInt(document.getElementById(`score_${n}`)?.value) || 0;
-  const lbl = document.getElementById(`scoreLabel_${n}`);
-  if (!lbl) return;
-  const { text, cls } = scoreLabel(val);
-  lbl.textContent = text;
-  lbl.className = 'score-label ' + cls;
+function onAnakChange() {
+  const anakVal = document.getElementById('namaAnak').value;
+  loadTujuanDariRencana(anakVal);
 }
 
-function buildTujuan() {
-  const container = document.getElementById('tujuanContainer');
-  let html = '';
-  for (let n = 1; n <= 3; n++) {
-    html += `
+// Ambil tujuan dari draft perencanaan anak ini
+function loadTujuanDariRencana(anakVal) {
+  const key = 'ben_draft_perencanaan_' + anakVal;
+  let tujuan = [];
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      const data = JSON.parse(raw);
+      tujuan = (data.tujuan || []).filter(t => t.tujuan);
+    }
+  } catch {}
+  tujuanDariRencana = tujuan;
+  buildEvalSections(tujuan);
+}
+
+function buildEvalSections(tujuan) {
+  const container = document.getElementById('evalContainer');
+  // Gunakan tujuan dari rencana jika ada, fallback ke 3 kosong
+  const list = tujuan.length > 0 ? tujuan : [{nomor:1,tujuan:''},{nomor:2,tujuan:''},{nomor:3,tujuan:''}];
+
+  container.innerHTML = list.map((t, i) => {
+    const n   = i + 1;
+    const ref = t.tujuan
+      ? `<div class="tujuan-ref"><strong>📌 Tujuan ${n} dari Perencanaan:</strong>${t.tujuan}</div>`
+      : `<div class="no-rencana-notice">⚠️ Belum ada data perencanaan untuk tujuan ${n}. Pastikan draft perencanaan anak ini sudah disimpan.</div>`;
+    return `
     <div class="section-card">
       <div class="section-header purple" onclick="toggleSection('t${n}')">
-        <div class="section-num">${n + 1}</div>
-        <div class="section-title">Evaluasi Tujuan ${n} <div class="section-sub">Penilaian pencapaian</div></div>
+        <div class="section-num">${n+1}</div>
+        <div class="section-title">Evaluasi Tujuan ${n}
+          <div class="section-sub">${t.tujuan ? t.tujuan.slice(0,35)+(t.tujuan.length>35?'…':'') : 'Penilaian pencapaian'}</div>
+        </div>
         <div class="chevron" id="chevron-t${n}">▼</div>
       </div>
       <div class="section-body" id="body-t${n}">
+        ${ref}
         <div class="field">
           <div class="score-hint">
-            Nilai tingkat keberhasilan cara mencapai <strong>Tujuan ${n}</strong>
-            <div class="score-scale">
-              <span>1–4 = Kurang</span><span>5–7 = Cukup</span><span>8–10 = Sangat Baik</span>
-            </div>
+            Nilai tingkat keberhasilan <strong>Tujuan ${n}</strong>
+            <div class="score-scale"><span>1–4 = Kurang</span><span>5–7 = Cukup</span><span>8–10 = Sangat Baik</span></div>
           </div>
           <label>Score (1–10)</label>
           <div class="score-input-wrap">
             <input type="number" id="score_${n}" min="1" max="10" placeholder="—"
-              oninput="this.value=Math.min(10,Math.max(1,this.value||'')); updateScoreLabel(${n})">
+              oninput="this.value=Math.min(10,Math.max(1,this.value||''));updateScoreLabel(${n})">
             <span class="score-label" id="scoreLabel_${n}">—</span>
           </div>
         </div>
         <div class="field">
           <label>Jelaskan mengapa memilih score ini</label>
-          <textarea id="alasan_${n}" placeholder="Tuliskan alasan pemilihan score…" rows="3"></textarea>
+          <textarea id="alasan_${n}" rows="3" placeholder="Tuliskan alasan…"></textarea>
         </div>
         <div class="field">
-          <label>Apa yang sudah berubah dari Tujuan ${n}?</label>
-          <textarea id="perubahan_${n}" placeholder="Tuliskan perubahan yang terjadi…" rows="3"></textarea>
+          <label>Apa yang sudah berubah?</label>
+          <textarea id="perubahan_${n}" rows="3" placeholder="Perubahan yang terjadi…"></textarea>
         </div>
         <div class="field">
           <label>Perubahan disebabkan oleh apa dan siapa?</label>
-          <textarea id="penyebab_${n}" placeholder="Tuliskan penyebab perubahan…" rows="3"></textarea>
+          <textarea id="penyebab_${n}" rows="3" placeholder="Penyebab perubahan…"></textarea>
         </div>
         <div class="field">
           <label>Jika belum sesuai harapan, apa yang harus dikerjakan lagi?</label>
-          <textarea id="tindaklanjut_${n}" placeholder="Tuliskan tindak lanjut yang perlu dilakukan…" rows="3"></textarea>
+          <textarea id="tindaklanjut_${n}" rows="3" placeholder="Tindak lanjut…"></textarea>
         </div>
       </div>
     </div>`;
-  }
-  container.innerHTML = html;
+  }).join('');
+}
+
+function updateScoreLabel(n) {
+  const v = parseInt(document.getElementById('score_'+n)?.value)||0;
+  const l = document.getElementById('scoreLabel_'+n);
+  if (!l) return;
+  if (!v) { l.textContent='—'; l.className='score-label'; return; }
+  if (v>=8) { l.textContent=v+' — Sangat Baik'; l.className='score-label'; }
+  else if(v>=5) { l.textContent=v+' — Cukup'; l.className='score-label mid'; }
+  else { l.textContent=v+' — Perlu Perhatian'; l.className='score-label low'; }
+}
+
+function getTujuanCount() {
+  return document.getElementById('evalContainer').querySelectorAll('.section-card').length;
 }
 
 function collect() {
-  const workerEl = document.getElementById('cbrWorker');
-  const anakEl   = document.getElementById('namaAnak');
-  const tujuan   = [];
-  for (let n = 1; n <= 3; n++) {
+  const workerEl=document.getElementById('cbrWorker'),anakEl=document.getElementById('namaAnak');
+  const count=getTujuanCount();
+  const tujuan=[];
+  for(let n=1;n<=count;n++){
     tujuan.push({
-      nomor:         n,
-      score:         parseInt(document.getElementById(`score_${n}`)?.value) || null,
-      alasan:        document.getElementById(`alasan_${n}`)?.value.trim() || '',
-      perubahan:     document.getElementById(`perubahan_${n}`)?.value.trim() || '',
-      penyebab:      document.getElementById(`penyebab_${n}`)?.value.trim() || '',
-      tindaklanjut:  document.getElementById(`tindaklanjut_${n}`)?.value.trim() || ''
+      nomor:n,
+      tujuanRencana: tujuanDariRencana[n-1]?.tujuan||'',
+      score: parseInt(document.getElementById('score_'+n)?.value)||null,
+      alasan: (document.getElementById('alasan_'+n)?.value||'').trim(),
+      perubahan: (document.getElementById('perubahan_'+n)?.value||'').trim(),
+      penyebab: (document.getElementById('penyebab_'+n)?.value||'').trim(),
+      tindaklanjut: (document.getElementById('tindaklanjut_'+n)?.value||'').trim(),
     });
   }
   return {
-    timestamp:      new Date().toISOString(),
-    modul:          'eval_menengah',
-    cbrWorkerValue: workerEl.value,
-    cbrWorkerLabel: workerEl.options[workerEl.selectedIndex]?.text || '',
-    namaAnakValue:  anakEl.value,
-    namaAnakLabel:  anakEl.options[anakEl.selectedIndex]?.text || '',
-    tanggal:        document.getElementById('tanggal').value,
-    tujuan
+    timestamp:new Date().toISOString(),modul:'eval_menengah',
+    cbrWorkerValue:workerEl.value,cbrWorkerLabel:workerEl.options[workerEl.selectedIndex]?.text||'',
+    namaAnakValue:anakEl.value,namaAnakLabel:anakEl.options[anakEl.selectedIndex]?.text||'',
+    tanggal:document.getElementById('tanggal').value,tujuan
   };
 }
 
-function validate(data) {
-  if (!data.cbrWorkerValue) return 'CBR Worker belum dipilih.';
-  if (!data.namaAnakValue)  return 'Nama Anak belum dipilih.';
-  if (!data.tanggal)        return 'Tanggal belum diisi.';
+function validate(d){
+  if(!d.cbrWorkerValue)return'CBR Worker belum dipilih.';
+  if(!d.namaAnakValue)return'Nama Anak belum dipilih.';
+  if(!d.tanggal)return'Tanggal belum diisi.';
   return null;
 }
 
-function restore(data) {
-  if (!data) return;
-  const workerEl = document.getElementById('cbrWorker');
-  const anakEl   = document.getElementById('namaAnak');
-  if (data.cbrWorkerValue) {
-    workerEl.value = data.cbrWorkerValue;
-    populateChildSelect(data.cbrWorkerValue, anakEl);
-    setTimeout(() => { if (data.namaAnakValue) anakEl.value = data.namaAnakValue; }, 50);
+function restoreForm(data){
+  if(!data)return;
+  const we=document.getElementById('cbrWorker'),ae=document.getElementById('namaAnak');
+  if(data.cbrWorkerValue){we.value=data.cbrWorkerValue;populateChildSelect(data.cbrWorkerValue,ae);
+    setTimeout(()=>{if(data.namaAnakValue){ae.value=data.namaAnakValue;loadTujuanDariRencana(data.namaAnakValue);
+      setTimeout(()=>{
+        (data.tujuan||[]).forEach(t=>{const n=t.nomor;
+          if(t.score){document.getElementById('score_'+n).value=t.score;updateScoreLabel(n);}
+          ['alasan','perubahan','penyebab','tindaklanjut'].forEach(f=>{const el=document.getElementById(f+'_'+n);if(el&&t[f])el.value=t[f];});
+        });
+      },200);
+    }},50);
   }
-  if (data.tanggal) document.getElementById('tanggal').value = data.tanggal;
-  (data.tujuan || []).forEach(t => {
-    const n = t.nomor;
-    if (t.score) { document.getElementById(`score_${n}`).value = t.score; updateScoreLabel(n); }
-    ['alasan','perubahan','penyebab','tindaklanjut'].forEach(f => {
-      const el = document.getElementById(`${f}_${n}`);
-      if (el && t[f]) el.value = t[f];
-    });
-  });
+  if(data.tanggal)document.getElementById('tanggal').value=data.tanggal;
 }
 
-function doReset() {
-  closeConfirm(); clearDraft();
-  document.getElementById('cbrWorker').value = '';
-  const anakEl = document.getElementById('namaAnak');
-  anakEl.innerHTML = '<option value="">— Pilih CBR Worker dulu —</option>';
-  anakEl.disabled = true;
-  document.getElementById('tanggal').value = '';
-  for (let n = 1; n <= 3; n++) {
-    document.getElementById(`score_${n}`).value = '';
-    updateScoreLabel(n);
-    ['alasan','perubahan','penyebab','tindaklanjut'].forEach(f => {
-      const el = document.getElementById(`${f}_${n}`);
-      if (el) el.value = '';
-    });
-  }
-  window.scrollTo(0,0);
-  showToast('Form dikosongkan', '');
-}
+function loadDraftLocal(){try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||'null');}catch{return null;}}
+function handleDraft(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'error');return;}localStorage.setItem(DRAFT_KEY,JSON.stringify(d));showToast('Draft tersimpan ✓','success');}
+function handleSubmit(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'error');return;}doSubmit(d,doReset);}
+function doReset(){closeConfirm();localStorage.removeItem(DRAFT_KEY);document.getElementById('cbrWorker').value='';const a=document.getElementById('namaAnak');a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';a.disabled=true;document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];buildEvalSections([]);window.scrollTo(0,0);showToast('Form dikosongkan','');}
 
-function handleDraft()  { saveDraft(collect()); }
-function handleSubmit() {
-  const data = collect();
-  const err  = validate(data);
-  if (err) { showToast('⚠️ ' + err, 'error'); return; }
-  doSubmit(data, doReset);
-}
+function addToQueue(data){const q=JSON.parse(localStorage.getItem('ben_queue_eval_menengah')||'[]');data._queueId=Date.now();q.push(data);localStorage.setItem('ben_queue_eval_menengah',JSON.stringify(q));updateQueueBadge();}
+function getQueue(){return JSON.parse(localStorage.getItem('ben_queue_eval_menengah')||'[]');}
+function updateQueueBadge(){const q=getQueue(),b=document.getElementById('queueBadge'),c=document.getElementById('queueCount');if(b&&c){b.classList.toggle('visible',q.length>0);c.textContent=q.length;}}
+function openQueueModal(){document.getElementById('queueModal').classList.add('open');renderQueueList();}
+function renderQueueList(){const q=getQueue(),l=document.getElementById('queueList');if(!l)return;if(!q.length){l.innerHTML='<div class="empty-queue">Tidak ada antrian 🎉</div>';return;}l.innerHTML=q.map(i=>`<div class="queue-item"><div class="queue-item-info"><div class="queue-item-name">${i.namaAnakLabel||'—'}</div><div class="queue-item-meta">${i.cbrWorkerLabel||''}</div></div><button class="btn-q-submit" onclick="submitQueueItem(${i._queueId})">Kirim</button><button class="btn-q-delete" onclick="deleteQueueItem(${i._queueId})">Hapus</button></div>`).join('');}
+async function submitQueueItem(id){let q=getQueue(),item=q.find(x=>x._queueId===id);if(!item)return;try{const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});if(!r.ok)throw 0;localStorage.setItem('ben_queue_eval_menengah',JSON.stringify(q.filter(x=>x._queueId!==id)));updateQueueBadge();renderQueueList();showToast('✅ Terkirim!','success');}catch{showToast('Gagal','error');}}
+function deleteQueueItem(id){localStorage.setItem('ben_queue_eval_menengah',JSON.stringify(getQueue().filter(x=>x._queueId!==id)));updateQueueBadge();renderQueueList();}
+async function submitAllQueue(){const q=getQueue();let ok=0;for(const item of q){try{const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});if(r.ok){ok++;localStorage.setItem('ben_queue_eval_menengah',JSON.stringify(getQueue().filter(x=>x._queueId!==item._queueId)));}}catch{}}updateQueueBadge();renderQueueList();showToast(`✅ ${ok}/${q.length} terkirim`,'success');}
+document.getElementById('queueModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 
-document.addEventListener('DOMContentLoaded', () => {
-  buildTujuan();
-  initWorkerChild('cbrWorker', 'namaAnak');
-  document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-  updateStatusBar(); updateQueueBadge();
-  const draft = loadDraft();
-  if (draft) { restore(draft); showToast('Draft sebelumnya dimuat', 'warning'); }
-});
+let _t;function showToast(m,t=''){const el=document.getElementById('toast');el.textContent=m;el.className='toast '+t+' show';clearTimeout(_t);_t=setTimeout(()=>{el.className='toast';},3200);}
+function toggleSection(id){const b=document.getElementById('body-'+id),c=document.getElementById('chevron-'+id);if(!b||!c)return;const o=b.classList.toggle('open');c.classList.toggle('open',o);}
+function updateStatusBar(){const d=document.getElementById('statusDot'),t=document.getElementById('statusText');if(!d)return;if(navigator.onLine){d.className='status-dot';t.textContent='Online — siap kirim data';}else{d.className='status-dot offline';t.textContent='Offline — data ke antrian';}}
+function confirmReset(){document.getElementById('confirmOverlay').classList.add('open');}
+function closeConfirm(){document.getElementById('confirmOverlay').classList.remove('open');}
+window.addEventListener('online',updateStatusBar);window.addEventListener('offline',updateStatusBar);
 </script>
+<script>window.BEN_ACTIVE_NAV = "nav-menengah";</script>
 <script src="assets/js/nav.js"></script>
 </body>
 </html>
