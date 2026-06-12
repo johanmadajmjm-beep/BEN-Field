@@ -310,7 +310,6 @@ let photos       = [null, null, null];
 let gpsData      = null;
 let tujuanCount  = 0;
 let tujuanIds    = []; // array of unique IDs
-let isOnline     = navigator.onLine;
 
 // Draft key per anak: ben_draft_perencanaan_{namaAnakValue}
 function draftKey(anakValue) {
@@ -837,26 +836,8 @@ async function submitAllQueue() {
 }
 document.getElementById('queueModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 
-let _toast;
-function showToast(msg,type=''){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast '+type+' show';
-  clearTimeout(_toast); _toast=setTimeout(()=>{t.className='toast';},3200);
-}
-function toggleSection(id){
-  const b=document.getElementById('body-'+id),c=document.getElementById('chevron-'+id);
-  const o=b.classList.toggle('open'); c.classList.toggle('open',o);
-}
-function updateStatusBar(){
-  const d=document.getElementById('statusDot'),t=document.getElementById('statusText');
-  if(!d)return;
-  if(navigator.onLine){d.className='status-dot';t.textContent='Online — siap kirim data';}
-  else{d.className='status-dot offline';t.textContent='Offline — data disimpan ke antrian';}
-}
-function confirmReset(){document.getElementById('confirmOverlay').classList.add('open');}
-function closeConfirm(){document.getElementById('confirmOverlay').classList.remove('open');}
-window.addEventListener('online',()=>{isOnline=true;updateStatusBar();});
-window.addEventListener('offline',()=>{isOnline=false;updateStatusBar();});
+window.addEventListener('online',()=>{ isOnline=true; updateStatusBar(); });
+window.addEventListener('offline',()=>{ isOnline=false; updateStatusBar(); });
 </script>
 
 <script>window.BEN_ACTIVE_NAV = "nav-perenc";</script>
