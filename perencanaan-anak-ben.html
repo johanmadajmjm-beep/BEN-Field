@@ -158,7 +158,7 @@
             <input type="file" id="file-0" accept="image/*" capture="environment" onchange="handlePhoto(0,this)" style="display:none">
           </div>
           <div class="foto-slot" id="slot-1" onclick="triggerPhoto(1)">
-            <div class="slot-icon">👨‍👩‍👧</div>
+            <div class="slot-icon">&#128106;</div>
             <div class="slot-label">Keluarga</div>
             <input type="file" id="file-1" accept="image/*" capture="environment" onchange="handlePhoto(1,this)" style="display:none">
           </div>
@@ -448,7 +448,7 @@ function restoreForm(d){
   ['kesulitanPengasuh','kesulitanPekerja','kesepakatan'].forEach(f=>{const el=document.getElementById(f);if(el&&d[f])el.value=d[f];});
   if(d.tujuan&&d.tujuan.length>0){document.getElementById('tujuanList').innerHTML='';tujuanIds=[];tujuanCount=0;d.tujuan.forEach(t=>addTujuan(t));}
   if(d.gps){gpsData=d.gps;document.getElementById('gpsText').textContent=`${gpsData.lat.toFixed(6)}, ${gpsData.lng.toFixed(6)} (±${gpsData.acc}m)`;document.getElementById('gpsDisplay').className='gps-display ok';}
-  if(d.foto){const icons=['📷','👨‍👩‍👧','🏘️'],labels=['Anak/<br>Remaja','Keluarga','Lingkungan'],keys=['anak','keluarga','lingkungan'];keys.forEach((k,i)=>{if(!d.foto[k])return;photos[i]=d.foto[k];const slot=document.getElementById('slot-'+i);slot.classList.add('has-photo');slot.innerHTML=`<img src="${d.foto[k]}"><button class="remove-btn" onclick="removePhoto(${i},event)">✕</button><input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;slot.onclick=null;});}
+  if(d.foto){const icons=['📷','&#128106;','🏘️'],labels=['Anak/<br>Remaja','Keluarga','Lingkungan'],keys=['anak','keluarga','lingkungan'];keys.forEach((k,i)=>{if(!d.foto[k])return;photos[i]=d.foto[k];const slot=document.getElementById('slot-'+i);slot.classList.add('has-photo');slot.innerHTML=`<img src="${d.foto[k]}"><button class="remove-btn" onclick="removePhoto(${i},event)">✕</button><input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i},this)" style="display:none">`;slot.onclick=null;});}
 }
 
 // ── SUBMIT ────────────────────────────────────────────────────────
@@ -472,7 +472,7 @@ async function handleSubmit(){
 }
 
 // ── FOTO ──────────────────────────────────────────────────────────
-const FOTO_ICONS=['📷','👨‍👩‍👧','🏘️'],FOTO_LABELS=['Anak/<br>Remaja','Keluarga','Lingkungan'];
+const FOTO_ICONS=['📷','&#128106;','🏘️'],FOTO_LABELS=['Anak/<br>Remaja','Keluarga','Lingkungan'];
 function triggerPhoto(i){document.getElementById('file-'+i).click();}
 function handlePhoto(i,input){
   const f=input.files[0];if(!f)return;
