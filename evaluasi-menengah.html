@@ -4,33 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#4a2d7a">
-<title>Evaluasi Jangka Menengah — BEN</title>
+<meta name="theme-color" content="#2D1B69">
+<title>Evaluasi Menengah — BEN</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/shared.css">
-<style>
-.tujuan-ref {
-  background:#f3e8ff;border:1.5px solid #c084fc;
-  border-radius:8px;padding:10px 13px;
-  font-size:12px;color:#4a1d7a;margin-bottom:12px;line-height:1.6;
-}
-.tujuan-ref strong{color:#3b0f6e;display:block;margin-bottom:3px;font-size:13px;}
-.no-rencana-notice {
-  background:#fff8e1;border:1.5px solid #ffcc80;
-  border-radius:8px;padding:10px 13px;
-  font-size:12px;color:#7a4a10;margin-bottom:12px;
-}
-.score-input-wrap{display:flex;align-items:center;gap:14px;}
-.score-input-wrap input[type="number"]{width:90px;text-align:center;font-size:28px;font-weight:800;color:var(--green-deep);padding:10px;}
-.score-label{font-size:14px;font-weight:700;padding:8px 16px;border-radius:20px;transition:all 0.2s;background:var(--green-pale);color:var(--green-deep);border:1.5px solid var(--green-border);}
-.score-label.mid{background:#fff8e1;color:#e65100;border-color:#ffcc80;}
-.score-label.low{background:var(--red-light);color:var(--red);border-color:#f5b7b1;}
-.score-hint{background:#f3e8ff;border:1.5px solid #c084fc;border-radius:8px;padding:10px 13px;font-size:12px;color:#4a1d7a;margin-bottom:10px;line-height:1.7;}
-.score-scale{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;}
-.score-scale span{font-size:10px;padding:3px 7px;border-radius:10px;background:rgba(255,255,255,0.7);border:1px solid #c084fc;color:#4a1d7a;}
-</style>
 </head>
 <body>
 <script>
@@ -38,57 +17,51 @@
   window.BEN_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCx4CiGyxXRj01nP8v8W-2D9livH1Zk9r_uuCx2v4WCKIYJ-dBlugpvoYUE1ymw98a/exec';
 </script>
 
-<div class="app-header eval-mid">
-  <div class="logo-wrap">
-    <div class="logo-icon">📊</div>
-    <div><div class="sub">Program BEN — Manggarai</div><h1>Evaluasi Jangka Menengah</h1></div>
+<div class="app-header h-purple">
+  <div class="header-icon">📊</div>
+  <div class="header-text">
+    <div class="header-sub">Program BEN — Manggarai</div>
+    <div class="header-title">Evaluasi Jangka Menengah</div>
   </div>
-  <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
-    <span>📤</span><span id="queueCount">0</span> antrian
+  <div class="header-badge" id="queueBadge" onclick="openQueueModal()">
+    <span class="dot"></span><span id="queueCount">0</span> antrian
   </div>
 </div>
-<div class="status-bar">
+<div class="status-pill">
   <div class="status-dot" id="statusDot"></div>
   <span id="statusText">Memeriksa koneksi…</span>
 </div>
 
 <div class="main">
-  <!-- IDENTITAS -->
-  <div class="section-card">
-    <div class="section-header purple" onclick="toggleSection('s1')">
-      <div class="section-num">1</div>
-      <div class="section-title">Benef/Dampingan <div class="section-sub">Identitas</div></div>
-      <div class="chevron open" id="chevron-s1">▼</div>
+  <div class="s-card">
+    <div class="s-header open" id="shdr-s1" onclick="toggleSection('s1')">
+      <div class="s-step purple">1</div>
+      <div class="s-info"><div class="s-title">Benef / Dampingan</div><div class="s-sub">Identitas</div></div>
+      <svg class="s-chevron open" id="schev-s1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="section-body open" id="body-s1">
-      <div class="field">
-        <label>CBR Worker <span class="req">*</span></label>
-        <select id="cbrWorker" onchange="onWorkerChange()"></select>
-      </div>
-      <div class="field">
-        <label>Nama Anak <span class="req">*</span></label>
-        <select id="namaAnak" disabled onchange="onAnakChange()">
-          <option value="">— Pilih CBR Worker dulu —</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Tanggal Evaluasi Menengah <span class="req">*</span></label>
-        <input type="date" id="tanggal">
-      </div>
+    <div class="s-body open" id="sbody-s1">
+      <div class="field"><label class="field-label">CBR Worker <span class="req">*</span></label><select id="cbrWorker" onchange="onWorkerChange()"></select></div>
+      <div class="field"><label class="field-label">Nama Anak <span class="req">*</span></label><select id="namaAnak" disabled onchange="onAnakChange()"><option value="">— Pilih CBR Worker dulu —</option></select></div>
+      <div class="field"><label class="field-label">Tanggal Evaluasi <span class="req">*</span></label><input type="date" id="tanggal"></div>
     </div>
   </div>
 
-  <!-- EVALUASI TUJUAN (dynamic dari perencanaan) -->
   <div id="evalContainer"></div>
 
-  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="action-row">
-    <button class="btn btn-draft" onclick="handleDraft()">💾 Simpan Draft</button>
-    <button class="btn btn-submit" id="btnSubmit" onclick="handleSubmit()">📤 Kirim ke Server</button>
+  <div class="progress-wrap" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="action-bar">
+    <button class="btn btn-secondary" onclick="handleDraft()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Simpan Draft
+    </button>
+    <button class="btn btn-primary" id="btnSubmit" onclick="handleSubmit()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Kirim ke Server
+    </button>
   </div>
-  <div class="action-row" style="margin-bottom:32px;">
-    <button class="btn btn-home" onclick="window.location.href='index.html'" style="background:var(--blue-light);color:var(--blue);border:1.5px solid #bfdbfe;">🏠 Menu</button>
-    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset</button>
+  <div class="action-bar" style="margin-bottom:0;">
+    <button class="btn btn-ghost" onclick="window.location.href='index.html'">🏠 Kembali ke Menu</button>
+    <button class="btn btn-danger" onclick="confirmReset()">↺ Reset</button>
   </div>
 </div>
 
@@ -96,15 +69,16 @@
 <div class="modal-overlay" id="queueModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-title">📤 Antrian</div>
+    <div class="modal-title">Antrian Pengiriman</div>
     <div id="queueList"></div>
-    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua</button>
+    <button class="btn btn-primary" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
   </div>
 </div>
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
-    <h3>⚠️ Reset Form?</h3>
-    <p>Data yang belum tersimpan akan hilang.</p>
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">Reset Form?</div>
+    <div class="confirm-desc">Data yang belum tersimpan akan hilang.</div>
     <div class="confirm-btns">
       <button class="btn-cancel-c" onclick="closeConfirm()">Batal</button>
       <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
@@ -115,164 +89,125 @@
 <script src="assets/js/data.js"></script>
 <script src="assets/js/shared.js"></script>
 <script>
-let tujuanDariRencana = []; // loaded from perencanaan draft
+let tujuanDariRencana=[];
 
-document.addEventListener('DOMContentLoaded', () => {
-  initChildrenData(() => {
+document.addEventListener('DOMContentLoaded',()=>{
+  initChildrenData(()=>{
     populateWorkerSelect(document.getElementById('cbrWorker'));
-    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-    const draft = loadDraftLocal();
-    if (draft) { restoreForm(draft); showToast('Draft sebelumnya dimuat','warning'); }
+    const d=loadDraft();
+    if(d){restoreForm(d);showToast('Draft sebelumnya dimuat','t-warning');}
   });
-  updateStatusBar();
-  updateQueueBadge();
+  document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];
+  updateStatusBar();updateQueueBadge();
 });
 
-function onWorkerChange() {
-  populateChildSelect(document.getElementById('cbrWorker').value, document.getElementById('namaAnak'));
+function onWorkerChange(){populateChildSelect(document.getElementById('cbrWorker').value,document.getElementById('namaAnak'));}
+function onAnakChange(){loadTujuanDariRencana(document.getElementById('namaAnak').value);}
+
+function loadTujuanDariRencana(anakVal){
+  let tj=[];
+  try{const raw=localStorage.getItem('ben_draft_perencanaan_'+anakVal);if(raw)tj=(JSON.parse(raw).tujuan||[]).filter(t=>t.tujuan);}catch{}
+  tujuanDariRencana=tj;
+  buildEvalSections(tj);
 }
 
-function onAnakChange() {
-  const anakVal = document.getElementById('namaAnak').value;
-  loadTujuanDariRencana(anakVal);
-}
-
-// Ambil tujuan dari draft perencanaan anak ini
-function loadTujuanDariRencana(anakVal) {
-  const key = 'ben_draft_perencanaan_' + anakVal;
-  let tujuan = [];
-  try {
-    const raw = localStorage.getItem(key);
-    if (raw) {
-      const data = JSON.parse(raw);
-      tujuan = (data.tujuan || []).filter(t => t.tujuan);
-    }
-  } catch {}
-  tujuanDariRencana = tujuan;
-  buildEvalSections(tujuan);
-}
-
-function buildEvalSections(tujuan) {
-  const container = document.getElementById('evalContainer');
-  // Gunakan tujuan dari rencana jika ada, fallback ke 3 kosong
-  const list = tujuan.length > 0 ? tujuan : [{nomor:1,tujuan:''},{nomor:2,tujuan:''},{nomor:3,tujuan:''}];
-
-  container.innerHTML = list.map((t, i) => {
-    const n   = i + 1;
-    const ref = t.tujuan
-      ? `<div class="tujuan-ref"><strong>📌 Tujuan ${n} dari Perencanaan:</strong>${t.tujuan}</div>`
-      : `<div class="no-rencana-notice">⚠️ Belum ada data perencanaan untuk tujuan ${n}. Pastikan draft perencanaan anak ini sudah disimpan.</div>`;
-    return `
-    <div class="section-card">
-      <div class="section-header purple" onclick="toggleSection('t${n}')">
-        <div class="section-num">${n+1}</div>
-        <div class="section-title">Evaluasi Tujuan ${n}
-          <div class="section-sub">${t.tujuan ? t.tujuan.slice(0,35)+(t.tujuan.length>35?'…':'') : 'Penilaian pencapaian'}</div>
+function buildEvalSections(tujuan){
+  const list=tujuan.length>0?tujuan:[{nomor:1,tujuan:''},{nomor:2,tujuan:''},{nomor:3,tujuan:''}];
+  document.getElementById('evalContainer').innerHTML=list.map((t,i)=>{
+    const n=i+1;
+    const ref=t.tujuan
+      ?`<div class="info-box purple" style="margin-bottom:14px;"><strong>📌 Tujuan ${n} dari Perencanaan</strong><br>${t.tujuan}</div>`
+      :`<div class="info-box amber" style="margin-bottom:14px;">⚠️ Belum ada data perencanaan untuk tujuan ${n}. Pastikan draft perencanaan anak ini sudah disimpan.</div>`;
+    return `<div class="s-card">
+      <div class="s-header" id="shdr-t${n}" onclick="toggleSection('t${n}')">
+        <div class="s-step purple">${n+1}</div>
+        <div class="s-info">
+          <div class="s-title">Evaluasi Tujuan ${n}</div>
+          <div class="s-sub">${t.tujuan?t.tujuan.slice(0,40)+(t.tujuan.length>40?'…':''):'Penilaian pencapaian'}</div>
         </div>
-        <div class="chevron" id="chevron-t${n}">▼</div>
+        <svg class="s-chevron" id="schev-t${n}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div class="section-body" id="body-t${n}">
+      <div class="s-body" id="sbody-t${n}">
         ${ref}
         <div class="field">
-          <div class="score-hint">
-            Nilai tingkat keberhasilan <strong>Tujuan ${n}</strong>
-            <div class="score-scale"><span>1–4 = Kurang</span><span>5–7 = Cukup</span><span>8–10 = Sangat Baik</span></div>
+          <label class="field-label">Score Keberhasilan (1–10)</label>
+          <div class="info-box purple" style="margin-bottom:10px;font-size:11px;">
+            <span style="margin-right:8px;">1–4 = Kurang</span>·<span style="margin:0 8px;">5–7 = Cukup</span>·<span style="margin-left:8px;">8–10 = Sangat Baik</span>
           </div>
-          <label>Score (1–10)</label>
-          <div class="score-input-wrap">
+          <div class="score-wrap">
             <input type="number" id="score_${n}" min="1" max="10" placeholder="—"
-              oninput="this.value=Math.min(10,Math.max(1,this.value||''));updateScoreLabel(${n})">
-            <span class="score-label" id="scoreLabel_${n}">—</span>
+              oninput="this.value=Math.min(10,Math.max(1,this.value||''));updateScore(${n})">
+            <div class="score-pill" id="scorePill_${n}">—</div>
           </div>
         </div>
-        <div class="field">
-          <label>Jelaskan mengapa memilih score ini</label>
-          <textarea id="alasan_${n}" rows="3" placeholder="Tuliskan alasan…"></textarea>
-        </div>
-        <div class="field">
-          <label>Apa yang sudah berubah?</label>
-          <textarea id="perubahan_${n}" rows="3" placeholder="Perubahan yang terjadi…"></textarea>
-        </div>
-        <div class="field">
-          <label>Perubahan disebabkan oleh apa dan siapa?</label>
-          <textarea id="penyebab_${n}" rows="3" placeholder="Penyebab perubahan…"></textarea>
-        </div>
-        <div class="field">
-          <label>Jika belum sesuai harapan, apa yang harus dikerjakan lagi?</label>
-          <textarea id="tindaklanjut_${n}" rows="3" placeholder="Tindak lanjut…"></textarea>
-        </div>
+        <div class="field"><label class="field-label">Jelaskan mengapa memilih score ini</label><textarea id="alasan_${n}" rows="3" placeholder="Alasan pemilihan score…"></textarea></div>
+        <div class="field"><label class="field-label">Apa yang sudah berubah?</label><textarea id="perubahan_${n}" rows="3" placeholder="Perubahan yang terjadi…"></textarea></div>
+        <div class="field"><label class="field-label">Disebabkan oleh apa dan siapa?</label><textarea id="penyebab_${n}" rows="3" placeholder="Penyebab perubahan…"></textarea></div>
+        <div class="field"><label class="field-label">Jika belum sesuai harapan — apa yang harus dikerjakan lagi?</label><textarea id="tindaklanjut_${n}" rows="3" placeholder="Tindak lanjut…"></textarea></div>
       </div>
     </div>`;
   }).join('');
 }
 
-function updateScoreLabel(n) {
-  const v = parseInt(document.getElementById('score_'+n)?.value)||0;
-  const l = document.getElementById('scoreLabel_'+n);
-  if (!l) return;
-  if (!v) { l.textContent='—'; l.className='score-label'; return; }
-  if (v>=8) { l.textContent=v+' — Sangat Baik'; l.className='score-label'; }
-  else if(v>=5) { l.textContent=v+' — Cukup'; l.className='score-label mid'; }
-  else { l.textContent=v+' — Perlu Perhatian'; l.className='score-label low'; }
+function updateScore(n){
+  const v=parseInt(document.getElementById('score_'+n)?.value)||0;
+  const pill=document.getElementById('scorePill_'+n);
+  if(!pill)return;
+  if(!v){pill.textContent='—';pill.className='score-pill';return;}
+  if(v>=8){pill.textContent=v+' — Sangat Baik';pill.className='score-pill';}
+  else if(v>=5){pill.textContent=v+' — Cukup';pill.className='score-pill mid';}
+  else{pill.textContent=v+' — Perlu Perhatian';pill.className='score-pill low';}
 }
 
-function getTujuanCount() {
-  return document.getElementById('evalContainer').querySelectorAll('.section-card').length;
-}
+function getTujuanCount(){return document.getElementById('evalContainer').querySelectorAll('.s-card').length;}
 
-function collect() {
-  const workerEl=document.getElementById('cbrWorker'),anakEl=document.getElementById('namaAnak');
+function collect(){
+  const w=document.getElementById('cbrWorker'),a=document.getElementById('namaAnak');
   const count=getTujuanCount();
   const tujuan=[];
   for(let n=1;n<=count;n++){
-    tujuan.push({
-      nomor:n,
-      tujuanRencana: tujuanDariRencana[n-1]?.tujuan||'',
-      score: parseInt(document.getElementById('score_'+n)?.value)||null,
-      alasan: (document.getElementById('alasan_'+n)?.value||'').trim(),
-      perubahan: (document.getElementById('perubahan_'+n)?.value||'').trim(),
-      penyebab: (document.getElementById('penyebab_'+n)?.value||'').trim(),
-      tindaklanjut: (document.getElementById('tindaklanjut_'+n)?.value||'').trim(),
-    });
+    tujuan.push({nomor:n,tujuanRencana:tujuanDariRencana[n-1]?.tujuan||'',
+      score:parseInt(document.getElementById('score_'+n)?.value)||null,
+      alasan:(document.getElementById('alasan_'+n)?.value||'').trim(),
+      perubahan:(document.getElementById('perubahan_'+n)?.value||'').trim(),
+      penyebab:(document.getElementById('penyebab_'+n)?.value||'').trim(),
+      tindaklanjut:(document.getElementById('tindaklanjut_'+n)?.value||'').trim()});
   }
-  return {
-    timestamp:new Date().toISOString(),modul:'eval_menengah',
-    cbrWorkerValue:workerEl.value,cbrWorkerLabel:workerEl.options[workerEl.selectedIndex]?.text||'',
-    namaAnakValue:anakEl.value,namaAnakLabel:anakEl.options[anakEl.selectedIndex]?.text||'',
-    tanggal:document.getElementById('tanggal').value,tujuan
-  };
+  return {timestamp:new Date().toISOString(),modul:'eval_menengah',
+    cbrWorkerValue:w.value,cbrWorkerLabel:w.options[w.selectedIndex]?.text||'',
+    namaAnakValue:a.value,namaAnakLabel:a.options[a.selectedIndex]?.text||'',
+    tanggal:document.getElementById('tanggal').value,tujuan};
 }
-
 function validate(d){
-  if(!d.cbrWorkerValue)return'CBR Worker belum dipilih.';
-  if(!d.namaAnakValue)return'Nama Anak belum dipilih.';
-  if(!d.tanggal)return'Tanggal belum diisi.';
+  if(!d.cbrWorkerValue) return 'CBR Worker belum dipilih.';
+  if(!d.namaAnakValue)  return 'Nama Anak belum dipilih.';
+  if(!d.tanggal)        return 'Tanggal belum diisi.';
   return null;
 }
-
-function restoreForm(data){
-  if(!data)return;
-  const we=document.getElementById('cbrWorker'),ae=document.getElementById('namaAnak');
-  if(data.cbrWorkerValue){we.value=data.cbrWorkerValue;populateChildSelect(data.cbrWorkerValue,ae);
-    setTimeout(()=>{if(data.namaAnakValue){ae.value=data.namaAnakValue;loadTujuanDariRencana(data.namaAnakValue);
-      setTimeout(()=>{
-        (data.tujuan||[]).forEach(t=>{const n=t.nomor;
-          if(t.score){document.getElementById('score_'+n).value=t.score;updateScoreLabel(n);}
-          ['alasan','perubahan','penyebab','tindaklanjut'].forEach(f=>{const el=document.getElementById(f+'_'+n);if(el&&t[f])el.value=t[f];});
-        });
-      },200);
+function restoreForm(d){
+  if(!d)return;
+  const w=document.getElementById('cbrWorker'),a=document.getElementById('namaAnak');
+  if(d.cbrWorkerValue){w.value=d.cbrWorkerValue;populateChildSelect(d.cbrWorkerValue,a);
+    setTimeout(()=>{if(d.namaAnakValue){a.value=d.namaAnakValue;loadTujuanDariRencana(d.namaAnakValue);
+      setTimeout(()=>{(d.tujuan||[]).forEach(t=>{const n=t.nomor;
+        if(t.score){document.getElementById('score_'+n).value=t.score;updateScore(n);}
+        ['alasan','perubahan','penyebab','tindaklanjut'].forEach(f=>{const el=document.getElementById(f+'_'+n);if(el&&t[f])el.value=t[f];});
+      });},200);
     }},50);
   }
-  if(data.tanggal)document.getElementById('tanggal').value=data.tanggal;
+  if(d.tanggal)document.getElementById('tanggal').value=d.tanggal;
 }
-
-function loadDraftLocal(){try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||'null');}catch{return null;}}
-function handleDraft(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'error');return;}localStorage.setItem(DRAFT_KEY,JSON.stringify(d));showToast('Draft tersimpan ✓','success');}
-function handleSubmit(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'error');return;}doSubmit(d,doReset);}
-function doReset(){closeConfirm();localStorage.removeItem(DRAFT_KEY);document.getElementById('cbrWorker').value='';const a=document.getElementById('namaAnak');a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';a.disabled=true;document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];buildEvalSections([]);window.scrollTo(0,0);showToast('Form dikosongkan','');}
-
+function handleDraft(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'t-error');return;}saveDraft(d);showToast('Draft tersimpan','t-success');}
+function handleSubmit(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'t-error');return;}doSubmit(d,doReset);}
+function doReset(){
+  closeConfirm();clearDraft();
+  document.getElementById('cbrWorker').value='';
+  const a=document.getElementById('namaAnak');a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';a.disabled=true;
+  document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];
+  buildEvalSections([]);window.scrollTo(0,0);showToast('Form dikosongkan','');
+}
 </script>
-<script>window.BEN_ACTIVE_NAV = "nav-menengah";</script>
+<script>window.BEN_ACTIVE_NAV='nav-menengah';</script>
 <script src="assets/js/nav.js"></script>
 </body>
 </html>
