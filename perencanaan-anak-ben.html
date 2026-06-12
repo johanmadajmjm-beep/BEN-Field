@@ -847,66 +847,6 @@ function doReset() {
 }
 
 // Queue
-function addToQueue(data) {
-  const q = JSON.parse(localStorage.getItem('ben_queue_perencanaan')||'[]');
-  data._queueId = Date.now();
-  q.push(data);
-  localStorage.setItem('ben_queue_perencanaan', JSON.stringify(q));
-  updateQueueBadge();
-}
-function getQueue() { return JSON.parse(localStorage.getItem('ben_queue_perencanaan')||'[]'); }
-function updateQueueBadge() {
-  const q = getQueue();
-  const b = document.getElementById('queueBadge');
-  const c = document.getElementById('queueCount');
-  if (b && c) { b.classList.toggle('visible', q.length>0); c.textContent = q.length; }
-}
-function openQueueModal() {
-  document.getElementById('queueModal').classList.add('open');
-  renderQueueList();
-}
-function renderQueueList() {
-  const q = getQueue();
-  const list = document.getElementById('queueList');
-  if (!list) return;
-  if (q.length===0) { list.innerHTML='<div class="empty-queue">Tidak ada antrian 🎉</div>'; return; }
-  list.innerHTML = q.map(item => `
-    <div class="queue-item">
-      <div class="queue-item-info">
-        <div class="queue-item-name">${item.namaAnakLabel||'—'}</div>
-        <div class="queue-item-meta">${item.cbrWorkerLabel||''} · ${item.tanggal||''}</div>
-      </div>
-      <button class="btn-q-submit" onclick="submitQueueItem(${item._queueId})">Kirim</button>
-      <button class="btn-q-delete" onclick="deleteQueueItem(${item._queueId})">Hapus</button>
-    </div>`).join('');
-}
-async function submitQueueItem(id) {
-  let q = getQueue();
-  const item = q.find(x=>x._queueId===id); if(!item) return;
-  try {
-    const res = await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
-    if(!res.ok) throw new Error();
-    localStorage.setItem('ben_queue_perencanaan', JSON.stringify(q.filter(x=>x._queueId!==id)));
-    updateQueueBadge(); renderQueueList();
-    showToast('✅ Terkirim!','success');
-  } catch { showToast('Gagal kirim','error'); }
-}
-function deleteQueueItem(id) {
-  localStorage.setItem('ben_queue_perencanaan', JSON.stringify(getQueue().filter(x=>x._queueId!==id)));
-  updateQueueBadge(); renderQueueList();
-}
-async function submitAllQueue() {
-  const q = getQueue(); let ok=0;
-  for (const item of q) {
-    try {
-      const res=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
-      if(res.ok){ok++;localStorage.setItem('ben_queue_perencanaan',JSON.stringify(getQueue().filter(x=>x._queueId!==item._queueId)));}
-    } catch {}
-  }
-  updateQueueBadge(); renderQueueList();
-  showToast(`✅ ${ok} dari ${q.length} berhasil dikirim`,'success');
-}
-document.getElementById('queueModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 
 window.addEventListener('online',()=>{ isOnline=true; updateStatusBar(); });
 window.addEventListener('offline',()=>{ isOnline=false; updateStatusBar(); });
