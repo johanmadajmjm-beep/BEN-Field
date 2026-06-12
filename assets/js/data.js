@@ -282,17 +282,25 @@ function loadFromCache() {
 
 async function fetchFromSheets() {
   try {
-    const res  = await fetch(APPS_SCRIPT_URL + '?action=children', { cache: 'no-store' });
-    const json = await res.json();
+    const res  = await fetch(APPS_SCRIPT_URL + '?action=children', {
+      cache: 'no-store',
+      redirect: 'follow'
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    // Apps Script sometimes returns HTML on error
+    if (text.trim().startsWith('<')) throw new Error('HTML response — Apps Script belum deploy doGet');
+    const json = JSON.parse(text);
     if (json.status !== 'ok' || !json.data) throw new Error(json.error || 'bad response');
     CHILDREN_BY_WORKER = {};
     Object.entries(json.data).forEach(([wVal, wData]) => {
       CHILDREN_BY_WORKER[wVal] = wData.children;
     });
     localStorage.setItem(CACHE_KEY, JSON.stringify({ data: CHILDREN_BY_WORKER, fetchedAt: Date.now() }));
+    console.log('[data.js] data anak dimuat dari Sheets ✓');
     return true;
   } catch (err) {
-    console.warn('[data.js] fetch gagal:', err.message);
+    console.warn('[data.js] fetch Sheets gagal, pakai fallback:', err.message);
     return false;
   }
 }
