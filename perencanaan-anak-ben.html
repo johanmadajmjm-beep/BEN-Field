@@ -901,7 +901,7 @@ const CHILDREN_BY_WORKER = {
 };
 
 // APPS SCRIPT URL — ISI DI SINI SETELAH DEPLOY
-const APPS_SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCx4CiGyxXRj01nP8v8W-2D9livH1Zk9r_uuCx2v4WCKIYJ-dBlugpvoYUE1ymw98a/exec';
 
 // ═══════════════════════════════════════════════════════
 // STATE
@@ -1113,6 +1113,7 @@ function collectFormData() {
 
   return {
     timestamp: new Date().toISOString(),
+    modul: 'perencanaan',
     cbrWorkerValue: workerEl.value,
     cbrWorkerLabel: workerEl.options[workerEl.selectedIndex]?.text || '',
     namaAnakValue: anakEl.value,
@@ -1228,11 +1229,6 @@ async function submitForm() {
     return;
   }
 
-  if (APPS_SCRIPT_URL === 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA') {
-    showToast('⚠️ URL Apps Script belum diisi!', 'error');
-    return;
-  }
-
   await doSubmit(data);
 }
 
@@ -1339,11 +1335,6 @@ async function submitQueueItem(id) {
   let q = getQueue();
   const item = q.find(x => x._queueId === id);
   if (!item) return;
-
-  if (APPS_SCRIPT_URL === 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA') {
-    showToast('⚠️ URL Apps Script belum diisi!', 'error');
-    return;
-  }
 
   try {
     const res = await fetch(APPS_SCRIPT_URL, {
