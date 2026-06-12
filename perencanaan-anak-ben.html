@@ -14,7 +14,7 @@
 <body>
 <script>
   window.BEN_MODULE = 'perencanaan';
-  window.BEN_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCx4CiGyxXRj01nP8v8W-2D9livH1Zk9r_uuCx2v4WCKIYJ-dBlugpvoYUE1ymw98a/exec';
+  window.BEN_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbykXCG6hxn8xdQuv2BKAujYT5XGSCjTmJmxMLS1T3SeFqVAF3LK3G9Fxev-14rLw9WL/exec';
 </script>
 
 <div class="app-header">
@@ -431,8 +431,10 @@ function loadDraftItem(key){
 function deleteDraftItem(key){localStorage.removeItem(key);renderDraftManager();showToast('Draft dihapus','');}
 async function submitDraftItem(key){
   try{const d=JSON.parse(localStorage.getItem(key));if(!navigator.onLine){showToast('Tidak ada koneksi','t-error');return;}
-  const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
-  if(!r.ok) throw new Error();
+  const encD=encodeURIComponent(JSON.stringify(d));
+  const rD=await fetch(window.BEN_APPS_SCRIPT_URL+'?data='+encD);
+  const jD=await rD.json();
+  if(jD.status!==200) throw new Error(jD.message);
   localStorage.removeItem(key);renderDraftManager();showToast('Draft berhasil dikirim','t-success');}
   catch{showToast('Gagal kirim — cek koneksi','t-error');}
 }
@@ -458,9 +460,11 @@ async function handleSubmit(){
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Mengirim…';bar.classList.add('visible');
   let p=0;const iv=setInterval(()=>{p=Math.min(p+8,85);fill.style.width=p+'%';},300);
   try{
-    const r=await fetch(window.BEN_APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
+    const enc=encodeURIComponent(JSON.stringify(d));
+    const r=await fetch(window.BEN_APPS_SCRIPT_URL+'?data='+enc);
+    const j=await r.json();
     clearInterval(iv);fill.style.width='100%';
-    if(!r.ok) throw new Error();
+    if(j.status!==200) throw new Error(j.message||'Server error');
     localStorage.removeItem(draftKey(d.namaAnakValue));renderDraftManager();
     showToast('Data berhasil dikirim!','t-success');setTimeout(doReset,1500);
   }catch{clearInterval(iv);addToQueue(d);showToast('Gagal — data masuk antrian','t-warning');}
