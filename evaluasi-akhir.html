@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#7a1a1a">
+<title>Evaluasi Tahap Akhir — BEN</title>
+<link rel="stylesheet" href="assets/css/shared.css">
+<style>
+  .yn-group { display:flex; gap:10px; margin-bottom: 12px; }
+  .yn-btn {
+    flex:1; padding:14px; border:2px solid var(--border);
+    border-radius:var(--radius-sm);
+    background:#fff; color:var(--text-mid);
+    font-size:16px; font-weight:700; cursor:pointer;
+    transition:all 0.15s; text-align:center;
+  }
+  .yn-btn.ya     { background:#e8f5e9; border-color:#43a047; color:#2e7d32; }
+  .yn-btn.tidak  { background:var(--red-light); border-color:var(--red); color:var(--red); }
+  .cond-field { display:none; margin-top:2px; }
+  .cond-field.show { display:block; }
+  .achieved-banner {
+    background:#e8f5e9; border:1.5px solid #43a047;
+    border-radius:8px; padding:12px 14px;
+    font-size:13px; color:#2e7d32; font-weight:600;
+    display:flex; align-items:center; gap:8px;
+  }
+</style>
+</head>
+<body>
+
+<script>
+  window.BEN_MODULE = 'eval_akhir';
+  window.BEN_APPS_SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_EVAL_AKHIR';
+</script>
+
+<!-- HEADER -->
+<div class="app-header eval-akhir">
+  <div class="logo-wrap">
+    <div class="logo-icon">🏁</div>
+    <div>
+      <div class="sub">Program BEN — Manggarai</div>
+      <h1>Evaluasi Tahap Akhir</h1>
+    </div>
+  </div>
+  <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
+    <span>📤</span><span id="queueCount">0</span> antrian
+  </div>
+</div>
+
+<div class="status-bar">
+  <div class="status-dot" id="statusDot"></div>
+  <span id="statusText">Memeriksa koneksi…</span>
+</div>
+
+<div class="main">
+
+  <!-- IDENTITAS -->
+  <div class="section-card">
+    <div class="section-header red" onclick="toggleSection('s1')">
+      <div class="section-num">1</div>
+      <div class="section-title">Benef/Dampingan <div class="section-sub">Identitas</div></div>
+      <div class="chevron open" id="chevron-s1">▼</div>
+    </div>
+    <div class="section-body open" id="body-s1">
+      <div class="field">
+        <label>CBR Worker <span class="req">*</span></label>
+        <select id="cbrWorker"></select>
+      </div>
+      <div class="field">
+        <label>Nama Anak <span class="req">*</span></label>
+        <select id="namaAnak" disabled><option value="">— Pilih CBR Worker dulu —</option></select>
+      </div>
+      <div class="field">
+        <label>Tanggal Evaluasi Tahap Akhir <span class="req">*</span></label>
+        <input type="date" id="tanggal">
+      </div>
+    </div>
+  </div>
+
+  <!-- TUJUAN 1, 2, 3 -->
+  <div id="tujuanContainer"></div>
+
+  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="action-row">
+    <button class="btn btn-draft" onclick="handleDraft()">💾 Simpan Draft</button>
+    <button class="btn btn-submit" id="btnSubmit" onclick="handleSubmit()">📤 Kirim ke Server</button>
+  </div>
+  <div class="action-row" style="margin-bottom:32px;">
+    <button class="btn btn-home" onclick="window.location.href='index.html'">🏠 Kembali ke Menu</button>
+    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset Form</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="queueModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📤 Antrian Pengiriman</div>
+    <div id="queueList"></div>
+    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>⚠️ Reset Form?</h3>
+    <p>Semua data yang belum disimpan sebagai draft akan hilang.</p>
+    <div class="confirm-btns">
+      <button class="btn-cancel-c" onclick="closeConfirm()">Batal</button>
+      <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/shared.js"></script>
+<script>
+// State: 'ya' | 'tidak' | null per tujuan
+const ynState = { 1: null, 2: null, 3: null };
+
+function setYN(n, val) {
+  ynState[n] = val;
+  const btnYa    = document.getElementById(`btn_ya_${n}`);
+  const btnTidak = document.getElementById(`btn_tidak_${n}`);
+  const condYa   = document.getElementById(`cond_ya_${n}`);
+  const condTdk  = document.getElementById(`cond_tidak_${n}`);
+
+  btnYa.className    = 'yn-btn' + (val === 'ya'    ? ' ya'    : '');
+  btnTidak.className = 'yn-btn' + (val === 'tidak' ? ' tidak' : '');
+  condYa.classList.toggle('show',  val === 'ya');
+  condTdk.classList.toggle('show', val === 'tidak');
+}
+
+function buildTujuan() {
+  const container = document.getElementById('tujuanContainer');
+  let html = '';
+  for (let n = 1; n <= 3; n++) {
+    html += `
+    <div class="section-card">
+      <div class="section-header red" onclick="toggleSection('t${n}')">
+        <div class="section-num">${n + 1}</div>
+        <div class="section-title">Evaluasi Akhir Tujuan ${n} <div class="section-sub">Apakah tujuan tercapai?</div></div>
+        <div class="chevron" id="chevron-t${n}">▼</div>
+      </div>
+      <div class="section-body" id="body-t${n}">
+        <div class="field">
+          <label>Apakah Tujuan ${n} sudah tercapai saat ini?</label>
+          <div class="yn-group">
+            <button class="yn-btn" id="btn_ya_${n}"    onclick="setYN(${n},'ya')">✅ Ya, Tercapai</button>
+            <button class="yn-btn" id="btn_tidak_${n}" onclick="setYN(${n},'tidak')">❌ Belum Tercapai</button>
+          </div>
+          <div class="cond-field" id="cond_ya_${n}">
+            <div class="achieved-banner">🎉 Tujuan ${n} tercapai!</div>
+            <div class="field" style="margin-top:10px;">
+              <label>Jelaskan pencapaian ini</label>
+              <textarea id="jelaskan_ya_${n}" placeholder="Ceritakan bagaimana tujuan ini berhasil dicapai…" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="cond-field" id="cond_tidak_${n}">
+            <div class="field">
+              <label>Mengapa belum tercapai?</label>
+              <textarea id="jelaskan_tidak_${n}" placeholder="Jelaskan kendala atau hambatan yang dihadapi…" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Saran baru untuk hal ini</label>
+          <textarea id="saran_${n}" placeholder="Tuliskan saran atau rekomendasi ke depan…" rows="3"></textarea>
+        </div>
+      </div>
+    </div>`;
+  }
+  container.innerHTML = html;
+}
+
+function collect() {
+  const workerEl = document.getElementById('cbrWorker');
+  const anakEl   = document.getElementById('namaAnak');
+  const tujuan   = [];
+  for (let n = 1; n <= 3; n++) {
+    const status = ynState[n];
+    tujuan.push({
+      nomor:        n,
+      tercapai:     status,
+      jelaskan_ya:  document.getElementById(`jelaskan_ya_${n}`)?.value.trim() || '',
+      jelaskan_tdk: document.getElementById(`jelaskan_tidak_${n}`)?.value.trim() || '',
+      saran:        document.getElementById(`saran_${n}`)?.value.trim() || ''
+    });
+  }
+  return {
+    timestamp:      new Date().toISOString(),
+    modul:          'eval_akhir',
+    cbrWorkerValue: workerEl.value,
+    cbrWorkerLabel: workerEl.options[workerEl.selectedIndex]?.text || '',
+    namaAnakValue:  anakEl.value,
+    namaAnakLabel:  anakEl.options[anakEl.selectedIndex]?.text || '',
+    tanggal:        document.getElementById('tanggal').value,
+    tujuan
+  };
+}
+
+function validate(data) {
+  if (!data.cbrWorkerValue) return 'CBR Worker belum dipilih.';
+  if (!data.namaAnakValue)  return 'Nama Anak belum dipilih.';
+  if (!data.tanggal)        return 'Tanggal belum diisi.';
+  return null;
+}
+
+function restore(data) {
+  if (!data) return;
+  const workerEl = document.getElementById('cbrWorker');
+  const anakEl   = document.getElementById('namaAnak');
+  if (data.cbrWorkerValue) {
+    workerEl.value = data.cbrWorkerValue;
+    populateChildSelect(data.cbrWorkerValue, anakEl);
+    setTimeout(() => { if (data.namaAnakValue) anakEl.value = data.namaAnakValue; }, 50);
+  }
+  if (data.tanggal) document.getElementById('tanggal').value = data.tanggal;
+  (data.tujuan || []).forEach(t => {
+    const n = t.nomor;
+    if (t.tercapai) setYN(n, t.tercapai);
+    if (t.jelaskan_ya)  { const el = document.getElementById(`jelaskan_ya_${n}`);  if (el) el.value = t.jelaskan_ya; }
+    if (t.jelaskan_tdk) { const el = document.getElementById(`jelaskan_tidak_${n}`); if (el) el.value = t.jelaskan_tdk; }
+    if (t.saran)        { const el = document.getElementById(`saran_${n}`);         if (el) el.value = t.saran; }
+  });
+}
+
+function doReset() {
+  closeConfirm(); clearDraft();
+  document.getElementById('cbrWorker').value = '';
+  const anakEl = document.getElementById('namaAnak');
+  anakEl.innerHTML = '<option value="">— Pilih CBR Worker dulu —</option>';
+  anakEl.disabled = true;
+  document.getElementById('tanggal').value = '';
+  for (let n = 1; n <= 3; n++) {
+    ynState[n] = null;
+    ['btn_ya_','btn_tidak_'].forEach(p => {
+      const el = document.getElementById(p+n); if (el) el.className = 'yn-btn';
+    });
+    ['cond_ya_','cond_tidak_'].forEach(p => {
+      const el = document.getElementById(p+n); if (el) el.classList.remove('show');
+    });
+    ['jelaskan_ya_','jelaskan_tidak_','saran_'].forEach(p => {
+      const el = document.getElementById(p+n); if (el) el.value = '';
+    });
+  }
+  window.scrollTo(0,0);
+  showToast('Form dikosongkan', '');
+}
+
+function handleDraft()  { saveDraft(collect()); }
+function handleSubmit() {
+  const data = collect();
+  const err  = validate(data);
+  if (err) { showToast('⚠️ ' + err, 'error'); return; }
+  doSubmit(data, doReset);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildTujuan();
+  initWorkerChild('cbrWorker', 'namaAnak');
+  document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+  updateStatusBar(); updateQueueBadge();
+  const draft = loadDraft();
+  if (draft) { restore(draft); showToast('Draft sebelumnya dimuat', 'warning'); }
+});
+</script>
+</body>
+</html>

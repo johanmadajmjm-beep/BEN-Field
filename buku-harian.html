@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a3d5c">
+<title>Buku Harian Anak — BEN</title>
+<link rel="stylesheet" href="assets/css/shared.css">
+<style>
+  .diary-guide {
+    background: #e8f4fd;
+    border: 1.5px solid #90caf9;
+    border-radius: 8px;
+    padding: 10px 13px;
+    font-size: 12px;
+    color: #1a3a5c;
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+  .diary-guide strong { color: #0d2a45; }
+  .diary-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #1a3d5c; color: white;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .diary-header-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .diary-date-label { font-size: 13px; font-weight: 600; color: var(--text-mid); flex:1; }
+</style>
+</head>
+<body>
+
+<script>
+  window.BEN_MODULE = 'buku_harian';
+  window.BEN_APPS_SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_BUKU_HARIAN';
+</script>
+
+<!-- HEADER -->
+<div class="app-header buku-harian">
+  <div class="logo-wrap">
+    <div class="logo-icon">📓</div>
+    <div>
+      <div class="sub">Program BEN — Manggarai</div>
+      <h1>Buku Harian Anak</h1>
+    </div>
+  </div>
+  <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
+    <span>📤</span><span id="queueCount">0</span> antrian
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="status-dot" id="statusDot"></div>
+  <span id="statusText">Memeriksa koneksi…</span>
+</div>
+
+<div class="main">
+
+  <!-- SECTION 1: IDENTITAS -->
+  <div class="section-card">
+    <div class="section-header blue" onclick="toggleSection('s1')">
+      <div class="section-num">1</div>
+      <div class="section-title">Benef/Dampingan <div class="section-sub">Identitas</div></div>
+      <div class="chevron open" id="chevron-s1">▼</div>
+    </div>
+    <div class="section-body open" id="body-s1">
+      <div class="field">
+        <label>CBR Worker <span class="req">*</span></label>
+        <select id="cbrWorker"></select>
+      </div>
+      <div class="field">
+        <label>Nama Anak <span class="req">*</span></label>
+        <select id="namaAnak" disabled>
+          <option value="">— Pilih CBR Worker dulu —</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2–11: DIARY 1–10 -->
+  <div id="diaryContainer"></div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="action-row">
+    <button class="btn btn-draft" onclick="handleDraft()">💾 Simpan Draft</button>
+    <button class="btn btn-submit" id="btnSubmit" onclick="handleSubmit()">📤 Kirim ke Server</button>
+  </div>
+  <div class="action-row" style="margin-bottom:32px;">
+    <button class="btn btn-home" onclick="window.location.href='index.html'">🏠 Kembali ke Menu</button>
+    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset Form</button>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- QUEUE MODAL -->
+<div class="modal-overlay" id="queueModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📤 Antrian Pengiriman</div>
+    <div id="queueList"></div>
+    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
+  </div>
+</div>
+
+<!-- CONFIRM RESET -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>⚠️ Reset Form?</h3>
+    <p>Semua data yang belum disimpan sebagai draft akan hilang.</p>
+    <div class="confirm-btns">
+      <button class="btn-cancel-c" onclick="closeConfirm()">Batal</button>
+      <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/shared.js"></script>
+<script>
+const DIARY_GUIDE = `<strong>Panduan isi diary:</strong><br>
+● Hal-hal yang menonjol saat ini — sesuatu yang sangat baik & tantangan<br>
+● Apa, Mengapa, Dimana, Bagaimana, Siapa, Kapan<br>
+● Aktivitas yang dilakukan di rumah<br>
+● Perjanjian yang dibuat dengan petugas RBM<br>
+● Pertanyaan untuk kunjungan berikutnya`;
+
+// Build diary sections
+function buildDiaries() {
+  const container = document.getElementById('diaryContainer');
+  let html = '';
+  for (let n = 1; n <= 10; n++) {
+    const sectionNum = n + 1;
+    html += `
+    <div class="section-card">
+      <div class="section-header diary" onclick="toggleSection('d${n}')">
+        <div class="section-num">${sectionNum}</div>
+        <div class="section-title">Diary ${n} <div class="section-sub">Catatan kunjungan ke-${n}</div></div>
+        <div class="chevron" id="chevron-d${n}">▼</div>
+      </div>
+      <div class="section-body" id="body-d${n}">
+        <div class="diary-guide">${DIARY_GUIDE}</div>
+        <div class="field">
+          <label>Tanggal Diary ${n}</label>
+          <input type="date" id="tanggal_diary_${n}">
+        </div>
+        <div class="field">
+          <label>Catatan Diary ${n}</label>
+          <textarea id="isi_diary_${n}" placeholder="Tuliskan catatan diary di sini…" rows="5"></textarea>
+        </div>
+      </div>
+    </div>`;
+  }
+  container.innerHTML = html;
+}
+
+// Collect
+function collect() {
+  const workerEl = document.getElementById('cbrWorker');
+  const anakEl   = document.getElementById('namaAnak');
+  const diaries  = [];
+  for (let n = 1; n <= 10; n++) {
+    diaries.push({
+      nomor:   n,
+      tanggal: document.getElementById(`tanggal_diary_${n}`)?.value || '',
+      isi:     document.getElementById(`isi_diary_${n}`)?.value.trim() || ''
+    });
+  }
+  return {
+    timestamp:       new Date().toISOString(),
+    modul:           'buku_harian',
+    cbrWorkerValue:  workerEl.value,
+    cbrWorkerLabel:  workerEl.options[workerEl.selectedIndex]?.text || '',
+    namaAnakValue:   anakEl.value,
+    namaAnakLabel:   anakEl.options[anakEl.selectedIndex]?.text || '',
+    tanggal:         diaries.find(d => d.tanggal)?.tanggal || new Date().toISOString().split('T')[0],
+    diaries
+  };
+}
+
+function validate(data) {
+  if (!data.cbrWorkerValue) return 'CBR Worker belum dipilih.';
+  if (!data.namaAnakValue)  return 'Nama Anak belum dipilih.';
+  const filled = data.diaries.filter(d => d.isi);
+  if (filled.length === 0)  return 'Minimal 1 diary harus diisi.';
+  return null;
+}
+
+// Restore
+function restore(data) {
+  if (!data) return;
+  const workerEl = document.getElementById('cbrWorker');
+  const anakEl   = document.getElementById('namaAnak');
+  if (data.cbrWorkerValue) {
+    workerEl.value = data.cbrWorkerValue;
+    populateChildSelect(data.cbrWorkerValue, anakEl);
+    setTimeout(() => { if (data.namaAnakValue) anakEl.value = data.namaAnakValue; }, 50);
+  }
+  (data.diaries || []).forEach(d => {
+    const tEl = document.getElementById(`tanggal_diary_${d.nomor}`);
+    const iEl = document.getElementById(`isi_diary_${d.nomor}`);
+    if (tEl && d.tanggal) tEl.value = d.tanggal;
+    if (iEl && d.isi)     iEl.value = d.isi;
+  });
+}
+
+function doReset() {
+  closeConfirm();
+  clearDraft();
+  document.getElementById('cbrWorker').value = '';
+  const anakEl = document.getElementById('namaAnak');
+  anakEl.innerHTML = '<option value="">— Pilih CBR Worker dulu —</option>';
+  anakEl.disabled = true;
+  for (let n = 1; n <= 10; n++) {
+    const tEl = document.getElementById(`tanggal_diary_${n}`);
+    const iEl = document.getElementById(`isi_diary_${n}`);
+    if (tEl) tEl.value = '';
+    if (iEl) iEl.value = '';
+  }
+  window.scrollTo(0, 0);
+  showToast('Form dikosongkan', '');
+}
+
+function handleDraft() { saveDraft(collect()); }
+
+function handleSubmit() {
+  const data = collect();
+  const err  = validate(data);
+  if (err) { showToast('⚠️ ' + err, 'error'); return; }
+  doSubmit(data, doReset);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  buildDiaries();
+  initWorkerChild('cbrWorker', 'namaAnak');
+  updateStatusBar();
+  updateQueueBadge();
+  const draft = loadDraft();
+  if (draft) { restore(draft); showToast('Draft sebelumnya dimuat', 'warning'); }
+});
+</script>
+</body>
+</html>

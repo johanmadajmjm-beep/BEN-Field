@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#4a2d7a">
+<title>Evaluasi Jangka Menengah — BEN</title>
+<link rel="stylesheet" href="assets/css/shared.css">
+<style>
+  .score-hint {
+    background: #f3e8ff; border: 1.5px solid #c084fc;
+    border-radius: 8px; padding: 10px 13px;
+    font-size: 12px; color: #4a1d7a; margin-bottom: 10px; line-height: 1.7;
+  }
+  .score-scale {
+    display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap;
+  }
+  .score-scale span {
+    font-size: 10px; padding: 3px 7px; border-radius: 10px;
+    background: rgba(255,255,255,0.7); border: 1px solid #c084fc; color: #4a1d7a;
+  }
+  .score-input-wrap { display: flex; align-items: center; gap: 14px; }
+  .score-input-wrap input[type="number"] {
+    width: 90px; text-align: center; font-size: 28px; font-weight: 800;
+    color: var(--green-deep); padding: 10px;
+  }
+  .score-label {
+    font-size: 14px; font-weight: 700; padding: 8px 16px;
+    border-radius: 20px; transition: all 0.2s;
+    background: var(--green-pale); color: var(--green-deep);
+    border: 1.5px solid var(--green-border);
+  }
+  .score-label.mid { background:#fff8e1; color:#e65100; border-color:#ffcc80; }
+  .score-label.low { background:var(--red-light); color:var(--red); border-color:#f5b7b1; }
+</style>
+</head>
+<body>
+
+<script>
+  window.BEN_MODULE = 'eval_menengah';
+  window.BEN_APPS_SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_EVAL_MENENGAH';
+</script>
+
+<!-- HEADER -->
+<div class="app-header eval-mid">
+  <div class="logo-wrap">
+    <div class="logo-icon">📊</div>
+    <div>
+      <div class="sub">Program BEN — Manggarai</div>
+      <h1>Evaluasi Jangka Menengah</h1>
+    </div>
+  </div>
+  <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
+    <span>📤</span><span id="queueCount">0</span> antrian
+  </div>
+</div>
+
+<div class="status-bar">
+  <div class="status-dot" id="statusDot"></div>
+  <span id="statusText">Memeriksa koneksi…</span>
+</div>
+
+<div class="main">
+
+  <!-- SECTION 1: IDENTITAS -->
+  <div class="section-card">
+    <div class="section-header purple" onclick="toggleSection('s1')">
+      <div class="section-num">1</div>
+      <div class="section-title">Benef/Dampingan <div class="section-sub">Identitas</div></div>
+      <div class="chevron open" id="chevron-s1">▼</div>
+    </div>
+    <div class="section-body open" id="body-s1">
+      <div class="field">
+        <label>CBR Worker <span class="req">*</span></label>
+        <select id="cbrWorker"></select>
+      </div>
+      <div class="field">
+        <label>Nama Anak <span class="req">*</span></label>
+        <select id="namaAnak" disabled><option value="">— Pilih CBR Worker dulu —</option></select>
+      </div>
+      <div class="field">
+        <label>Tanggal Evaluasi Menengah <span class="req">*</span></label>
+        <input type="date" id="tanggal">
+      </div>
+    </div>
+  </div>
+
+  <!-- TUJUAN 1, 2, 3 -->
+  <div id="tujuanContainer"></div>
+
+  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="action-row">
+    <button class="btn btn-draft" onclick="handleDraft()">💾 Simpan Draft</button>
+    <button class="btn btn-submit" id="btnSubmit" onclick="handleSubmit()">📤 Kirim ke Server</button>
+  </div>
+  <div class="action-row" style="margin-bottom:32px;">
+    <button class="btn btn-home" onclick="window.location.href='index.html'">🏠 Kembali ke Menu</button>
+    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset Form</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="queueModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📤 Antrian Pengiriman</div>
+    <div id="queueList"></div>
+    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>⚠️ Reset Form?</h3>
+    <p>Semua data yang belum disimpan sebagai draft akan hilang.</p>
+    <div class="confirm-btns">
+      <button class="btn-cancel-c" onclick="closeConfirm()">Batal</button>
+      <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/shared.js"></script>
+<script>
+
+function scoreLabel(v) {
+  if (!v || v < 1) return { text: '—', cls: '' };
+  if (v >= 8) return { text: `${v} — Sangat Baik`, cls: '' };
+  if (v >= 5) return { text: `${v} — Cukup`, cls: 'mid' };
+  return { text: `${v} — Perlu Perhatian`, cls: 'low' };
+}
+
+function updateScoreLabel(n) {
+  const val = parseInt(document.getElementById(`score_${n}`)?.value) || 0;
+  const lbl = document.getElementById(`scoreLabel_${n}`);
+  if (!lbl) return;
+  const { text, cls } = scoreLabel(val);
+  lbl.textContent = text;
+  lbl.className = 'score-label ' + cls;
+}
+
+function buildTujuan() {
+  const container = document.getElementById('tujuanContainer');
+  let html = '';
+  for (let n = 1; n <= 3; n++) {
+    html += `
+    <div class="section-card">
+      <div class="section-header purple" onclick="toggleSection('t${n}')">
+        <div class="section-num">${n + 1}</div>
+        <div class="section-title">Evaluasi Tujuan ${n} <div class="section-sub">Penilaian pencapaian</div></div>
+        <div class="chevron" id="chevron-t${n}">▼</div>
+      </div>
+      <div class="section-body" id="body-t${n}">
+        <div class="field">
+          <div class="score-hint">
+            Nilai tingkat keberhasilan cara mencapai <strong>Tujuan ${n}</strong>
+            <div class="score-scale">
+              <span>1–4 = Kurang</span><span>5–7 = Cukup</span><span>8–10 = Sangat Baik</span>
+            </div>
+          </div>
+          <label>Score (1–10)</label>
+          <div class="score-input-wrap">
+            <input type="number" id="score_${n}" min="1" max="10" placeholder="—"
+              oninput="this.value=Math.min(10,Math.max(1,this.value||'')); updateScoreLabel(${n})">
+            <span class="score-label" id="scoreLabel_${n}">—</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Jelaskan mengapa memilih score ini</label>
+          <textarea id="alasan_${n}" placeholder="Tuliskan alasan pemilihan score…" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label>Apa yang sudah berubah dari Tujuan ${n}?</label>
+          <textarea id="perubahan_${n}" placeholder="Tuliskan perubahan yang terjadi…" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label>Perubahan disebabkan oleh apa dan siapa?</label>
+          <textarea id="penyebab_${n}" placeholder="Tuliskan penyebab perubahan…" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label>Jika belum sesuai harapan, apa yang harus dikerjakan lagi?</label>
+          <textarea id="tindaklanjut_${n}" placeholder="Tuliskan tindak lanjut yang perlu dilakukan…" rows="3"></textarea>
+        </div>
+      </div>
+    </div>`;
+  }
+  container.innerHTML = html;
+}
+
+function collect() {
+  const workerEl = document.getElementById('cbrWorker');
+  const anakEl   = document.getElementById('namaAnak');
+  const tujuan   = [];
+  for (let n = 1; n <= 3; n++) {
+    tujuan.push({
+      nomor:         n,
+      score:         parseInt(document.getElementById(`score_${n}`)?.value) || null,
+      alasan:        document.getElementById(`alasan_${n}`)?.value.trim() || '',
+      perubahan:     document.getElementById(`perubahan_${n}`)?.value.trim() || '',
+      penyebab:      document.getElementById(`penyebab_${n}`)?.value.trim() || '',
+      tindaklanjut:  document.getElementById(`tindaklanjut_${n}`)?.value.trim() || ''
+    });
+  }
+  return {
+    timestamp:      new Date().toISOString(),
+    modul:          'eval_menengah',
+    cbrWorkerValue: workerEl.value,
+    cbrWorkerLabel: workerEl.options[workerEl.selectedIndex]?.text || '',
+    namaAnakValue:  anakEl.value,
+    namaAnakLabel:  anakEl.options[anakEl.selectedIndex]?.text || '',
+    tanggal:        document.getElementById('tanggal').value,
+    tujuan
+  };
+}
+
+function validate(data) {
+  if (!data.cbrWorkerValue) return 'CBR Worker belum dipilih.';
+  if (!data.namaAnakValue)  return 'Nama Anak belum dipilih.';
+  if (!data.tanggal)        return 'Tanggal belum diisi.';
+  return null;
+}
+
+function restore(data) {
+  if (!data) return;
+  const workerEl = document.getElementById('cbrWorker');
+  const anakEl   = document.getElementById('namaAnak');
+  if (data.cbrWorkerValue) {
+    workerEl.value = data.cbrWorkerValue;
+    populateChildSelect(data.cbrWorkerValue, anakEl);
+    setTimeout(() => { if (data.namaAnakValue) anakEl.value = data.namaAnakValue; }, 50);
+  }
+  if (data.tanggal) document.getElementById('tanggal').value = data.tanggal;
+  (data.tujuan || []).forEach(t => {
+    const n = t.nomor;
+    if (t.score) { document.getElementById(`score_${n}`).value = t.score; updateScoreLabel(n); }
+    ['alasan','perubahan','penyebab','tindaklanjut'].forEach(f => {
+      const el = document.getElementById(`${f}_${n}`);
+      if (el && t[f]) el.value = t[f];
+    });
+  });
+}
+
+function doReset() {
+  closeConfirm(); clearDraft();
+  document.getElementById('cbrWorker').value = '';
+  const anakEl = document.getElementById('namaAnak');
+  anakEl.innerHTML = '<option value="">— Pilih CBR Worker dulu —</option>';
+  anakEl.disabled = true;
+  document.getElementById('tanggal').value = '';
+  for (let n = 1; n <= 3; n++) {
+    document.getElementById(`score_${n}`).value = '';
+    updateScoreLabel(n);
+    ['alasan','perubahan','penyebab','tindaklanjut'].forEach(f => {
+      const el = document.getElementById(`${f}_${n}`);
+      if (el) el.value = '';
+    });
+  }
+  window.scrollTo(0,0);
+  showToast('Form dikosongkan', '');
+}
+
+function handleDraft()  { saveDraft(collect()); }
+function handleSubmit() {
+  const data = collect();
+  const err  = validate(data);
+  if (err) { showToast('⚠️ ' + err, 'error'); return; }
+  doSubmit(data, doReset);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildTujuan();
+  initWorkerChild('cbrWorker', 'namaAnak');
+  document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+  updateStatusBar(); updateQueueBadge();
+  const draft = loadDraft();
+  if (draft) { restore(draft); showToast('Draft sebelumnya dimuat', 'warning'); }
+});
+</script>
+</body>
+</html>
