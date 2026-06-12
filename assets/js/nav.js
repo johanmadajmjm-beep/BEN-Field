@@ -28,7 +28,7 @@ function injectBottomNav() {
   // Inject CSS inline agar tidak tergantung load order shared.css
   const style = document.createElement('style');
   style.textContent = `
-    body { padding-bottom: 64px !important; }
+    body { padding-bottom: 80px !important; }
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       height: 64px; background: #fff;
