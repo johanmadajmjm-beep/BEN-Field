@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a5c3a">
+<title>Perencanaan Anak — BEN</title>
+<style>
+  :root {
+    --green-deep: #1a5c3a;
+    --green-mid: #2d7a52;
+    --green-light: #4a9e6f;
+    --green-pale: #e8f5ee;
+    --green-border: #b8dfc9;
+    --amber: #e07b2a;
+    --amber-light: #fef3e8;
+    --red: #c0392b;
+    --red-light: #fdecea;
+    --text: #1a2e24;
+    --text-mid: #3d5c4a;
+    --text-muted: #7a9e8a;
+    --bg: #f5faf7;
+    --card: #ffffff;
+    --border: #d4e8db;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 8px rgba(26,92,58,0.10);
+    --shadow-lg: 0 8px 32px rgba(26,92,58,0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ─────────────────────────────────────── */
+  .app-header {
+    background: var(--green-deep);
+    color: #fff;
+    padding: 14px 16px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.20);
+  }
+  .app-header .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .app-header .logo-icon {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .app-header h1 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    line-height: 1.2;
+  }
+  .app-header .subtitle {
+    font-size: 11px;
+    opacity: 0.7;
+    font-weight: 400;
+  }
+
+  .queue-badge {
+    background: var(--amber);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 5px;
+  }
+  .queue-badge.visible { display: flex; }
+
+  /* ── STATUS BAR ──────────────────────────────────── */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--green-pale);
+    border-bottom: 1px solid var(--green-border);
+    font-size: 12px;
+    color: var(--text-mid);
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #5cb85c;
+    flex-shrink: 0;
+  }
+  .status-dot.offline { background: var(--amber); }
+
+  /* ── MAIN CONTENT ────────────────────────────────── */
+  .main { padding: 16px; max-width: 640px; margin: 0 auto; }
+
+  /* ── SECTION CARDS ───────────────────────────────── */
+  .section-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    background: var(--green-deep);
+    color: #fff;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-header.tujuan-header { background: var(--green-mid); }
+  .section-header.docs-header { background: var(--text-mid); }
+
+  .section-num {
+    width: 26px; height: 26px;
+    background: rgba(255,255,255,0.20);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .section-sub {
+    font-size: 11px;
+    opacity: 0.75;
+    font-weight: 400;
+  }
+  .chevron {
+    font-size: 12px;
+    transition: transform 0.2s;
+    opacity: 0.8;
+  }
+  .chevron.open { transform: rotate(180deg); }
+
+  .section-body {
+    padding: 16px;
+    display: none;
+  }
+  .section-body.open { display: block; }
+
+  /* ── FORM FIELDS ─────────────────────────────────── */
+  .field {
+    margin-bottom: 14px;
+  }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 5px;
+  }
+  label .req { color: var(--red); margin-left: 2px; }
+
+  label .hint {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(45,122,82,0.12);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%233d5c4a' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  /* ── ABC TEXTAREA ────────────────────────────────── */
+  .abc-box {
+    background: var(--amber-light);
+    border: 1.5px solid #f0c07a;
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #7a4a10;
+    line-height: 1.6;
+  }
+  .abc-box strong { color: #5a3008; }
+
+  /* ── FOTO SECTION ────────────────────────────────── */
+  .foto-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 4px; }
+
+  .foto-slot {
+    aspect-ratio: 1;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    background: var(--green-pale);
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .foto-slot:hover { border-color: var(--green-mid); }
+  .foto-slot.has-photo { border-style: solid; border-color: var(--green-mid); }
+
+  .foto-slot .slot-icon { font-size: 24px; margin-bottom: 4px; }
+  .foto-slot .slot-label { font-size: 10px; color: var(--text-muted); text-align: center; line-height: 1.3; }
+
+  .foto-slot img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .foto-slot .remove-btn {
+    position: absolute; top: 4px; right: 4px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+  }
+  input[type="file"] { display: none; }
+
+  /* ── GPS BUTTON ──────────────────────────────────── */
+  .gps-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .gps-display {
+    flex: 1;
+    padding: 11px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text-mid);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .gps-display.got-location { color: var(--green-mid); border-color: var(--green-mid); }
+  .gps-display.error { color: var(--red); border-color: var(--red); }
+
+  .btn-gps {
+    padding: 0 14px;
+    background: var(--green-deep);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+  }
+  .btn-gps:hover { background: var(--green-mid); }
+  .btn-gps:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+  /* ── DIVIDER ─────────────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 14px 0;
+  }
+
+  /* ── ACTION BUTTONS ──────────────────────────────── */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    padding: 16px;
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .btn-save-draft {
+    background: var(--green-pale);
+    color: var(--green-deep);
+    border: 1.5px solid var(--green-border);
+  }
+  .btn-save-draft:hover { background: var(--green-border); }
+  .btn-submit {
+    background: var(--green-deep);
+    color: white;
+  }
+  .btn-submit:hover { background: var(--green-mid); }
+  .btn-submit:disabled {
+    background: var(--text-muted);
+    cursor: not-allowed;
+  }
+  .btn-new {
+    background: var(--amber-light);
+    color: var(--amber);
+    border: 1.5px solid #f0c07a;
+  }
+  .btn-new:hover { background: #fde8d0; }
+
+  /* ── TOAST ───────────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--text);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    white-space: nowrap;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { background: var(--green-deep); }
+  .toast.error { background: var(--red); }
+  .toast.warning { background: var(--amber); }
+
+  /* ── MODAL (Queue) ───────────────────────────────── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: flex-end;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 20px 16px 40px;
+  }
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .queue-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .queue-item-info { flex: 1; }
+  .queue-item-name { font-size: 14px; font-weight: 600; }
+  .queue-item-meta { font-size: 11px; color: var(--text-muted); }
+  .btn-queue-submit {
+    background: var(--green-deep);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-queue-delete {
+    background: var(--red-light);
+    color: var(--red);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .empty-queue {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* ── LOADING SPINNER ─────────────────────────────── */
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--green-pale);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    display: none;
+  }
+  .progress-bar.visible { display: block; }
+  .progress-fill {
+    height: 100%;
+    background: var(--green-mid);
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  /* ── KONFIRMASI RESET ────────────────────────────── */
+  .confirm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .confirm-overlay.open { display: flex; }
+  .confirm-box {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+  }
+  .confirm-box h3 { font-size: 16px; margin-bottom: 8px; }
+  .confirm-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+  .confirm-btns { display: flex; gap: 10px; }
+  .confirm-btns button {
+    flex: 1; padding: 12px;
+    border-radius: 8px; border: none;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  .btn-cancel-confirm { background: var(--border); color: var(--text); }
+  .btn-do-reset { background: var(--red); color: white; }
+
+  @media (min-width: 480px) {
+    .action-row { flex-direction: row; }
+    .btn { width: auto; flex: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="logo-wrap">
+    <div class="logo-icon">🌱</div>
+    <div>
+      <div class="subtitle">Program BEN — Manggarai</div>
+      <h1>Perencanaan Anak</h1>
+    </div>
+  </div>
+  <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
+    <span>📤</span>
+    <span id="queueCount">0</span> antrian
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="status-dot" id="statusDot"></div>
+  <span id="statusText">Memeriksa koneksi…</span>
+</div>
+
+<!-- MAIN FORM -->
+<div class="main">
+
+  <!-- SECTION 1: BENEF/DAMPINGAN -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('s1')">
+      <div class="section-num">1</div>
+      <div class="section-title">
+        Benef/Dampingan
+        <div class="section-sub">Identitas kunjungan</div>
+      </div>
+      <div class="chevron open" id="chevron-s1">▼</div>
+    </div>
+    <div class="section-body open" id="body-s1">
+      <div class="field">
+        <label>CBR Worker <span class="req">*</span></label>
+        <select id="cbrWorker" onchange="updateChildrenList()">
+          <option value="">— Pilih CBR Worker —</option>
+          <option value="jack_roka">Jack Roka</option>
+          <option value="laurensius_h__semparang">Laurensius Herbianto</option>
+          <option value="leonardus_mawardi">Leonardus M. Mawardi</option>
+          <option value="magdalena_sabe">Magdalena Sabe</option>
+          <option value="magdalena_siung">Elfrida Suryati</option>
+          <option value="maria_diana_banut">Maria Diana Banut</option>
+          <option value="miseldis_hamilda">Miseldis Halmida</option>
+          <option value="stanis_j__ngalu">Stanis J. Ngalu</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Nama Anak <span class="req">*</span></label>
+        <select id="namaAnak" disabled>
+          <option value="">— Pilih CBR Worker dulu —</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tanggal Membuat Perencanaan <span class="req">*</span></label>
+        <input type="date" id="tanggal">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: KESULITAN -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection('s2')">
+      <div class="section-num">2</div>
+      <div class="section-title">
+        Kesulitan
+        <div class="section-sub">Identifikasi prioritas</div>
+      </div>
+      <div class="chevron" id="chevron-s2">▼</div>
+    </div>
+    <div class="section-body" id="body-s2">
+      <div class="field">
+        <label>Kesulitan menurut Pengasuh/Anak</label>
+        <textarea id="kesulitanPengasuh" placeholder="Tuliskan kesulitan yang diprioritaskan menurut pengasuh atau anak…" rows="3"></textarea>
+      </div>
+      <div class="field">
+        <label>
+          Kesulitan menurut Pekerja Lapangan
+          <span class="hint">Jika berbeda dengan orang tua, diskusikan: pengambilan keputusan bersama</span>
+        </label>
+        <textarea id="kesulitanPekerja" placeholder="Tuliskan kesulitan yang diprioritaskan menurut pekerja lapangan…" rows="3"></textarea>
+      </div>
+      <div class="field">
+        <label>Kesepakatan Kesulitan Prioritas</label>
+        <textarea id="kesepakatan" placeholder="Tuliskan kesepakatan kesulitan yang menjadi prioritas untuk ditangani…" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: TUJUAN 1 -->
+  <div class="section-card">
+    <div class="section-header tujuan-header" onclick="toggleSection('s3')">
+      <div class="section-num">3</div>
+      <div class="section-title">
+        Tujuan 1
+        <div class="section-sub">Fokus 1–3 bulan ke depan</div>
+      </div>
+      <div class="chevron" id="chevron-s3">▼</div>
+    </div>
+    <div class="section-body" id="body-s3">
+      <div id="tujuan-fields-1"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: TUJUAN 2 -->
+  <div class="section-card">
+    <div class="section-header tujuan-header" onclick="toggleSection('s4')">
+      <div class="section-num">4</div>
+      <div class="section-title">
+        Tujuan 2
+        <div class="section-sub">Fokus 1–3 bulan ke depan</div>
+      </div>
+      <div class="chevron" id="chevron-s4">▼</div>
+    </div>
+    <div class="section-body" id="body-s4">
+      <div id="tujuan-fields-2"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: TUJUAN 3 -->
+  <div class="section-card">
+    <div class="section-header tujuan-header" onclick="toggleSection('s5')">
+      <div class="section-num">5</div>
+      <div class="section-title">
+        Tujuan 3
+        <div class="section-sub">Fokus 1–3 bulan ke depan</div>
+      </div>
+      <div class="chevron" id="chevron-s5">▼</div>
+    </div>
+    <div class="section-body" id="body-s5">
+      <div id="tujuan-fields-3"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: DOKUMENTASI -->
+  <div class="section-card">
+    <div class="section-header docs-header" onclick="toggleSection('s6')">
+      <div class="section-num">6</div>
+      <div class="section-title">
+        Dokumentasi
+        <div class="section-sub">Foto & Lokasi</div>
+      </div>
+      <div class="chevron" id="chevron-s6">▼</div>
+    </div>
+    <div class="section-body" id="body-s6">
+      <div class="field">
+        <label>Foto</label>
+        <div class="foto-grid">
+          <div class="foto-slot" id="slot-0" onclick="triggerPhoto(0)">
+            <div class="slot-icon">📷</div>
+            <div class="slot-label">Anak/<br>Remaja</div>
+            <input type="file" id="file-0" accept="image/*" capture="environment" onchange="handlePhoto(0, this)">
+          </div>
+          <div class="foto-slot" id="slot-1" onclick="triggerPhoto(1)">
+            <div class="slot-icon">👨‍👩‍👧</div>
+            <div class="slot-label">Keluarga</div>
+            <input type="file" id="file-1" accept="image/*" capture="environment" onchange="handlePhoto(1, this)">
+          </div>
+          <div class="foto-slot" id="slot-2" onclick="triggerPhoto(2)">
+            <div class="slot-icon">🏘️</div>
+            <div class="slot-label">Lingkungan</div>
+            <input type="file" id="file-2" accept="image/*" capture="environment" onchange="handlePhoto(2, this)">
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="field">
+        <label>Lokasi Penyusunan Rencana</label>
+        <div class="gps-row">
+          <div class="gps-display" id="gpsDisplay">
+            <span>📍</span>
+            <span id="gpsText">Belum diambil</span>
+          </div>
+          <button class="btn-gps" id="btnGps" onclick="getLocation()">
+            <span>🎯</span> Ambil GPS
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="action-row">
+    <button class="btn btn-save-draft" onclick="saveDraft()">
+      💾 Simpan Draft
+    </button>
+    <button class="btn btn-submit" id="btnSubmit" onclick="submitForm()">
+      📤 Kirim ke Server
+    </button>
+  </div>
+
+  <div class="action-row" style="margin-bottom:32px;">
+    <button class="btn btn-new" onclick="confirmReset()">
+      ✏️ Form Baru / Reset
+    </button>
+  </div>
+
+</div><!-- /main -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- QUEUE MODAL -->
+<div class="modal-overlay" id="queueModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📤 Antrian Pengiriman</div>
+    <div id="queueList"></div>
+    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">
+      Kirim Semua Sekarang
+    </button>
+  </div>
+</div>
+
+<!-- CONFIRM RESET -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>⚠️ Reset Form?</h3>
+    <p>Semua data yang belum disimpan sebagai draft akan hilang.</p>
+    <div class="confirm-btns">
+      <button class="btn-cancel-confirm" onclick="closeConfirm()">Batal</button>
+      <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+const CHILDREN_BY_WORKER = {
+  'magdalena_siung': [
+    {v:'elentrida_muliati_murni',l:'Elentrida Muliati Murni'},
+    {v:'fransiska_santiana_elos',l:'Natalia Delsindi Sanul'},
+    {v:'kresensia_kamelda_putri',l:'Kresensia Kamelda Putri'},
+    {v:'nofrinda_ngamut',l:'Jenselsiana Onam'},
+    {v:'philippus_neri_sanja',l:'Philippus Neri Sanja'},
+    {v:'vebrianus_jemarus',l:'Felisitas Alfinda Lulus'},
+    {v:'yohanes_leonardus_garut',l:'Yohanes Leonardus Garut'},
+    {v:'yosef_apriliano_nyoman',l:'Yohanes Royan Saputra Dagal'}
+  ],
+  'jack_roka': [
+    {v:'alfredo_ndak',l:'Alfredo Ndak'},{v:'antonio_febriano_ono_ompot',l:'Antonio Febriano Ono Ompot'},
+    {v:'antonius_retno_serto',l:'Antonius Retno Serto'},{v:'asisi_aglisia_kurnia',l:'Asisi Aglisia Kurnia'},
+    {v:'aurelia_vanya_andromeda',l:'Aurelia Vanya Andromeda'},{v:'bonefasius_nurung',l:'Bonefasius Nurung'},
+    {v:'brianus_donot',l:'Brianus Donot'},{v:'dionisius_irfan_jaya',l:'Dionisius Irfan Jaya'},
+    {v:'elisa_astiana_gamung',l:'Elisa Astiana Gamung'},{v:'epivio_ganggus',l:'Epivio Ganggus'},
+    {v:'fransiska_anjela',l:'Fransiska Anjela'},{v:'fransiskus_dika_habut',l:'Fransiskus Dika Habut'},
+    {v:'frederikus_a__dagur__ds',l:'Frederikus A. Dagur (Ds)'},{v:'gabriel_alexander_wilson_oboth',l:'Yohanes Ridianus Joni'},
+    {v:'jerianus_jhon',l:'Jerianus Jhon'},{v:'natasha_eugenia_palus',l:'Natasha Eugenia Palus'},
+    {v:'oktaviani_dais',l:'Oktaviani Dais'},{v:'robinson_wahar',l:'Robinson Wahar'},
+    {v:'stefiani_jehabut',l:'Stefiani Jehabut'},{v:'wihelmus_agung',l:'Wihelmus Agung'},
+    {v:'yanuarius_gan_jeferison__ds',l:'Yanuarius Gan Jeferison (Ds)'},{v:'yohana_natalia_bahagia',l:'Yohana Natalia Bahagia'},
+    {v:'yulita_klaudia_oktaviani',l:'Yulita Klaudia Oktaviani'},{v:'bernadeta_v_j_ndavas',l:'Bernadeta V.J Ndavas'}
+  ],
+  'laurensius_h__semparang': [
+    {v:'adelia_yohana_luhur',l:'Adelia Yohana Luhur'},{v:'afrilianus_jera',l:'Afrilianus Jera'},
+    {v:'andreas_leonanda__slb',l:'Andreas Leonanda (SLB)'},{v:'antonius_junino_gapon',l:'Antonius Junino Gapon'},
+    {v:'arenfantus_nenggos',l:'Arenfantus Nenggos'},{v:'basilika_jiani_ngara',l:'Basilika Jiani Ngara'},
+    {v:'beatrix_serviana_toton',l:'Beatrix Serviana Toton'},{v:'bernadino_keor__slb',l:'Bernadino Keor (SLB)'},
+    {v:'claudius_aldi_ndaur',l:'Claudius Aldi Ndaur'},{v:'eltreda_jenita_moa',l:'Eltreda Jenita Moa'},
+    {v:'ernesti_yolanda_neno',l:'Ernesti Yolanda Neno'},{v:'flora_ekkliysia_muel',l:'Flora Ekkliysia Muel'},
+    {v:'fransiska_pradela_juita',l:'Fransiska Pradela Juita'},{v:'geovani_laura_enje',l:'Geovani Laura Enje'},
+    {v:'gordianus_jehadin',l:'Gordianus Jehadin'},{v:'gregorius_alfares_amal',l:'Gregorius Alfares Amal'},
+    {v:'ignasius_arseno_aba',l:'Ignasius Arseno Aba'},{v:'januar_erdilon_suri_hayon',l:'Januar Erdilon Suri Hayon'},
+    {v:'jesenferter_rapang',l:'Jesenferter Rapang'},{v:'klaudio_seve_talion',l:'Klaudio Seve Talion'},
+    {v:'lusiana_cahaya_rana',l:'Lusiana Cahaya Rana'},{v:'margareta_cerin_angkar',l:'Margareta Cerin Angkar'},
+    {v:'maria_adinda_linut',l:'Maria Adinda Linut'},{v:'maria_bricilia_celsa',l:'Maria Bricilia Celsa'},
+    {v:'maria_fiola_din',l:'Maria Fiola Din'},{v:'maria_jeane_kembo',l:'Maria Jeane Kembo'},
+    {v:'maria_olivia_fontain',l:'Maria Olivia Fontain'},{v:'martir_enda_sumarlin',l:'Martir Enda Sumarlin'},
+    {v:'novaldi_javier_amal',l:'Novaldi Javier Amal'},{v:'novalia_monika_saskia',l:'Novalia Monika Saskia'},
+    {v:'patrisius_kesi_stoner',l:'Patrisius Kesi Stoner'},{v:'paulus_putra_miki',l:'Paulus Putra Miki'},
+    {v:'piternus_aldycapirlo',l:'Piternus Aldycapirlo'},{v:'teresia_tania_suhartin',l:'Teresia Tania Suhartin'},
+    {v:'velisiandra_trivia_sumarlin',l:'Velisiandra Trivia Sumarlin'},{v:'viktorianus_moreno',l:'Viktorianus Moreno'},
+    {v:'vinsensius_ajril_ambun',l:'Vinsensius Ajril Ambun'},{v:'vitalianus_merici_sumar',l:'Vitalianus Merici Sumar'},
+    {v:'wilfebri_oswaldus_bero',l:'Wilfebri Oswaldus Bero'},{v:'yosefina_atma_kusuma_patut',l:'Yosefina Atma Kusuma Patut'},
+    {v:'yuanita_wulandari_deagon',l:'Yuanita Wulandari Deagon'}
+  ],
+  'leonardus_mawardi': [
+    {v:'agustinus_darung',l:'Gilberto Carlo Jemalu'},{v:'aloisius_orlando_s__luruk',l:'Aloisius Orlando S. Luruk'},
+    {v:'arfan_tantu',l:'Arfan Tantu'},{v:'elciana_kanul',l:'Elciana Kanul'},
+    {v:'ferdinandus_putra_chafara_r',l:'Ferdinandus Putra Chafara R'},{v:'herkolanus_wang',l:'Herkolanus Wang'},
+    {v:'jefrianus_domi',l:'Jefrianus Domi'},{v:'kamsia',l:'Kamsia'},
+    {v:'ketrina_cantika_celsi',l:'Ketrina Cantika Celsi'},{v:'leonardo_mahardika_tingka',l:'Leonardo Mahardika Tingka'},
+    {v:'maria_divani_calista_banggut',l:'Maria Divani Calista Banggut'},{v:'maria_elvika_nasri',l:'Gunfrantus Jenaman'},
+    {v:'maria_juliva_grezela_ayu',l:'Maria Juliva Grezela Ayu'},{v:'maria_septiani_m__jebarus',l:'Maria Septiani M. Jebarus'},
+    {v:'maria_suryati_sanung',l:'Ignasius Raflino Pratama Jompal'},{v:'martinus_alvianto_damo',l:'Martinus Alvianto Damo'},
+    {v:'milania_ambun',l:'Milania Ambun'},{v:'natalia_fitriani_putri_charita',l:'Natalia Fitriani Putri Charita'},
+    {v:'olfani_fatima_anul',l:'Olfani Fatima Anul'},{v:'quintus_r__tangkut',l:'Quintus R. Tangkut'},
+    {v:'rafaello_afrisco_ndona',l:'Rafaello Afrisco Ndona'},{v:'revano_tamo_amanaot',l:'Revano Tamo Amanaot'},
+    {v:'vinsensius_yuda_saputra',l:'Vinsensius Yuda Saputra'},{v:'yohana_elisabet_mol',l:'Yohana Elisabet Mol'},
+    {v:'yosefina_elda_hibur',l:'Yosefina Elda Hibur'},{v:'yulius_julio_pane',l:'Yulius Julio Pane'}
+  ],
+  'magdalena_sabe': [
+    {v:'agresia_arot',l:'Agresia Arot'},{v:'agustin_kirana_talar',l:'Agustin Kirana Talar'},
+    {v:'aloysius_jeriko_madut',l:'Aloysius Jeriko Madut'},{v:'andreas_karman',l:'Andreas Karman'},
+    {v:'arkan_anjela_selviani',l:'Arkan Anjela Selviani'},{v:'benedikta_jelita',l:'Benedikta Jelita'},
+    {v:'delfina_eliana',l:'Delfina Eliana'},{v:'edmundus_dilan_wanggor',l:'Edmundus Dilan Wanggor'},
+    {v:'ekavantura_gerlan',l:'Ekavantura Gerlan'},{v:'febronia_ndeo',l:'Febronia Ndeo'},
+    {v:'gregorius_agung',l:'Gregorius Agung'},{v:'hilarius_argon',l:'Hilarius Argon'},
+    {v:'jhosua_devanka_kantur',l:'Jhosua Devanka Kantur'},{v:'kelianus_jemat',l:'Kelianus Jemat'},
+    {v:'kresensia_setia',l:'Kresensia Setia'},{v:'maria_flora',l:'Maria Flora'},
+    {v:'maria_kresensia_madut',l:'Maria Kresensia Madut'},{v:'maria_rosvita',l:'Maria Rosvita'},
+    {v:'mariana_ladung',l:'Mariana Ladung'},{v:'mariani_ladung',l:'Mariani Ladung'},
+    {v:'marianus_enggot',l:'Marianus Enggot'},{v:'marselinus_evansi_anggun',l:'Marselinus Evansi Anggun'},
+    {v:'natalia_mayora_daiman',l:'Natalia Mayora Daiman'},{v:'pakhormius_mai',l:'Pakhormius Mai'},
+    {v:'paulinus_aquino_koko',l:'Paulinus Aquino Koko'},{v:'renaldis_anur',l:'Renaldis Anur'},
+    {v:'romanus_riski_putra',l:'Romanus Riski Putra'},{v:'salfina_sartika',l:'Salfina Sartika'},
+    {v:'stanislaus_sagun',l:'Stanislaus Sagun'},{v:'yosef_alfan_kaso',l:'Yosef Alfan Kaso'}
+  ],
+  'maria_diana_banut': [
+    {v:'agustina_tiara_nalkofi',l:'Agustina Tiara Nalkofi'},{v:'alga_farid',l:'Alga Farid'},
+    {v:'angelika_kurniati_hamen',l:'Angelika Kurniati Hamen'},{v:'claudio_valentamur',l:'Claudio Valentamur'},
+    {v:'exra_xander_chornelius_jebarut_mantut',l:'Exra Xander Chornelius Jebarut Mantut'},
+    {v:'familia_mutiara_johor',l:'Familia Mutiara Johor'},{v:'febrianus_bertolomeus_yoasa',l:'Febrianus Bertolomeus Yoasa'},
+    {v:'fransisko_sajua_ngampa',l:'Fransisko Sajua Ngampa'},{v:'frederikus_realino_laput',l:'Frederikus Realino Laput'},
+    {v:'ghio_jeconia_rojo_mola',l:'Ghio Jeconia Rojo Mola'},{v:'hieronimus_gerard_ambur',l:'Hieronimus Gerard Ambur'},
+    {v:'karitasiana_bili',l:'Karitasiana Bili'},{v:'maria_angelina_kartika_sari',l:'Maria Angelina Kartika Sari'},
+    {v:'maria_sri_rahayu_bongkar',l:'Maria Sri Rahayu Bongkar'},{v:'mariani_citra_jemadu',l:'Mariani Citra Jemadu'},
+    {v:'ronaldus_gosa_gado',l:'Ronaldus Gosa Gado'},{v:'silviani_kirana_kagung',l:'Silviani Kirana Kagung'},
+    {v:'theresia_yulisna_ngorang',l:'Theresia Yulisna Ngorang'},{v:'yohanes_putra_pongko',l:'Yohanes Putra Pongko'},
+    {v:'yusufiano_betran_jebaru',l:'Yusufiano Betran Jebaru'}
+  ],
+  'miseldis_hamilda': [
+    {v:'alvonosus_wagul',l:'Alvonosus Wagul'},{v:'andrasius_supardi',l:'Andrasius Supardi'},
+    {v:'athanasius_janes_susanto',l:'Athanasius Janes Susanto'},{v:'aurelia_anita_jun',l:'Aurelia Anita Jun'},
+    {v:'citra_manuraja',l:'Citra Manuraja'},{v:'elisabet_klarisa_wela',l:'Elisabet Klarisa Wela'},
+    {v:'emanuel_nael',l:'Emanuel Nael'},{v:'eusabeus_jefson_danggar',l:'Agustino Hilari Hibur'},
+    {v:'eustakia_selmayani_jebau',l:'Eustakia Selmayani Jebau'},{v:'febriani_agung',l:'Febriani Agung'},
+    {v:'gervasius_rofitianus_terang',l:'Gervasius Rofitianus Terang'},{v:'hendriko_sandur',l:'Hendriko Sandur'},
+    {v:'jackson_purnama__ds',l:'Jackson Purnama (Ds)'},{v:'maria_arena_lestari',l:'Maria Arena Lestari'},
+    {v:'maria_dian_hambut',l:'Maria Dian Hambut'},{v:'maria_gema_galgani_sahat',l:'Maria Gema Galgani Sahat'},
+    {v:'maria_julita_setia',l:'Maria Julita Setia'},{v:'maria_vinsensia_momang',l:'Maria Vinsensia Momang'},
+    {v:'marselo_halu',l:'Marselo Halu'},{v:'nova_aditya_malvin',l:'Nova Aditya Malvin'},
+    {v:'rafael_jemparu',l:'Rafael Jemparu'},{v:'satria_salut',l:'Satria Salut'},
+    {v:'septiana_nahut',l:'Septiana Nahut'},{v:'stefanus_gadil_jadur',l:'Angelina Maria Delima'},
+    {v:'viktorianus_dangkut',l:'Viktorianus Dangkut'},{v:'yohanes_kevintus_aber',l:'Yohanes Kevintus Aber'},
+    {v:'yosep_satria_r_m__anggul',l:'Yosep Satria R.M. Anggul'},{v:'yunatia_setia__ds',l:'Yunatia Setia (Ds)'}
+  ],
+  'stanis_j__ngalu': [
+    {v:'andreas_ganti_guntur',l:'Andreas Ganti Guntur'},{v:'aprianus_eizel_sumardi',l:'Aprianus Eizel Sumardi'},
+    {v:'arian_fazar',l:'Arian Fazar'},{v:'avinoldus_sapak',l:'Avinoldus Sapak'},
+    {v:'eduardus_panggang',l:'Eduardus Panggang'},{v:'elisabet_angginita_wijaya',l:'Elisabet Angginita Wijaya'},
+    {v:'enjilia_viani_putri_naeng',l:'Enjilia Viani Putri Naeng'},{v:'fitri_abiliya_untahwa',l:'Fitri Abiliya Untahwa'},
+    {v:'fransiskus_j__pirlo_angke',l:'Fransiskus J. Pirlo Angke'},{v:'fransiskus_juano_kalat',l:'Maria Ana Junita Nanda'},
+    {v:'januarius_evaldo_sungga',l:'Januarius Evaldo Sungga'},{v:'leonardo_bertino_mamput',l:'Leonardo Bertino Mamput'},
+    {v:'maria_wulandari_jemahan',l:'Maria Wulandari Jemahan'},{v:'marianus_r__jeradut',l:'Marianus R. Jeradut'},
+    {v:'paskalia_nera_jenina',l:'Paskalia Nera Jenina'},{v:'paskalis_aldora',l:'Paskalis Aldora'},
+    {v:'priska_saputri_daim',l:'Priska Saputri Daim'},{v:'pudensianus_suyusta_edor',l:'Pudensianus Suyusta Edor'},
+    {v:'rahmad_dani',l:'Rahmad Dani'},{v:'raihan_afina',l:'Raihan Afina'},
+    {v:'stefanus_wangku',l:'Stefanus Wangku'},{v:'yohanes_fari_baru',l:'Maria Noya'},
+    {v:'yusuf_usman',l:'Yusuf Usman'}
+  ]
+};
+
+// APPS SCRIPT URL — ISI DI SINI SETELAH DEPLOY
+const APPS_SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA';
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let photos = [null, null, null]; // base64
+let gpsData = null;
+let isOnline = navigator.onLine;
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  buildTujuanFields();
+  setTodayDate();
+  checkOnlineStatus();
+  loadDraft();
+  updateQueueBadge();
+
+  window.addEventListener('online', () => { isOnline = true; updateStatusBar(); });
+  window.addEventListener('offline', () => { isOnline = false; updateStatusBar(); });
+});
+
+function setTodayDate() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('tanggal').value = today;
+}
+
+// ═══════════════════════════════════════════════════════
+// TUJUAN FIELDS BUILDER
+// ═══════════════════════════════════════════════════════
+function buildTujuanFields() {
+  for (let n = 1; n <= 3; n++) {
+    const container = document.getElementById(`tujuan-fields-${n}`);
+    container.innerHTML = `
+      <div class="field">
+        <label>Tujuan ${n}</label>
+        <textarea id="tujuan${n}" placeholder="Apa yang ingin difokuskan dalam 1–3 bulan ke depan?" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <label>Siapa yang Terlibat</label>
+        <textarea id="terlibat${n}" placeholder="Siapa saja yang terlibat dalam rencana ini?" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <label>Apa yang Akan Dilakukan</label>
+        <textarea id="dilakukan${n}" placeholder="Apa kegiatan yang akan dilakukan?" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <label>Bagaimana Rencana Dilakukan</label>
+        <textarea id="bagaimana${n}" placeholder="Bagaimana cara melaksanakannya?" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <label>Dimana Dilaksanakan</label>
+        <input type="text" id="dimana${n}" placeholder="Lokasi pelaksanaan…">
+      </div>
+      <div class="field">
+        <label>Kapan Dilaksanakan</label>
+        <input type="text" id="kapan${n}" placeholder="Mis: Januari–Maret 2025, setiap minggu…">
+      </div>
+      <div class="divider"></div>
+      <div class="field">
+        <label>Rencana Aksi — Rumus ABC</label>
+        <div class="abc-box">
+          <strong>A</strong> = Antecedent (kondisi awal / pemicu)<br>
+          <strong>B</strong> = Behavior (perilaku yang ingin diubah / ditingkatkan)<br>
+          <strong>C</strong> = Consequence (konsekuensi / hasil yang diharapkan)
+        </div>
+        <textarea id="rencanaABC${n}" placeholder="Tuliskan rencana aksi menggunakan panduan rumus ABC di atas…" rows="3"></textarea>
+      </div>
+    `;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// DROPDOWN CBR WORKER → ANAK
+// ═══════════════════════════════════════════════════════
+function updateChildrenList() {
+  const worker = document.getElementById('cbrWorker').value;
+  const select = document.getElementById('namaAnak');
+  select.innerHTML = '<option value="">— Pilih Nama Anak —</option>';
+
+  if (!worker || !CHILDREN_BY_WORKER[worker]) {
+    select.disabled = true;
+    select.innerHTML = '<option value="">— Pilih CBR Worker dulu —</option>';
+    return;
+  }
+
+  const children = CHILDREN_BY_WORKER[worker];
+  children.sort((a, b) => a.l.localeCompare(b.l));
+  children.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.v;
+    opt.textContent = c.l;
+    select.appendChild(opt);
+  });
+  select.disabled = false;
+}
+
+// ═══════════════════════════════════════════════════════
+// SECTION TOGGLE
+// ═══════════════════════════════════════════════════════
+function toggleSection(id) {
+  const body = document.getElementById(`body-${id}`);
+  const chevron = document.getElementById(`chevron-${id}`);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+// ═══════════════════════════════════════════════════════
+// FOTO
+// ═══════════════════════════════════════════════════════
+const FOTO_LABELS = ['Anak/Remaja', 'Keluarga', 'Lingkungan'];
+
+function triggerPhoto(idx) {
+  document.getElementById(`file-${idx}`).click();
+}
+
+function handlePhoto(idx, input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    photos[idx] = e.target.result;
+    const slot = document.getElementById(`slot-${idx}`);
+    slot.classList.add('has-photo');
+    slot.innerHTML = `
+      <img src="${e.target.result}" alt="${FOTO_LABELS[idx]}">
+      <button class="remove-btn" onclick="removePhoto(${idx}, event)">✕</button>
+      <input type="file" id="file-${idx}" accept="image/*" capture="environment" onchange="handlePhoto(${idx}, this)" style="display:none">
+    `;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto(idx, event) {
+  event.stopPropagation();
+  photos[idx] = null;
+  const slot = document.getElementById(`slot-${idx}`);
+  slot.classList.remove('has-photo');
+  const icons = ['📷', '👨‍👩‍👧', '🏘️'];
+  slot.innerHTML = `
+    <div class="slot-icon">${icons[idx]}</div>
+    <div class="slot-label">${FOTO_LABELS[idx]}</div>
+    <input type="file" id="file-${idx}" accept="image/*" capture="environment" onchange="handlePhoto(${idx}, this)" style="display:none">
+  `;
+  slot.onclick = () => triggerPhoto(idx);
+}
+
+// ═══════════════════════════════════════════════════════
+// GPS
+// ═══════════════════════════════════════════════════════
+function getLocation() {
+  const btn = document.getElementById('btnGps');
+  const display = document.getElementById('gpsDisplay');
+  const text = document.getElementById('gpsText');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Mengambil…';
+  text.textContent = 'Mengambil lokasi…';
+  display.className = 'gps-display';
+
+  if (!navigator.geolocation) {
+    text.textContent = 'GPS tidak tersedia';
+    display.className = 'gps-display error';
+    btn.disabled = false;
+    btn.innerHTML = '<span>🎯</span> Ambil GPS';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      gpsData = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: Math.round(pos.coords.accuracy) };
+      text.textContent = `${gpsData.lat.toFixed(6)}, ${gpsData.lng.toFixed(6)} (±${gpsData.acc}m)`;
+      display.className = 'gps-display got-location';
+      btn.disabled = false;
+      btn.innerHTML = '<span>✅</span> Diperbarui';
+      setTimeout(() => { btn.innerHTML = '<span>🎯</span> Perbarui GPS'; }, 2000);
+    },
+    (err) => {
+      text.textContent = 'Gagal: ' + err.message;
+      display.className = 'gps-display error';
+      btn.disabled = false;
+      btn.innerHTML = '<span>🎯</span> Coba Lagi';
+    },
+    { enableHighAccuracy: true, timeout: 15000 }
+  );
+}
+
+// ═══════════════════════════════════════════════════════
+// COLLECT FORM DATA
+// ═══════════════════════════════════════════════════════
+function collectFormData() {
+  const workerEl = document.getElementById('cbrWorker');
+  const anakEl = document.getElementById('namaAnak');
+
+  const tujuan = [];
+  for (let n = 1; n <= 3; n++) {
+    tujuan.push({
+      tujuan: val(`tujuan${n}`),
+      terlibat: val(`terlibat${n}`),
+      dilakukan: val(`dilakukan${n}`),
+      bagaimana: val(`bagaimana${n}`),
+      dimana: val(`dimana${n}`),
+      kapan: val(`kapan${n}`),
+      rencanaABC: val(`rencanaABC${n}`)
+    });
+  }
+
+  return {
+    timestamp: new Date().toISOString(),
+    cbrWorkerValue: workerEl.value,
+    cbrWorkerLabel: workerEl.options[workerEl.selectedIndex]?.text || '',
+    namaAnakValue: anakEl.value,
+    namaAnakLabel: anakEl.options[anakEl.selectedIndex]?.text || '',
+    tanggal: val('tanggal'),
+    kesulitanPengasuh: val('kesulitanPengasuh'),
+    kesulitanPekerja: val('kesulitanPekerja'),
+    kesepakatan: val('kesepakatan'),
+    tujuan,
+    gps: gpsData,
+    foto: {
+      anak: photos[0],
+      keluarga: photos[1],
+      lingkungan: photos[2]
+    }
+  };
+}
+
+function val(id) {
+  return (document.getElementById(id)?.value || '').trim();
+}
+
+function validateForm(data) {
+  if (!data.cbrWorkerValue) return 'CBR Worker belum dipilih.';
+  if (!data.namaAnakValue) return 'Nama Anak belum dipilih.';
+  if (!data.tanggal) return 'Tanggal belum diisi.';
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════
+// DRAFT (LOCALSTORAGE)
+// ═══════════════════════════════════════════════════════
+function saveDraft() {
+  const data = collectFormData();
+  localStorage.setItem('ben_draft', JSON.stringify(data));
+  showToast('Draft tersimpan ✓', 'success');
+}
+
+function loadDraft() {
+  const raw = localStorage.getItem('ben_draft');
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    restoreForm(data);
+    showToast('Draft sebelumnya dimuat', 'warning');
+  } catch(e) {}
+}
+
+function restoreForm(data) {
+  // Basic fields
+  if (data.cbrWorkerValue) {
+    document.getElementById('cbrWorker').value = data.cbrWorkerValue;
+    updateChildrenList();
+    setTimeout(() => {
+      if (data.namaAnakValue) document.getElementById('namaAnak').value = data.namaAnakValue;
+    }, 50);
+  }
+  if (data.tanggal) document.getElementById('tanggal').value = data.tanggal;
+  if (data.kesulitanPengasuh) document.getElementById('kesulitanPengasuh').value = data.kesulitanPengasuh;
+  if (data.kesulitanPekerja) document.getElementById('kesulitanPekerja').value = data.kesulitanPekerja;
+  if (data.kesepakatan) document.getElementById('kesepakatan').value = data.kesepakatan;
+
+  // Tujuan
+  if (data.tujuan) {
+    data.tujuan.forEach((t, i) => {
+      const n = i + 1;
+      const fields = ['tujuan','terlibat','dilakukan','bagaimana','dimana','kapan','rencanaABC'];
+      fields.forEach(f => {
+        const el = document.getElementById(`${f}${n}`);
+        if (el && t[f]) el.value = t[f];
+      });
+    });
+  }
+
+  // GPS
+  if (data.gps) {
+    gpsData = data.gps;
+    document.getElementById('gpsText').textContent = `${gpsData.lat.toFixed(6)}, ${gpsData.lng.toFixed(6)} (±${gpsData.acc}m)`;
+    document.getElementById('gpsDisplay').className = 'gps-display got-location';
+  }
+
+  // Photos — restore base64
+  if (data.foto) {
+    const keys = ['anak','keluarga','lingkungan'];
+    keys.forEach((k, idx) => {
+      if (data.foto[k]) {
+        photos[idx] = data.foto[k];
+        const slot = document.getElementById(`slot-${idx}`);
+        slot.classList.add('has-photo');
+        const icons = ['📷', '👨‍👩‍👧', '🏘️'];
+        slot.innerHTML = `
+          <img src="${data.foto[k]}" alt="${k}">
+          <button class="remove-btn" onclick="removePhoto(${idx}, event)">✕</button>
+          <input type="file" id="file-${idx}" accept="image/*" capture="environment" onchange="handlePhoto(${idx}, this)" style="display:none">
+        `;
+        slot.onclick = null;
+      }
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// SUBMIT
+// ═══════════════════════════════════════════════════════
+async function submitForm() {
+  const data = collectFormData();
+  const err = validateForm(data);
+  if (err) { showToast('⚠️ ' + err, 'error'); return; }
+
+  if (!isOnline) {
+    addToQueue(data);
+    showToast('Offline — data masuk antrian ✓', 'warning');
+    return;
+  }
+
+  if (APPS_SCRIPT_URL === 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA') {
+    showToast('⚠️ URL Apps Script belum diisi!', 'error');
+    return;
+  }
+
+  await doSubmit(data);
+}
+
+async function doSubmit(data) {
+  const btn = document.getElementById('btnSubmit');
+  const bar = document.getElementById('progressBar');
+  const fill = document.getElementById('progressFill');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Mengirim…';
+  bar.classList.add('visible');
+
+  // Simulate progress
+  let prog = 0;
+  const progInterval = setInterval(() => {
+    prog = Math.min(prog + 8, 85);
+    fill.style.width = prog + '%';
+  }, 300);
+
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    clearInterval(progInterval);
+    fill.style.width = '100%';
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    showToast('✅ Data berhasil dikirim!', 'success');
+    localStorage.removeItem('ben_draft');
+    setTimeout(() => resetForm(), 1500);
+
+  } catch (err) {
+    clearInterval(progInterval);
+    addToQueue(data);
+    showToast('Gagal — data masuk antrian ✓', 'warning');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '📤 Kirim ke Server';
+    setTimeout(() => {
+      bar.classList.remove('visible');
+      fill.style.width = '0%';
+    }, 1000);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// OFFLINE QUEUE
+// ═══════════════════════════════════════════════════════
+function getQueue() {
+  try { return JSON.parse(localStorage.getItem('ben_queue') || '[]'); } catch { return []; }
+}
+function saveQueue(q) { localStorage.setItem('ben_queue', JSON.stringify(q)); }
+
+function addToQueue(data) {
+  const q = getQueue();
+  data._queueId = Date.now();
+  q.push(data);
+  saveQueue(q);
+  updateQueueBadge();
+}
+
+function updateQueueBadge() {
+  const q = getQueue();
+  const badge = document.getElementById('queueBadge');
+  const count = document.getElementById('queueCount');
+  if (q.length > 0) {
+    badge.classList.add('visible');
+    count.textContent = q.length;
+  } else {
+    badge.classList.remove('visible');
+  }
+}
+
+function openQueueModal() {
+  const modal = document.getElementById('queueModal');
+  modal.classList.add('open');
+  renderQueueList();
+}
+
+function renderQueueList() {
+  const q = getQueue();
+  const list = document.getElementById('queueList');
+  if (q.length === 0) {
+    list.innerHTML = '<div class="empty-queue">Tidak ada data dalam antrian 🎉</div>';
+    return;
+  }
+  list.innerHTML = q.map(item => `
+    <div class="queue-item">
+      <div class="queue-item-info">
+        <div class="queue-item-name">${item.namaAnakLabel || '—'}</div>
+        <div class="queue-item-meta">${item.cbrWorkerLabel} • ${item.tanggal}</div>
+      </div>
+      <button class="btn-queue-submit" onclick="submitQueueItem(${item._queueId})">Kirim</button>
+      <button class="btn-queue-delete" onclick="deleteQueueItem(${item._queueId})">Hapus</button>
+    </div>
+  `).join('');
+}
+
+async function submitQueueItem(id) {
+  let q = getQueue();
+  const item = q.find(x => x._queueId === id);
+  if (!item) return;
+
+  if (APPS_SCRIPT_URL === 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA') {
+    showToast('⚠️ URL Apps Script belum diisi!', 'error');
+    return;
+  }
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(item)
+    });
+    if (!res.ok) throw new Error();
+    q = q.filter(x => x._queueId !== id);
+    saveQueue(q);
+    updateQueueBadge();
+    renderQueueList();
+    showToast('✅ Terkirim!', 'success');
+  } catch {
+    showToast('Gagal kirim — cek koneksi', 'error');
+  }
+}
+
+function deleteQueueItem(id) {
+  let q = getQueue().filter(x => x._queueId !== id);
+  saveQueue(q);
+  updateQueueBadge();
+  renderQueueList();
+}
+
+async function submitAllQueue() {
+  if (!isOnline) { showToast('Tidak ada koneksi', 'error'); return; }
+  const q = getQueue();
+  let success = 0;
+  for (const item of q) {
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item)
+      });
+      if (res.ok) success++;
+    } catch {}
+  }
+  const remaining = getQueue().filter(x => !q.slice(0, success).find(s => s._queueId === x._queueId));
+  saveQueue(getQueue().slice(success));
+  updateQueueBadge();
+  renderQueueList();
+  showToast(`✅ ${success} dari ${q.length} berhasil dikirim`, 'success');
+}
+
+// Click outside modal to close
+document.getElementById('queueModal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+
+// ═══════════════════════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════════════════════
+function confirmReset() { document.getElementById('confirmOverlay').classList.add('open'); }
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); }
+
+function doReset() {
+  closeConfirm();
+  resetForm();
+  localStorage.removeItem('ben_draft');
+  showToast('Form dikosongkan', '');
+}
+
+function resetForm() {
+  document.getElementById('cbrWorker').value = '';
+  document.getElementById('namaAnak').innerHTML = '<option value="">— Pilih CBR Worker dulu —</option>';
+  document.getElementById('namaAnak').disabled = true;
+  setTodayDate();
+
+  ['kesulitanPengasuh','kesulitanPekerja','kesepakatan'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+
+  for (let n = 1; n <= 3; n++) {
+    ['tujuan','terlibat','dilakukan','bagaimana','dimana','kapan','rencanaABC'].forEach(f => {
+      const el = document.getElementById(`${f}${n}`);
+      if (el) el.value = '';
+    });
+  }
+
+  // Reset photos
+  photos = [null, null, null];
+  const icons = ['📷', '👨‍👩‍👧', '🏘️'];
+  const labels = ['Anak/<br>Remaja', 'Keluarga', 'Lingkungan'];
+  for (let i = 0; i < 3; i++) {
+    const slot = document.getElementById(`slot-${i}`);
+    slot.classList.remove('has-photo');
+    slot.innerHTML = `
+      <div class="slot-icon">${icons[i]}</div>
+      <div class="slot-label">${labels[i]}</div>
+      <input type="file" id="file-${i}" accept="image/*" capture="environment" onchange="handlePhoto(${i}, this)" style="display:none">
+    `;
+    slot.onclick = () => triggerPhoto(i);
+  }
+
+  // Reset GPS
+  gpsData = null;
+  document.getElementById('gpsText').textContent = 'Belum diambil';
+  document.getElementById('gpsDisplay').className = 'gps-display';
+  document.getElementById('btnGps').innerHTML = '<span>🎯</span> Ambil GPS';
+
+  // Open first section
+  document.getElementById('body-s1').classList.add('open');
+  document.getElementById('chevron-s1').classList.add('open');
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════════════════════
+// ONLINE STATUS
+// ═══════════════════════════════════════════════════════
+function checkOnlineStatus() {
+  isOnline = navigator.onLine;
+  updateStatusBar();
+}
+
+function updateStatusBar() {
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  if (isOnline) {
+    dot.className = 'status-dot';
+    text.textContent = 'Online — data akan langsung dikirim';
+  } else {
+    dot.className = 'status-dot offline';
+    text.textContent = 'Offline — data disimpan ke antrian';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg, type = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast ' + type + ' show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toast.className = 'toast'; }, 3000);
+}
+</script>
+</body>
+</html>
