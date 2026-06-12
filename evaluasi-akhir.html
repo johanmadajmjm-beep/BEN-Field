@@ -4,24 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#7a1a1a">
-<title>Evaluasi Tahap Akhir — BEN</title>
+<meta name="theme-color" content="#450A0A">
+<title>Evaluasi Akhir — BEN</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/shared.css">
-<style>
-.tujuan-ref{background:#fef0f0;border:1.5px solid #f5b7b1;border-radius:8px;padding:10px 13px;font-size:12px;color:#7a1a1a;margin-bottom:12px;line-height:1.6;}
-.tujuan-ref strong{color:#5c0f0f;display:block;margin-bottom:3px;font-size:13px;}
-.no-rencana-notice{background:#fff8e1;border:1.5px solid #ffcc80;border-radius:8px;padding:10px 13px;font-size:12px;color:#7a4a10;margin-bottom:12px;}
-.yn-group{display:flex;gap:10px;margin-bottom:12px;}
-.yn-btn{flex:1;padding:14px;border:2px solid var(--border);border-radius:var(--radius-sm);background:#fff;color:var(--text-mid);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.15s;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;}
-.yn-btn.ya{background:#e8f5e9;border-color:#43a047;color:#2e7d32;}
-.yn-btn.tidak{background:var(--red-light);border-color:var(--red);color:var(--red);}
-.cond-field{display:none;margin-top:4px;}
-.cond-field.show{display:block;}
-.achieved-banner{background:#e8f5e9;border:1.5px solid #43a047;border-radius:8px;padding:12px 14px;font-size:13px;color:#2e7d32;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-</style>
 </head>
 <body>
 <script>
@@ -29,55 +17,51 @@
   window.BEN_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCx4CiGyxXRj01nP8v8W-2D9livH1Zk9r_uuCx2v4WCKIYJ-dBlugpvoYUE1ymw98a/exec';
 </script>
 
-<div class="app-header eval-akhir">
-  <div class="logo-wrap">
-    <div class="logo-icon">🏁</div>
-    <div><div class="sub">Program BEN — Manggarai</div><h1>Evaluasi Tahap Akhir</h1></div>
+<div class="app-header h-red">
+  <div class="header-icon">🏁</div>
+  <div class="header-text">
+    <div class="header-sub">Program BEN — Manggarai</div>
+    <div class="header-title">Evaluasi Tahap Akhir</div>
   </div>
-  <div class="queue-badge" id="queueBadge" onclick="openQueueModal()">
-    <span>📤</span><span id="queueCount">0</span> antrian
+  <div class="header-badge" id="queueBadge" onclick="openQueueModal()">
+    <span class="dot"></span><span id="queueCount">0</span> antrian
   </div>
 </div>
-<div class="status-bar">
+<div class="status-pill">
   <div class="status-dot" id="statusDot"></div>
   <span id="statusText">Memeriksa koneksi…</span>
 </div>
 
 <div class="main">
-  <div class="section-card">
-    <div class="section-header red" onclick="toggleSection('s1')">
-      <div class="section-num">1</div>
-      <div class="section-title">Benef/Dampingan <div class="section-sub">Identitas</div></div>
-      <div class="chevron open" id="chevron-s1">▼</div>
+  <div class="s-card">
+    <div class="s-header open" id="shdr-s1" onclick="toggleSection('s1')">
+      <div class="s-step red">1</div>
+      <div class="s-info"><div class="s-title">Benef / Dampingan</div><div class="s-sub">Identitas</div></div>
+      <svg class="s-chevron open" id="schev-s1" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="section-body open" id="body-s1">
-      <div class="field">
-        <label>CBR Worker <span class="req">*</span></label>
-        <select id="cbrWorker" onchange="onWorkerChange()"></select>
-      </div>
-      <div class="field">
-        <label>Nama Anak <span class="req">*</span></label>
-        <select id="namaAnak" disabled onchange="onAnakChange()">
-          <option value="">— Pilih CBR Worker dulu —</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Tanggal Evaluasi Akhir <span class="req">*</span></label>
-        <input type="date" id="tanggal">
-      </div>
+    <div class="s-body open" id="sbody-s1">
+      <div class="field"><label class="field-label">CBR Worker <span class="req">*</span></label><select id="cbrWorker" onchange="onWorkerChange()"></select></div>
+      <div class="field"><label class="field-label">Nama Anak <span class="req">*</span></label><select id="namaAnak" disabled onchange="onAnakChange()"><option value="">— Pilih CBR Worker dulu —</option></select></div>
+      <div class="field"><label class="field-label">Tanggal Evaluasi Akhir <span class="req">*</span></label><input type="date" id="tanggal"></div>
     </div>
   </div>
 
   <div id="evalContainer"></div>
 
-  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="action-row">
-    <button class="btn btn-draft" onclick="handleDraft()">💾 Simpan Draft</button>
-    <button class="btn btn-submit" id="btnSubmit" onclick="handleSubmit()">📤 Kirim ke Server</button>
+  <div class="progress-wrap" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="action-bar">
+    <button class="btn btn-secondary" onclick="handleDraft()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Simpan Draft
+    </button>
+    <button class="btn btn-primary" id="btnSubmit" onclick="handleSubmit()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Kirim ke Server
+    </button>
   </div>
-  <div class="action-row" style="margin-bottom:32px;">
-    <button class="btn btn-home" onclick="window.location.href='index.html'" style="background:var(--blue-light);color:var(--blue);border:1.5px solid #bfdbfe;">🏠 Menu</button>
-    <button class="btn btn-reset" onclick="confirmReset()">✏️ Reset</button>
+  <div class="action-bar" style="margin-bottom:0;">
+    <button class="btn btn-ghost" onclick="window.location.href='index.html'">🏠 Kembali ke Menu</button>
+    <button class="btn btn-danger" onclick="confirmReset()">↺ Reset</button>
   </div>
 </div>
 
@@ -85,15 +69,16 @@
 <div class="modal-overlay" id="queueModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-title">📤 Antrian</div>
+    <div class="modal-title">Antrian Pengiriman</div>
     <div id="queueList"></div>
-    <button class="btn btn-submit" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua</button>
+    <button class="btn btn-primary" style="margin-top:16px;" onclick="submitAllQueue()">Kirim Semua Sekarang</button>
   </div>
 </div>
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
-    <h3>⚠️ Reset Form?</h3>
-    <p>Data yang belum tersimpan akan hilang.</p>
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">Reset Form?</div>
+    <div class="confirm-desc">Data yang belum tersimpan akan hilang.</div>
     <div class="confirm-btns">
       <button class="btn-cancel-c" onclick="closeConfirm()">Batal</button>
       <button class="btn-do-reset" onclick="doReset()">Ya, Reset</button>
@@ -104,153 +89,120 @@
 <script src="assets/js/data.js"></script>
 <script src="assets/js/shared.js"></script>
 <script>
-let ynState = {};
-let tujuanDariRencana = [];
+let ynState={}, tujuanDariRencana=[];
 
-document.addEventListener('DOMContentLoaded', () => {
-  initChildrenData(() => {
+document.addEventListener('DOMContentLoaded',()=>{
+  initChildrenData(()=>{
     populateWorkerSelect(document.getElementById('cbrWorker'));
-    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-    const draft = loadDraftLocal();
-    if (draft) { restoreForm(draft); showToast('Draft sebelumnya dimuat','warning'); }
+    const d=loadDraft();
+    if(d){restoreForm(d);showToast('Draft sebelumnya dimuat','t-warning');}
   });
-  updateStatusBar();
-  updateQueueBadge();
+  document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];
+  updateStatusBar();updateQueueBadge();
 });
 
-function onWorkerChange() {
-  populateChildSelect(document.getElementById('cbrWorker').value, document.getElementById('namaAnak'));
+function onWorkerChange(){populateChildSelect(document.getElementById('cbrWorker').value,document.getElementById('namaAnak'));}
+function onAnakChange(){loadTujuanDariRencana(document.getElementById('namaAnak').value);}
+
+function loadTujuanDariRencana(anakVal){
+  let tj=[];
+  try{const raw=localStorage.getItem('ben_draft_perencanaan_'+anakVal);if(raw)tj=(JSON.parse(raw).tujuan||[]).filter(t=>t.tujuan);}catch{}
+  tujuanDariRencana=tj;buildEvalSections(tj);
 }
 
-function onAnakChange() {
-  loadTujuanDariRencana(document.getElementById('namaAnak').value);
-}
-
-function loadTujuanDariRencana(anakVal) {
-  let tujuan = [];
-  try {
-    const raw = localStorage.getItem('ben_draft_perencanaan_' + anakVal);
-    if (raw) tujuan = (JSON.parse(raw).tujuan || []).filter(t => t.tujuan);
-  } catch {}
-  tujuanDariRencana = tujuan;
-  buildEvalSections(tujuan);
-}
-
-function buildEvalSections(tujuan) {
-  const list = tujuan.length > 0 ? tujuan : [{nomor:1,tujuan:''},{nomor:2,tujuan:''},{nomor:3,tujuan:''}];
-  ynState = {};
-
-  document.getElementById('evalContainer').innerHTML = list.map((t, i) => {
-    const n   = i + 1;
-    const ref = t.tujuan
-      ? `<div class="tujuan-ref"><strong>📌 Tujuan ${n} dari Perencanaan:</strong>${t.tujuan}</div>`
-      : `<div class="no-rencana-notice">⚠️ Belum ada data perencanaan untuk tujuan ${n}.</div>`;
-    return `
-    <div class="section-card">
-      <div class="section-header red" onclick="toggleSection('t${n}')">
-        <div class="section-num">${n+1}</div>
-        <div class="section-title">Evaluasi Akhir Tujuan ${n}
-          <div class="section-sub">${t.tujuan ? t.tujuan.slice(0,35)+(t.tujuan.length>35?'…':'') : 'Apakah tujuan tercapai?'}</div>
+function buildEvalSections(tujuan){
+  const list=tujuan.length>0?tujuan:[{nomor:1,tujuan:''},{nomor:2,tujuan:''},{nomor:3,tujuan:''}];
+  ynState={};
+  document.getElementById('evalContainer').innerHTML=list.map((t,i)=>{
+    const n=i+1;
+    const ref=t.tujuan
+      ?`<div class="info-box red" style="margin-bottom:14px;"><strong>📌 Tujuan ${n} dari Perencanaan</strong><br>${t.tujuan}</div>`
+      :`<div class="info-box amber" style="margin-bottom:14px;">⚠️ Belum ada data perencanaan untuk tujuan ${n}.</div>`;
+    return `<div class="s-card">
+      <div class="s-header" id="shdr-t${n}" onclick="toggleSection('t${n}')">
+        <div class="s-step red">${n+1}</div>
+        <div class="s-info">
+          <div class="s-title">Evaluasi Akhir Tujuan ${n}</div>
+          <div class="s-sub">${t.tujuan?t.tujuan.slice(0,40)+(t.tujuan.length>40?'…':''):'Apakah tujuan tercapai?'}</div>
         </div>
-        <div class="chevron" id="chevron-t${n}">▼</div>
+        <svg class="s-chevron" id="schev-t${n}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div class="section-body" id="body-t${n}">
+      <div class="s-body" id="sbody-t${n}">
         ${ref}
         <div class="field">
-          <label>Apakah Tujuan ${n} sudah tercapai?</label>
-          <div class="yn-group">
+          <label class="field-label">Apakah Tujuan ${n} sudah tercapai?</label>
+          <div class="yn-wrap">
             <button class="yn-btn" id="btn_ya_${n}" onclick="setYN(${n},'ya')">✅ Ya, Tercapai</button>
             <button class="yn-btn" id="btn_tidak_${n}" onclick="setYN(${n},'tidak')">❌ Belum Tercapai</button>
           </div>
           <div class="cond-field" id="cond_ya_${n}">
-            <div class="achieved-banner">🎉 Tujuan ${n} tercapai!</div>
-            <div class="field">
-              <label>Jelaskan pencapaian ini</label>
-              <textarea id="jya_${n}" rows="3" placeholder="Ceritakan bagaimana tujuan ini berhasil dicapai…"></textarea>
-            </div>
+            <div class="achieved-banner">🎉 Tujuan ${n} berhasil tercapai!</div>
+            <div class="field"><label class="field-label">Jelaskan pencapaian ini</label><textarea id="jya_${n}" rows="3" placeholder="Ceritakan bagaimana tujuan ini berhasil dicapai…"></textarea></div>
           </div>
           <div class="cond-field" id="cond_tidak_${n}">
-            <div class="field">
-              <label>Mengapa belum tercapai?</label>
-              <textarea id="jtdk_${n}" rows="3" placeholder="Jelaskan kendala atau hambatan…"></textarea>
-            </div>
+            <div class="field"><label class="field-label">Mengapa belum tercapai?</label><textarea id="jtdk_${n}" rows="3" placeholder="Jelaskan kendala atau hambatan…"></textarea></div>
           </div>
         </div>
-        <div class="field">
-          <label>Saran baru untuk hal ini</label>
-          <textarea id="saran_${n}" rows="3" placeholder="Tuliskan saran atau rekomendasi ke depan…"></textarea>
-        </div>
+        <div class="field"><label class="field-label">Saran ke depan</label><textarea id="saran_${n}" rows="3" placeholder="Tuliskan saran atau rekomendasi…"></textarea></div>
       </div>
     </div>`;
   }).join('');
 }
 
-function setYN(n, val) {
-  ynState[n] = val;
-  document.getElementById('btn_ya_'+n).className    = 'yn-btn' + (val==='ya'    ? ' ya'    : '');
-  document.getElementById('btn_tidak_'+n).className = 'yn-btn' + (val==='tidak' ? ' tidak' : '');
-  document.getElementById('cond_ya_'+n).classList.toggle('show',  val==='ya');
-  document.getElementById('cond_tidak_'+n).classList.toggle('show', val==='tidak');
+function setYN(n,val){
+  ynState[n]=val;
+  document.getElementById('btn_ya_'+n).className='yn-btn'+(val==='ya'?' ya':'');
+  document.getElementById('btn_tidak_'+n).className='yn-btn'+(val==='tidak'?' tidak':'');
+  document.getElementById('cond_ya_'+n).classList.toggle('show',val==='ya');
+  document.getElementById('cond_tidak_'+n).classList.toggle('show',val==='tidak');
 }
-
-function getTujuanCount() {
-  return document.getElementById('evalContainer').querySelectorAll('.section-card').length;
-}
-
-function collect() {
-  const we=document.getElementById('cbrWorker'),ae=document.getElementById('namaAnak');
-  const count=getTujuanCount();
-  const tujuan=[];
+function getTujuanCount(){return document.getElementById('evalContainer').querySelectorAll('.s-card').length;}
+function collect(){
+  const w=document.getElementById('cbrWorker'),a=document.getElementById('namaAnak');
+  const count=getTujuanCount(),tujuan=[];
   for(let n=1;n<=count;n++){
-    tujuan.push({
-      nomor:n,
-      tujuanRencana:tujuanDariRencana[n-1]?.tujuan||'',
-      tercapai:ynState[n]||null,
+    tujuan.push({nomor:n,tujuanRencana:tujuanDariRencana[n-1]?.tujuan||'',tercapai:ynState[n]||null,
       jelaskan_ya:(document.getElementById('jya_'+n)?.value||'').trim(),
       jelaskan_tdk:(document.getElementById('jtdk_'+n)?.value||'').trim(),
-      saran:(document.getElementById('saran_'+n)?.value||'').trim()
-    });
+      saran:(document.getElementById('saran_'+n)?.value||'').trim()});
   }
-  return {
-    timestamp:new Date().toISOString(),modul:'eval_akhir',
-    cbrWorkerValue:we.value,cbrWorkerLabel:we.options[we.selectedIndex]?.text||'',
-    namaAnakValue:ae.value,namaAnakLabel:ae.options[ae.selectedIndex]?.text||'',
-    tanggal:document.getElementById('tanggal').value,tujuan
-  };
+  return {timestamp:new Date().toISOString(),modul:'eval_akhir',
+    cbrWorkerValue:w.value,cbrWorkerLabel:w.options[w.selectedIndex]?.text||'',
+    namaAnakValue:a.value,namaAnakLabel:a.options[a.selectedIndex]?.text||'',
+    tanggal:document.getElementById('tanggal').value,tujuan};
 }
-
 function validate(d){
-  if(!d.cbrWorkerValue)return'CBR Worker belum dipilih.';
-  if(!d.namaAnakValue)return'Nama Anak belum dipilih.';
-  if(!d.tanggal)return'Tanggal belum diisi.';
+  if(!d.cbrWorkerValue) return 'CBR Worker belum dipilih.';
+  if(!d.namaAnakValue)  return 'Nama Anak belum dipilih.';
+  if(!d.tanggal)        return 'Tanggal belum diisi.';
   return null;
 }
-
-function restoreForm(data){
-  if(!data)return;
-  const we=document.getElementById('cbrWorker'),ae=document.getElementById('namaAnak');
-  if(data.cbrWorkerValue){we.value=data.cbrWorkerValue;populateChildSelect(data.cbrWorkerValue,ae);
-    setTimeout(()=>{if(data.namaAnakValue){ae.value=data.namaAnakValue;loadTujuanDariRencana(data.namaAnakValue);
-      setTimeout(()=>{
-        (data.tujuan||[]).forEach(t=>{const n=t.nomor;
-          if(t.tercapai)setYN(n,t.tercapai);
-          if(t.jelaskan_ya){const el=document.getElementById('jya_'+n);if(el)el.value=t.jelaskan_ya;}
-          if(t.jelaskan_tdk){const el=document.getElementById('jtdk_'+n);if(el)el.value=t.jelaskan_tdk;}
-          if(t.saran){const el=document.getElementById('saran_'+n);if(el)el.value=t.saran;}
-        });
-      },200);
+function restoreForm(d){
+  if(!d)return;
+  const w=document.getElementById('cbrWorker'),a=document.getElementById('namaAnak');
+  if(d.cbrWorkerValue){w.value=d.cbrWorkerValue;populateChildSelect(d.cbrWorkerValue,a);
+    setTimeout(()=>{if(d.namaAnakValue){a.value=d.namaAnakValue;loadTujuanDariRencana(d.namaAnakValue);
+      setTimeout(()=>{(d.tujuan||[]).forEach(t=>{const n=t.nomor;
+        if(t.tercapai)setYN(n,t.tercapai);
+        if(t.jelaskan_ya){const el=document.getElementById('jya_'+n);if(el)el.value=t.jelaskan_ya;}
+        if(t.jelaskan_tdk){const el=document.getElementById('jtdk_'+n);if(el)el.value=t.jelaskan_tdk;}
+        if(t.saran){const el=document.getElementById('saran_'+n);if(el)el.value=t.saran;}
+      });},200);
     }},50);
   }
-  if(data.tanggal)document.getElementById('tanggal').value=data.tanggal;
+  if(d.tanggal)document.getElementById('tanggal').value=d.tanggal;
 }
-
-function loadDraftLocal(){try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||'null');}catch{return null;}}
-function handleDraft(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'error');return;}localStorage.setItem(DRAFT_KEY,JSON.stringify(d));showToast('Draft tersimpan ✓','success');}
-function handleSubmit(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'error');return;}doSubmit(d,doReset);}
-function doReset(){closeConfirm();localStorage.removeItem(DRAFT_KEY);document.getElementById('cbrWorker').value='';const a=document.getElementById('namaAnak');a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';a.disabled=true;document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];buildEvalSections([]);ynState={};window.scrollTo(0,0);showToast('Form dikosongkan','');}
-
+function handleDraft(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'t-error');return;}saveDraft(d);showToast('Draft tersimpan','t-success');}
+function handleSubmit(){const d=collect(),e=validate(d);if(e){showToast('⚠️ '+e,'t-error');return;}doSubmit(d,doReset);}
+function doReset(){
+  closeConfirm();clearDraft();
+  document.getElementById('cbrWorker').value='';
+  const a=document.getElementById('namaAnak');a.innerHTML='<option value="">— Pilih CBR Worker dulu —</option>';a.disabled=true;
+  document.getElementById('tanggal').value=new Date().toISOString().split('T')[0];
+  buildEvalSections([]);ynState={};window.scrollTo(0,0);showToast('Form dikosongkan','');
+}
 </script>
-<script>window.BEN_ACTIVE_NAV = "nav-akhir";</script>
+<script>window.BEN_ACTIVE_NAV='nav-akhir';</script>
 <script src="assets/js/nav.js"></script>
 </body>
 </html>
